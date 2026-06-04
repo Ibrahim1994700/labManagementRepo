@@ -5,7 +5,7 @@ import { inject } from '@angular/core';
 export const authGuard: CanActivateFn = (route, state) => {
   const dataService=inject(DataService)
   const router = inject(Router);
-
+//erge
   if (dataService.CheckLocalStorageItem('token')) {
     return true;
   } else {
