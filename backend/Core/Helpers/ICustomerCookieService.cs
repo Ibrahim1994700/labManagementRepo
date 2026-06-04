@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Core.Helpers
+{
+    public interface ICustomerCookieService
+    {
+        void SetToken(string token);
+        void DeleteToken();
+        bool HasToken();
+        string? GetToken();
+    }
+}
