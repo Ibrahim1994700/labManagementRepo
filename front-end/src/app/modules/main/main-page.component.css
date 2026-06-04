@@ -1,0 +1,16 @@
+:host {
+    display: block;
+    min-height: 100vh;
+    direction: rtl;
+    font-family: "Cairo", sans-serif;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+
+.main-area {
+    padding-top: 0px;
+    padding-bottom: 26px;
+}

@@ -1,0 +1,65 @@
+.topbar {
+    height: 82px;
+    background: rgba(255, 255, 255, 0.92);
+    border-bottom: 1px solid #e7edf6;
+    display: flex;
+    align-items: center;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+/* تعديل حجم اللوجو */
+.brand img {
+    width: 50px;
+    /* الحجم الجديد مناسب للشاشة */
+    height: auto;
+    display: block;
+}
+
+.brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    /* المسافة بين الصورة والنص */
+    text-decoration: none;
+}
+
+.brand-text h1 {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0;
+    color: #133E78;
+}
+
+.brand-text p {
+    font-size: 12px;
+    font-weight: 700;
+    margin: 0;
+    color: #2E6FB2;
+}
+
+.btn-light-soft {
+    height: 42px;
+    border: 1px solid #e2eaf5;
+    border-radius: 12px;
+    background: #ffffff;
+    color: #244a7a;
+    padding: 0 15px;
+    font-weight: 700;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.btn-light-soft i {
+    font-size: 14px;
+}
+
+.btn-light-soft .arrow-icon {
+    font-size: 11px;
+}

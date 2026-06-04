@@ -1,0 +1,168 @@
+<div class="login-page" dir="rtl">
+ 
+
+   <div class="row g-4 align-items-stretch">
+      <div class="col-lg-5 order-lg-1">
+        <section class="login-card">
+          <div class="login-title text-center">
+            <h2>تسجيل الدخول</h2>
+            <p>أدخل بياناتك للوصول إلى حسابك</p>
+          </div>
+
+          <form>
+            <div class="form-group-custom">
+              <label class="form-label">البريد الإلكتروني أو رقم الجوال</label>
+              <div class="input-wrap">
+                <i class="bi bi-person input-icon"></i>
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="أدخل بريدك الإلكتروني أو رقم الجوال"
+                />
+              </div>
+            </div>
+
+            <div class="form-group-custom">
+              <label class="form-label">كلمة المرور</label>
+              <div class="input-wrap">
+                <i class="bi bi-lock input-icon"></i>
+                <input
+                  type="password"
+                  class="form-control"
+                  placeholder="أدخل كلمة المرور"
+                />
+                <i class="bi bi-eye eye-icon"></i>
+              </div>
+            </div>
+
+            <div
+              class="login-options d-flex align-items-center justify-content-between"
+            >
+              <label class="remember-box">
+                <input class="form-check-input" type="checkbox" />
+                <span>تذكرني</span>
+              </label>
+
+              <a href="#" class="link-primary-custom">نسيت كلمة المرور؟</a>
+            </div>
+
+            <button (click)="loginUser()" type="button" class="btn btn-primary-custom w-100">
+              <span>تسجيل الدخول</span>
+              <i class="bi bi-lock"></i>
+            </button>
+
+            <div class="divider"><span>أو</span></div>
+
+            <button type="button" class="btn btn-outline-custom w-100">
+              <span>إنشاء حساب جديد</span>
+              <i class="bi bi-person-plus"></i>
+            </button>
+
+            <p class="policy-text">
+              <i class="bi bi-shield-check"></i>
+              <span>بتسجيل الدخول، أنت توافق على</span>
+              <a href="#">الشروط والأحكام</a>
+              <span>و</span>
+              <a href="#">سياسة الخصوصية</a>
+            </p>
+          </form>
+        </section>
+      </div>
+
+      <div class="col-lg-7 order-lg-2">
+        <section class="intro-area">
+          <div class="row g-4 align-items-center hero-row">
+            <div class="col-md-6 text-start">
+              <div class="welcome-copy">
+                <h3>مرحبا بك في</h3>
+                <h4>مختبرات الحكمة</h4>
+                <p>
+                  بوابتك الإلكترونية لإدارة تحاليلك الطبية
+                  <br />
+                  بسهولة وأمان أينما كنت
+                </p>
+                <div class="accent-line"></div>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="lab-image-card">
+                <img
+                  src="../../../../assets/img/microscope-person.png"
+                  alt="فني مختبر يستخدم الميكروسكوب"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div class="features-grid">
+            <div class="feature-card">
+              <div class="feature-icon">
+                <i class="bi bi-lightning-charge"></i>
+              </div>
+              <h5>نتائج سريعة</h5>
+              <p>احصل على نتائج تحاليلك بدقة وسرعة</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon"><i class="bi bi-house-door"></i></div>
+              <h5>سحب منزلي</h5>
+              <p>خدمة سحب العينات من المنزل بكل راحة</p>
+            </div>
+
+            <div class="feature-card">
+              <div class="feature-icon"><i class="bi bi-shield-lock"></i></div>
+              <h5>بياناتك آمنة</h5>
+              <p>نحافظ على خصوصية بياناتك وفق أعلى معايير الأمان</p>
+            </div>
+          </div>
+
+          <div class="trust-banner">
+            <div class="trust-icon"><i class="bi bi-shield-check"></i></div>
+            <div>
+              <h6>مختبرات الحكمة معتمدة من وزارة الصحة</h6>
+              <p>جودة موثوقة · نتائج دقيقة</p>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+  <section class="info-strip">
+    <div class="container-fluid px-4">
+      <div class="row g-3 text-center">
+        <div class="col-md-4">
+          <div class="info-item">
+            <i class="bi bi-calendar-check"></i>
+            <div>
+              <h6>خدمة متاحة يومياً</h6>
+              <p>بما في ذلك العطلات</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="info-item">
+            <i class="bi bi-clock"></i>
+            <div>
+              <h6>ساعات العمل</h6>
+              <p>7 صباحاً - 11 مساءً</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4">
+          <div class="info-item">
+            <i class="bi bi-telephone"></i>
+            <div>
+              <h6>9200 12345</h6>
+              <p>خدمة العملاء</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+</div>

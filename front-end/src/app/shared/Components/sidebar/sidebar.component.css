@@ -1,0 +1,217 @@
+:root {
+  --navbar-height: 78px;
+  --sidebar-width: 260px;
+}
+
+/* Sidebar container */
+.hikmah-sidebar {
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--navbar-height));
+
+  position: fixed;
+  top: var(--navbar-height);
+  right: 0;
+
+  background-color: #ffffff;
+  border-left: 1px solid #dfe7f3;
+  border-top: 1px solid #dfe7f3;
+
+  z-index: 900;
+
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 22px 14px 18px;
+
+  overflow: hidden;
+}
+
+/* القائمة نفسها */
+.sidebar-menu {
+  width: 100%;
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+
+  margin: 0;
+  padding: 0;
+
+  overflow: hidden;
+}
+
+/* كل عنصر */
+.sidebar-link {
+  width: 100%;
+  height: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 18px;
+
+  padding: 0 18px;
+
+  border-radius: 10px;
+
+  text-decoration: none;
+
+  color: #263a5c;
+  font-size: 17px;
+  font-weight: 600;
+
+  box-sizing: border-box;
+
+  flex-shrink: 0;
+}
+
+/* الأيقونة على اليمين */
+.sidebar-link i {
+  order: 1;
+
+  width: 24px;
+  min-width: 24px;
+
+  font-size: 22px;
+  color: #243b5f;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* النص بعد الأيقونة باتجاه اليسار */
+.sidebar-link span {
+  order: 2;
+
+  flex: 1;
+
+  text-align: right;
+  white-space: nowrap;
+
+  color: inherit;
+}
+
+/* Active */
+.sidebar-link.active {
+  background-color: #edf6ff;
+  color: #0d6efd;
+  font-weight: 700;
+}
+
+.sidebar-link.active i {
+  color: #0d6efd;
+}
+
+/* Hover */
+.sidebar-link:hover {
+  background-color: #f4f9ff;
+  color: #0d6efd;
+}
+
+.sidebar-link:hover i {
+  color: #0d6efd;
+}
+
+/* آخر مربعين */
+.sidebar-bottom {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  margin-top: 18px;
+
+  flex-shrink: 0;
+}
+
+/* Box */
+.help-box,
+.trusted-box {
+  width: 100%;
+
+  min-height: 100px;
+
+  border: 1px solid #dfe7f3;
+  border-radius: 12px;
+
+  background-color: #ffffff;
+
+  box-sizing: border-box;
+
+  padding: 16px 16px;
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+/* Help text */
+.help-title,
+.trusted-title {
+  margin: 0 0 6px;
+
+  color: #0d6efd;
+
+  font-size: 16px;
+  font-weight: 800;
+
+  text-align: right;
+}
+
+.help-sub,
+.trusted-sub {
+  margin: 0;
+
+  color: #7b8aa4;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  text-align: right;
+}
+
+/* زر تواصل معنا */
+.help-btn {
+  margin-top: 12px;
+
+  height: 36px;
+  min-width: 120px;
+
+  border: 1px solid #8bb9ff;
+  border-radius: 8px;
+
+  background-color: #ffffff;
+
+  color: #0d6efd;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* دائرة الأيقونة داخل المربع */
+.help-box::after,
+.trusted-box::after {
+  content: "";
+
+  position: absolute;
+  left: 16px;
+  top: 18px;
+
+  width: 54px;
+  height: 54px;
+
+  border-radius: 50%;
+  background-color: #edf6ff;
+}
