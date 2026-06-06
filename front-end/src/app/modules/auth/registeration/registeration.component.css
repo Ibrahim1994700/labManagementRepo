@@ -1,0 +1,52 @@
+
+/* ===========================
+   Services Cards (Right Column)
+=========================== */
+    .services-right .card {
+      border: none;
+      border-radius: 12px;
+    }
+    .services-right .icon, .services-right .d-inline-flex img {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 8px;
+    }
+    .services-right .bg-primary { background-color: #cce5ff !important; }
+    .services-right .bg-success { background-color: #d1f7d6 !important; }
+    .services-right .bg-warning { background-color: #ffd6a5 !important; }
+    .services-right .bg-purple { background-color: #f0e5ff !important; }
+    /* أيقونات صغيرة داخل البطاقات */
+    .services-right img {
+      display: block;
+    }
+    .form-control, .form-select {
+      border-radius: 8px;
+    }
+    .card {
+      border-radius: 12px;
+    }
+    .btn-primary {
+      border-radius: 8px;
+    }
+
+    .icon-container {
+  width: 60px;
+  height: 60px;
+  background-color: #d6f7e4; /* نفس اللون الخارجي */
+  border-radius: 16px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-container img {
+  width: 32px;
+  height: 32px;
+  background: transparent; /* مهم لجعلها تتوافق مع لون الخلفية */
+}
+
+
+.registerForm{
+  background-color: #f7fbff;
+}
