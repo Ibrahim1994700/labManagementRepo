@@ -17,7 +17,7 @@ const routes: Routes = [
         component: HomePageComponent,
         children: [
           {
-             path: 'main-user-page',
+             path: '',
             loadComponent: () =>
               import('../home-page/Pages/main-user-page/main-user-page.component').then(
                 (m) => m.MainUserPageComponent,
@@ -29,7 +29,7 @@ const routes: Routes = [
         path: 'Auth',
         loadChildren: () =>
           import('../auth/auth.module').then((m) => m.AuthModule),
-        canActivate: [checkCredinalGuard],
+        
       },
     ],
   },

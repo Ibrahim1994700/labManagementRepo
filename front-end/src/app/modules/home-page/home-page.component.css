@@ -1,0 +1,33 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;600;700;800&display=swap');
+
+:host {
+  display: block;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+
+.dashboard {
+      font-size: 300%;
+
+  --primary: #1667b2;
+  --primary-strong: #0a559d;
+  --primary-soft: #edf5ff;
+  --text: #1f2b3a;
+  --muted: #7d8794;
+  --line: #e8edf3;
+  --panel: #ffffff;
+  --page: #fbfdff;
+  min-height: 100vh;
+  background: var(--page);
+  color: var(--text);
+  font-family: 'Tajawal', Arial, sans-serif;
+}
+
+
+
+
