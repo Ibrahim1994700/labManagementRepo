@@ -1,0 +1,249 @@
+<main class="offers-page" dir="rtl">
+
+  <!-- عنوان الصفحة -->
+  <section class="page-header">
+    <div class="page-title">
+      <h1>العروض والخصومات</h1>
+
+      <p>
+        اكتشف أحدث العروض والخصومات على الباقات والتحاليل
+      </p>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-wrapper">
+      <button
+        *ngFor="let filter of filters"
+        type="button"
+        class="filter-button"
+        [class.active]="activeFilter === filter.label"
+        (click)="setFilter(filter.label)"
+      >
+        <i class="bi" [ngClass]="filter.icon"></i>
+        <span>{{ filter.label }}</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- Hero Banner -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <h2>عروض حصرية لصحتك</h2>
+
+      <p>
+        خصومات مميزة على الباقات والتحاليل لفترة محدودة
+      </p>
+
+      <button type="button" class="hero-button">
+        <span>استفد الآن</span>
+        <i class="bi bi-arrow-left"></i>
+      </button>
+    </div>
+
+    <div class="hero-decoration" aria-hidden="true">
+      <span class="confetti confetti-one"></span>
+      <span class="confetti confetti-two"></span>
+      <span class="confetti confetti-three"></span>
+      <span class="confetti confetti-four"></span>
+      <span class="confetti confetti-five"></span>
+
+      <div class="gift">
+        <div class="gift-lid">
+          <span class="gift-ribbon-horizontal"></span>
+        </div>
+
+        <div class="gift-body">
+          <span class="gift-ribbon-vertical"></span>
+        </div>
+
+        <div class="gift-bow">
+          <span class="bow bow-right"></span>
+          <span class="bow bow-left"></span>
+          <span class="bow-center"></span>
+        </div>
+      </div>
+
+      <div class="discount-label">
+        <span>%</span>
+        <span class="discount-label-hole"></span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Offer Cards -->
+  <section class="offers-grid">
+    <article
+      *ngFor="let offer of offers; trackBy: trackByOfferCode"
+      class="offer-card"
+      [ngClass]="offer.tone"
+    >
+      <div class="offer-top">
+        <div class="offer-image">
+          <i class="bi" [ngClass]="offer.icon"></i>
+        </div>
+
+        <div class="offer-heading">
+          <h3>{{ offer.title }}</h3>
+          <p>{{ offer.description }}</p>
+        </div>
+
+        <div class="discount-box">
+          <strong>{{ offer.discount }}%</strong>
+          <span>خصم</span>
+        </div>
+      </div>
+
+      <div class="analyses-count">
+        <span>{{ offer.analyses }} تحليل</span>
+        <i class="bi bi-eyedropper"></i>
+      </div>
+
+      <div class="price-code-row">
+        <button
+          type="button"
+          class="offer-code"
+          (click)="copyCode(offer.code)"
+          [attr.aria-label]="'نسخ كود العرض ' + offer.code"
+        >
+          <span>
+            {{ copiedCode === offer.code ? 'تم النسخ' : offer.code }}
+          </span>
+
+          <i
+            class="bi"
+            [ngClass]="
+              copiedCode === offer.code
+                ? 'bi-check-lg'
+                : 'bi-copy'
+            "
+          ></i>
+        </button>
+
+        <div class="price-box">
+          <span class="old-price">
+            {{ offer.oldPrice }}
+            <small>ريال</small>
+          </span>
+
+          <strong>{{ offer.currentPrice }}</strong>
+        </div>
+      </div>
+
+      <div class="expiry-row">
+        <i class="bi bi-calendar3"></i>
+
+        <span>
+          ينتهي في
+          <strong>{{ offer.expiry }}</strong>
+        </span>
+      </div>
+
+      <div class="offer-divider"></div>
+
+      <ul class="offer-notes">
+        <li *ngFor="let note of offer.notes">
+          {{ note }}
+        </li>
+      </ul>
+
+      <div class="offer-actions">
+        <button
+          type="button"
+          class="apply-button"
+          (click)="applyOffer(offer)"
+        >
+          تطبيق العرض
+        </button>
+
+        <button
+          type="button"
+          class="details-button"
+          (click)="showDetails(offer)"
+        >
+          عرض التفاصيل
+        </button>
+      </div>
+    </article>
+  </section>
+
+  <!-- Bottom Sections -->
+  <section class="bottom-grid">
+
+    <!-- Tips Card -->
+    <article class="tips-card">
+      <div class="tips-content">
+        <h3>نصائح للاستفادة القصوى من العروض</h3>
+
+        <ul>
+          <li>
+            <i class="bi bi-check2"></i>
+            <span>تأكد من قراءة شروط العرض قبل التطبيق</span>
+          </li>
+
+          <li>
+            <i class="bi bi-check2"></i>
+            <span>العروض لفترة محدودة، سارع بالحجز</span>
+          </li>
+
+          <li>
+            <i class="bi bi-check2"></i>
+            <span>يمكنك استخدام كود العرض عند الدفع</span>
+          </li>
+
+          <li>
+            <i class="bi bi-check2"></i>
+            <span>بعض العروض تتطلب حجزاً مسبقاً للسحب المنزلي</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="small-gift" aria-hidden="true">
+        <div class="small-gift-lid"></div>
+        <div class="small-gift-body"></div>
+        <div class="small-gift-ribbon"></div>
+
+        <div class="small-gift-bow">
+          <span></span>
+          <span></span>
+        </div>
+      </div>
+    </article>
+
+    <!-- Ramadan Banner -->
+    <article class="ramadan-banner">
+      <div class="ramadan-art" aria-hidden="true">
+        <span class="star star-one">✦</span>
+        <span class="star star-two">✦</span>
+        <span class="star star-three">✦</span>
+
+        <div class="moon"></div>
+
+        <div class="lantern lantern-one">
+          <i class="bi bi-lightbulb-fill"></i>
+        </div>
+
+        <div class="lantern lantern-two">
+          <i class="bi bi-lightbulb-fill"></i>
+        </div>
+      </div>
+
+      <div class="ramadan-content">
+        <h3>عروض رمضان المبارك</h3>
+
+        <p>
+          خصومات خاصة على الباقات المختارة خلال شهر رمضان
+        </p>
+
+        <button type="button">
+          <span>استكشف عروض رمضان</span>
+          <i class="bi bi-arrow-left"></i>
+        </button>
+      </div>
+
+      <div class="ramadan-discount">
+        <span>خصم حتى</span>
+        <strong>25%</strong>
+      </div>
+    </article>
+  </section>
+</main>

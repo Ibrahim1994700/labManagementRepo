@@ -1,0 +1,451 @@
+<div class="family-page" dir="rtl">
+  <div class="family-layout">
+
+    <!-- المحتوى الرئيسي -->
+    <main class="family-main">
+
+      <!-- عنوان الصفحة -->
+      <section class="page-heading">
+        <div class="title-icon">
+          <i class="bi bi-people"></i>
+        </div>
+
+        <div>
+          <h1>حساب العائلة</h1>
+          <p>إدارة أفراد عائلتك ومتابعة ملفاتهم الصحية من مكان واحد</p>
+        </div>
+      </section>
+
+      <!-- بطاقات الملخص -->
+      <section class="summary-grid">
+
+        <button
+          type="button"
+          class="summary-card add-member-card"
+          (click)="addMember()"
+        >
+          <span class="summary-icon add-icon">
+            <i class="bi bi-plus-lg"></i>
+          </span>
+
+          <strong>إضافة فرد جديد</strong>
+          <p>أضف فرداً جديداً إلى العائلة</p>
+        </button>
+
+        <article class="summary-card">
+          <span class="summary-icon purple-icon">
+            <i class="bi bi-person-badge"></i>
+          </span>
+
+          <div class="summary-content">
+            <span class="summary-label">القصر</span>
+            <strong>{{ minorsCount }}</strong>
+            <p>أفراد تحت 18 سنة</p>
+          </div>
+
+          <button type="button" class="summary-link">
+            إدارة الموافقات
+            <i class="bi bi-arrow-left"></i>
+          </button>
+        </article>
+
+        <article class="summary-card">
+          <span class="summary-icon green-icon">
+            <i class="bi bi-check-circle"></i>
+          </span>
+
+          <div class="summary-content">
+            <span class="summary-label">الملفات النشطة</span>
+            <strong>{{ members.length }}</strong>
+            <p>ملف نشط</p>
+          </div>
+
+          <button type="button" class="summary-link">
+            عرض الملفات
+            <i class="bi bi-arrow-left"></i>
+          </button>
+        </article>
+
+        <article class="summary-card">
+          <span class="summary-icon orange-icon">
+            <i class="bi bi-people"></i>
+          </span>
+
+          <div class="summary-content">
+            <span class="summary-label">إجمالي أفراد العائلة</span>
+            <strong>{{ members.length }}</strong>
+            <p>أفراد مسجلون</p>
+          </div>
+
+          <button type="button" class="summary-link">
+            عرض جميع الأفراد
+            <i class="bi bi-arrow-left"></i>
+          </button>
+        </article>
+      </section>
+
+      <!-- التنبيه -->
+      <section class="guardian-alert">
+        <span class="alert-icon">
+          <i class="bi bi-shield-check"></i>
+        </span>
+
+        <div>
+          <h2>موافقة ولي الأمر مطلوبة للقصر</h2>
+
+          <p>
+            لإجراء الحجوزات، أو الاطلاع على النتائج، أو إدارة البيانات
+            للأفراد القصر الأقل من 18 سنة، يلزم الحصول على موافقة ولي الأمر.
+          </p>
+        </div>
+      </section>
+
+      <!-- قائمة أفراد العائلة -->
+      <section class="members-section">
+        <header class="members-toolbar">
+          <h2>أفراد العائلة</h2>
+
+          <div class="toolbar-controls">
+            <select
+              class="status-select"
+              [(ngModel)]="selectedStatus"
+              aria-label="تصفية حسب الحالة"
+            >
+              <option>كل الحالات</option>
+              <option>نشط</option>
+              <option>قاصر</option>
+            </select>
+
+            <div class="search-box">
+              <i class="bi bi-search"></i>
+
+              <input
+                type="search"
+                [(ngModel)]="searchValue"
+                placeholder="ابحث عن فرد..."
+              />
+            </div>
+          </div>
+        </header>
+
+        <div class="members-table">
+
+          <div class="list-header">
+            <span></span>
+            <span>الاسم</span>
+            <span>صلة القرابة</span>
+            <span>العمر</span>
+            <span>الجنس</span>
+            <span>الحالة</span>
+            <span>الإجراءات</span>
+          </div>
+
+          <div
+            *ngFor="
+              let member of filteredMembers;
+              trackBy: trackByMemberId
+            "
+            class="member-row"
+            [class.selected]="selectedMember.id === member.id"
+            (click)="selectMember(member)"
+          >
+            <div class="row-select">
+              <span
+                class="radio-circle"
+                [class.checked]="selectedMember.id === member.id"
+              ></span>
+            </div>
+
+            <div class="member-cell member-name-cell">
+              <img
+                [src]="member.avatar"
+                [alt]="member.name"
+                class="member-avatar"
+              />
+
+              <div>
+                <div class="member-name-line">
+                  <strong>{{ member.name }}</strong>
+
+                  <span
+                    *ngIf="member.relationship === 'أنت'"
+                    class="you-badge"
+                  >
+                    أنت
+                  </span>
+
+                  <span
+                    *ngIf="member.status === 'قاصر'"
+                    class="minor-badge"
+                  >
+                    قاصر
+                  </span>
+                </div>
+
+                <small>{{ member.id }}</small>
+              </div>
+            </div>
+
+            <div
+              class="member-cell mobile-information"
+              data-label="صلة القرابة"
+            >
+              {{ member.relationship }}
+            </div>
+
+            <div
+              class="member-cell mobile-information"
+              data-label="العمر"
+            >
+              {{ member.age }}
+            </div>
+
+            <div
+              class="member-cell gender-cell mobile-information"
+              data-label="الجنس"
+              [class.male]="member.gender === 'ذكر'"
+              [class.female]="member.gender === 'أنثى'"
+            >
+              <i
+                class="bi"
+                [ngClass]="
+                  member.gender === 'ذكر'
+                    ? 'bi-gender-male'
+                    : 'bi-gender-female'
+                "
+              ></i>
+
+              {{ member.gender }}
+            </div>
+
+            <div
+              class="member-cell mobile-information"
+              data-label="الحالة"
+            >
+              <span
+                class="status-badge"
+                [class.active-status]="member.status === 'نشط'"
+                [class.minor-status]="member.status === 'قاصر'"
+              >
+                {{ member.status }}
+              </span>
+            </div>
+
+            <div
+              class="member-actions"
+              (click)="$event.stopPropagation()"
+            >
+              <button
+                type="button"
+                class="action-button"
+                (click)="editMember(member)"
+              >
+                <i class="bi bi-pencil"></i>
+                <span>تعديل</span>
+              </button>
+
+              <button
+                type="button"
+                class="action-button"
+                (click)="showResults(member)"
+              >
+                <i class="bi bi-flask"></i>
+                <span>النتائج</span>
+              </button>
+
+              <button
+                type="button"
+                class="action-button"
+                (click)="createBooking(member)"
+              >
+                <i class="bi bi-calendar2"></i>
+                <span>حجز</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            *ngIf="filteredMembers.length === 0"
+            class="empty-state"
+          >
+            <i class="bi bi-search"></i>
+            <p>لا توجد نتائج مطابقة لعملية البحث</p>
+          </div>
+        </div>
+
+        <footer class="table-footer">
+          <div class="page-size">
+            <span>عناصر لكل صفحة</span>
+
+            <select>
+              <option>10</option>
+              <option>20</option>
+              <option>50</option>
+            </select>
+
+            <span>من {{ filteredMembers.length }}</span>
+          </div>
+
+          <div class="pagination-controls">
+            <button type="button">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+
+            <button type="button">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+
+            <button type="button" class="active-page">1</button>
+
+            <button type="button">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+
+            <button type="button">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+          </div>
+        </footer>
+      </section>
+    </main>
+
+    <!-- لوحة تفاصيل الفرد -->
+    <aside class="member-details-panel">
+      <header class="panel-header">
+        <h2>تفاصيل الفرد</h2>
+
+        <button type="button" class="close-panel-button">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </header>
+
+      <section class="selected-profile">
+        <img
+          [src]="selectedMember.avatar"
+          [alt]="selectedMember.name"
+          class="selected-avatar"
+        />
+
+        <div>
+          <div class="selected-name">
+            <strong>{{ selectedMember.name }}</strong>
+
+            <span
+              *ngIf="selectedMember.relationship === 'أنت'"
+              class="you-badge"
+            >
+              أنت
+            </span>
+
+            <span
+              *ngIf="selectedMember.status === 'قاصر'"
+              class="minor-badge"
+            >
+              قاصر
+            </span>
+          </div>
+
+          <small>{{ selectedMember.id }}</small>
+        </div>
+      </section>
+
+      <nav class="profile-tabs">
+        <button type="button" class="active">الملف الشخصي</button>
+        <button type="button">السجل الصحي</button>
+      </nav>
+
+      <section class="details-card">
+        <h3>البيانات الشخصية</h3>
+
+        <div class="detail-row">
+          <span>تاريخ الميلاد</span>
+          <strong>{{ selectedMember.birthDate }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>الجنس</span>
+          <strong>{{ selectedMember.gender }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>رقم الجوال</span>
+          <strong dir="ltr">{{ selectedMember.phone }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>البريد الإلكتروني</span>
+          <strong class="email-value">
+            {{ selectedMember.email }}
+          </strong>
+        </div>
+
+        <div class="detail-row">
+          <span>فصيلة الدم</span>
+          <strong>{{ selectedMember.bloodType }}</strong>
+        </div>
+
+        <button
+          type="button"
+          class="outline-panel-button"
+          (click)="editMember(selectedMember)"
+        >
+          <i class="bi bi-pencil"></i>
+          تعديل البيانات
+        </button>
+      </section>
+
+      <section class="details-card insurance-card">
+        <h3>معلومات التأمين</h3>
+
+        <div class="detail-row">
+          <span>نوع التأمين</span>
+          <strong>{{ selectedMember.insuranceType }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>رقم الوثيقة</span>
+          <strong dir="ltr">{{ selectedMember.policyNumber }}</strong>
+        </div>
+
+        <div class="detail-row">
+          <span>تاريخ الانتهاء</span>
+          <strong>{{ selectedMember.insuranceExpiry }}</strong>
+        </div>
+
+        <button type="button" class="text-panel-button">
+          عرض بطاقة التأمين
+          <i class="bi bi-arrow-left"></i>
+        </button>
+      </section>
+
+      <section class="details-card settings-card">
+        <h3>الإعدادات</h3>
+
+        <button type="button" class="setting-item">
+          <span>
+            <i class="bi bi-person-gear"></i>
+            تعيين كولي أمر
+          </span>
+
+          <small>ولي أمر رئيسي</small>
+        </button>
+
+        <button type="button" class="setting-item">
+          <span>
+            <i class="bi bi-key"></i>
+            إدارة الصلاحيات
+          </span>
+        </button>
+
+        <button
+          type="button"
+          class="remove-member-button"
+          (click)="removeMember()"
+        >
+          <i class="bi bi-trash3"></i>
+          إزالة من العائلة
+        </button>
+      </section>
+    </aside>
+  </div>
+</div>

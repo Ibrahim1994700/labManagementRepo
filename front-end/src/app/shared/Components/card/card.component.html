@@ -1,0 +1,509 @@
+<div class="checkout-page" dir="rtl">
+  <div class="checkout-container">
+
+    <!-- Page heading -->
+    <section class="page-heading">
+      <div class="breadcrumb-row">
+        <a href="javascript:void(0)">الرئيسية</a>
+        <i class="bi bi-arrow-left"></i>
+        <span>السلة والدفع</span>
+      </div>
+
+      <h1>السلة والدفع</h1>
+      <p>راجع طلبك واختر طريقة الدفع المناسبة لإتمام حجز التحاليل</p>
+    </section>
+
+    <div class="checkout-layout">
+
+      <!-- Main content -->
+      <main class="checkout-main">
+
+        <!-- Cart -->
+        <section class="checkout-card cart-card">
+          <div class="card-heading">
+            <h2>التحاليل والباقات المختارة</h2>
+          </div>
+
+          <div class="cart-table">
+
+            <div class="cart-table-header">
+              <div>المنتج</div>
+              <div>السعر</div>
+              <div>الكمية</div>
+              <div>الإجمالي</div>
+              <div></div>
+            </div>
+
+            <div
+              class="cart-item"
+              *ngFor="let item of cartItems; trackBy: trackById"
+            >
+              <div class="product-column">
+                <div
+                  class="product-image"
+                  [ngClass]="item.imageClass"
+                  [style.background-image]="
+                    item.image ? 'url(' + item.image + ')' : null
+                  "
+                >
+                  <i
+                    *ngIf="!item.image"
+                    class="bi"
+                    [ngClass]="item.icon"
+                  ></i>
+                </div>
+
+                <div class="product-details">
+                  <h3>{{ item.name }}</h3>
+                  <p>{{ item.description }}</p>
+                </div>
+              </div>
+
+              <div class="price-column" data-label="السعر">
+                {{ item.price | number }}
+                <span>ر.س</span>
+              </div>
+
+              <div class="quantity-column" data-label="الكمية">
+                <div class="quantity-control">
+                  <button
+                    type="button"
+                    aria-label="زيادة الكمية"
+                    (click)="increaseQuantity(item)"
+                  >
+                    <i class="bi bi-plus"></i>
+                  </button>
+
+                  <span>{{ item.quantity }}</span>
+
+                  <button
+                    type="button"
+                    aria-label="تقليل الكمية"
+                    [disabled]="item.quantity <= 1"
+                    (click)="decreaseQuantity(item)"
+                  >
+                    <i class="bi bi-dash"></i>
+                  </button>
+                </div>
+              </div>
+
+              <div class="total-column" data-label="الإجمالي">
+                {{ item.price * item.quantity | number }}
+                <span>ر.س</span>
+              </div>
+
+              <div class="delete-column">
+                <button
+                  type="button"
+                  class="delete-item-button"
+                  aria-label="حذف المنتج"
+                  (click)="removeItem(item.id)"
+                >
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="empty-cart" *ngIf="cartItems.length === 0">
+              <i class="bi bi-cart-x"></i>
+              <h3>السلة فارغة</h3>
+              <p>لم تقم بإضافة أي تحاليل أو باقات إلى السلة.</p>
+            </div>
+          </div>
+
+          <div class="cart-actions" *ngIf="cartItems.length > 0">
+            <a href="javascript:void(0)" class="continue-shopping">
+              <i class="bi bi-arrow-right"></i>
+              مواصلة التسوق
+            </a>
+
+            <button
+              type="button"
+              class="clear-cart-button"
+              (click)="clearCart()"
+            >
+              <i class="bi bi-trash3"></i>
+              تفريغ السلة
+            </button>
+          </div>
+        </section>
+
+        <!-- Coupon section -->
+        <section class="dual-grid coupon-section">
+
+          <div class="checkout-card coupon-input-card">
+            <h2>استخدم كوبون الخصم</h2>
+
+            <div class="coupon-form">
+              <input
+                type="text"
+                [(ngModel)]="couponCode"
+                placeholder="أدخل رمز الكوبون"
+              />
+
+              <button type="button" (click)="applyCoupon()">
+                تطبيق
+              </button>
+            </div>
+
+            <small
+              class="coupon-message"
+              [class.error]="couponMessageType === 'error'"
+              *ngIf="couponMessage"
+            >
+              {{ couponMessage }}
+            </small>
+          </div>
+
+          <div
+            class="checkout-card applied-coupon-card"
+            *ngIf="discountAmount > 0"
+          >
+            <div class="applied-coupon-content">
+              <div>
+                <strong>{{ appliedCoupon }}</strong>
+                <p>خصم 20% على جميع الباقات</p>
+              </div>
+
+              <button
+                type="button"
+                class="remove-coupon"
+                aria-label="إزالة الكوبون"
+                (click)="removeCoupon()"
+              >
+                <i class="bi bi-x-lg"></i>
+              </button>
+            </div>
+
+            <span class="coupon-status">تم التطبيق</span>
+          </div>
+
+        </section>
+
+        <!-- Payment and insurance -->
+        <section class="dual-grid options-section">
+
+          <!-- Insurance -->
+          <div class="checkout-card insurance-card">
+            <div class="section-title-row">
+              <h2>
+                التغطية التأمينية
+                <span>(اختياري)</span>
+              </h2>
+
+              <label class="switch-control">
+                <input
+                  type="checkbox"
+                  [(ngModel)]="useInsurance"
+                />
+                <span class="switch-slider"></span>
+              </label>
+            </div>
+
+            <div
+              class="insurance-content"
+              [class.disabled]="!useInsurance"
+            >
+              <label>اختر شركة التأمين</label>
+
+              <button
+                type="button"
+                class="insurance-select"
+                (click)="showInsuranceOptions = !showInsuranceOptions"
+              >
+                <div class="insurance-company">
+                  <div class="bupa-logo">Bupa</div>
+                  <span>{{ selectedInsurance }}</span>
+                </div>
+
+                <i
+                  class="bi"
+                  [ngClass]="
+                    showInsuranceOptions
+                      ? 'bi-chevron-up'
+                      : 'bi-chevron-down'
+                  "
+                ></i>
+              </button>
+
+              <div
+                class="insurance-dropdown"
+                *ngIf="showInsuranceOptions && useInsurance"
+              >
+                <button
+                  type="button"
+                  *ngFor="let company of insuranceCompanies"
+                  (click)="selectInsurance(company)"
+                >
+                  {{ company }}
+                </button>
+              </div>
+
+              <small>
+                سيتم التحقق من التغطية بعد إتمام الطلب
+              </small>
+            </div>
+          </div>
+
+          <!-- Payment -->
+          <div class="checkout-card payment-card">
+            <h2>طريقة الدفع</h2>
+
+            <div class="payment-methods">
+
+              <label
+                class="payment-option"
+                [class.selected]="selectedPayment === 'visa'"
+              >
+                <input
+                  type="radio"
+                  name="payment"
+                  value="visa"
+                  [(ngModel)]="selectedPayment"
+                />
+
+                <span class="custom-radio"></span>
+
+                <span class="payment-name">
+                  فيزا / ماستركارد
+                </span>
+
+                <span class="card-brands">
+                  <span class="visa-brand">VISA</span>
+                  <span class="mastercard-brand">
+                    <i></i>
+                    <i></i>
+                  </span>
+                </span>
+              </label>
+
+              <label
+                class="payment-option"
+                [class.selected]="selectedPayment === 'mada'"
+              >
+                <input
+                  type="radio"
+                  name="payment"
+                  value="mada"
+                  [(ngModel)]="selectedPayment"
+                />
+
+                <span class="custom-radio"></span>
+
+                <span class="payment-name">بطاقة مدى</span>
+
+                <span class="mada-brand">مدى</span>
+              </label>
+
+              <label
+                class="payment-option"
+                [class.selected]="selectedPayment === 'apple'"
+              >
+                <input
+                  type="radio"
+                  name="payment"
+                  value="apple"
+                  [(ngModel)]="selectedPayment"
+                />
+
+                <span class="custom-radio"></span>
+
+                <span class="payment-name">أبل باي</span>
+
+                <span class="apple-brand">
+                  <i class="bi bi-apple"></i>
+                  Pay
+                </span>
+              </label>
+
+              <label
+                class="payment-option"
+                [class.selected]="selectedPayment === 'bank'"
+              >
+                <input
+                  type="radio"
+                  name="payment"
+                  value="bank"
+                  [(ngModel)]="selectedPayment"
+                />
+
+                <span class="custom-radio"></span>
+
+                <span class="payment-name">تحويل بنكي</span>
+
+                <i class="bi bi-bank bank-icon"></i>
+              </label>
+
+            </div>
+          </div>
+
+        </section>
+
+        <!-- Complete order -->
+        <section class="checkout-card complete-order-card">
+
+          <label class="terms-row">
+            <input
+              type="checkbox"
+              [(ngModel)]="termsAccepted"
+            />
+
+            <span class="checkmark">
+              <i class="bi bi-check-lg"></i>
+            </span>
+
+            <span>
+              أوافق على
+              <a href="javascript:void(0)">الشروط والأحكام</a>
+              و
+              <a href="javascript:void(0)">سياسة الخصوصية</a>
+              وأؤكد أن المعلومات المدخلة صحيحة
+            </span>
+          </label>
+
+          <div class="complete-order-content">
+
+            <div class="secure-payment">
+              <i class="bi bi-shield-lock"></i>
+
+              <div>
+                <strong>دفع آمن 100%</strong>
+                <p>جميع المعاملات مشفرة وآمنة</p>
+              </div>
+            </div>
+
+            <div class="complete-button-wrapper">
+              <button
+                type="button"
+                class="complete-order-button"
+                [disabled]="
+                  !termsAccepted ||
+                  cartItems.length === 0 ||
+                  isSubmitting
+                "
+                (click)="completeOrder()"
+              >
+                <span *ngIf="!isSubmitting">إتمام الطلب</span>
+                <span *ngIf="isSubmitting">جاري تنفيذ الطلب...</span>
+
+                <i
+                  class="bi"
+                  [ngClass]="
+                    isSubmitting
+                      ? 'bi-arrow-repeat spinner-icon'
+                      : 'bi-lock'
+                  "
+                ></i>
+              </button>
+
+              <p>سيتم تأكيد موعد السحب بعد إتمام الدفع</p>
+            </div>
+
+          </div>
+        </section>
+
+      </main>
+
+      <!-- Right summary -->
+      <aside class="checkout-sidebar">
+
+        <section class="checkout-card order-summary-card">
+          <h2>ملخص الطلب</h2>
+
+          <div class="summary-list">
+            <div class="summary-row">
+              <span>عدد المنتجات</span>
+              <strong>{{ productsCount }}</strong>
+            </div>
+
+            <div class="summary-row">
+              <span>الإجمالي الفرعي</span>
+              <strong>
+                {{ subtotal | number }}
+                <small>ر.س</small>
+              </strong>
+            </div>
+
+            <div
+              class="summary-row discount-row"
+              *ngIf="discountAmount > 0"
+            >
+              <span>
+                خصم
+                <b>({{ appliedCoupon }})</b>
+              </span>
+
+              <strong>
+                -{{ discountAmount | number }}
+                <small>ر.س</small>
+              </strong>
+            </div>
+
+            <div class="summary-row">
+              <span>ضريبة القيمة المضافة (15%)</span>
+              <strong>
+                {{ taxAmount | number }}
+                <small>ر.س</small>
+              </strong>
+            </div>
+          </div>
+
+          <div class="summary-total">
+            <span>المجموع الكلي</span>
+
+            <strong>
+              {{ finalTotal | number }}
+              <small>ر.س</small>
+            </strong>
+          </div>
+        </section>
+
+        <!-- Security -->
+        <section class="security-message">
+          <div class="security-icon">
+            <i class="bi bi-shield-check"></i>
+          </div>
+
+          <div>
+            <h3>تسوق آمن ومشفر</h3>
+            <p>جميع بياناتك محمية بتقنية التشفير العالمية</p>
+          </div>
+        </section>
+
+        <!-- Help -->
+        <section class="checkout-card help-card">
+          <div class="side-info-icon headset-icon">
+            <i class="bi bi-headset"></i>
+          </div>
+
+          <div class="side-info-content">
+            <h3>تحتاج مساعدة؟</h3>
+            <p>فريقنا جاهز للإجابة على استفساراتك</p>
+
+            <button type="button">
+              تواصل معنا
+              <i class="bi bi-arrow-left"></i>
+            </button>
+          </div>
+        </section>
+
+        <!-- Trusted -->
+        <section class="checkout-card trusted-card">
+          <div class="side-info-icon">
+            <i class="bi bi-shield-check"></i>
+          </div>
+
+          <div class="side-info-content">
+            <h3>موثوق ومعتمد</h3>
+            <p>
+              مختبرات الحكمة معتمدة<br />
+              وفقاً للمعايير العالمية
+            </p>
+          </div>
+        </section>
+
+      </aside>
+
+    </div>
+  </div>
+</div>

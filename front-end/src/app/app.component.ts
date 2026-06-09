@@ -9,18 +9,18 @@ import { DataService } from './shared/Services/data.service';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private Route: Router,
   ) {}
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(event: BeforeUnloadEvent): void {
-   console.log('Are you sure you want to leave?');
+    console.log('Are you sure you want to leave?');
 
     // مثال: حذف التوكن
   }
-   @HostListener('window:storage', ['$event'])
+  @HostListener('window:storage', ['$event'])
   onStorageChange(event: StorageEvent): void {
     if (event.key === 'token' && event.newValue === null) {
       this.Route.navigate(['/Auth/login']);
@@ -31,7 +31,13 @@ export class AppComponent implements OnInit, OnDestroy {
       this.Route.navigate(['/Auth/login']);
     }
   }
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    if (this.dataService.CheckLocalStorageItem('token')) {
+      this.Route.navigate(['/Patient-Home/main-user-page']);
+    } else {
+      this.Route.navigate(['/Auth/login']);
+    }
+  }
 
-  ngOnDestroy(): void {}
+ 
 }

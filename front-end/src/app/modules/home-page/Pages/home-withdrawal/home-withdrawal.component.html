@@ -1,0 +1,237 @@
+
+  <div class="page-grid">
+  
+
+    <main class="main-content">
+      <section class="page-heading">
+        <h1>حجز السحب المنزلي</h1>
+        <p>اتبع الخطوات التالية لحجز موعد السحب المنزلي</p>
+      </section>
+
+      <section class="steps-bar">
+        <div class="step active"><span>1</span><strong>اختيار الخدمة</strong></div>
+        <div class="step-line"></div>
+        <div class="step"><span>2</span><strong>الموعد</strong></div>
+        <div class="step-line"></div>
+        <div class="step"><span>3</span><strong>العنوان</strong></div>
+        <div class="step-line"></div>
+        <div class="step"><span>4</span><strong>الدفع</strong></div>
+        <div class="step-line"></div>
+        <div class="step"><span>5</span><strong>التأكيد</strong></div>
+      </section>
+
+      <section class="content-card patient-section">
+        <h2><span>1.</span> اختر المريض</h2>
+        <div class="patient-options">
+          <button class="patient-option selected">
+            <span class="radio-dot"></span>
+            <img src="assets/home-booking/avatar.png" alt="أحمد محمد" />
+            <span class="patient-copy">
+              <strong>أحمد محمد</strong>
+              <small>34 سنة - ذكر</small>
+            </span>
+          </button>
+
+          <button class="patient-option add-patient">
+            <span class="plus"><i class="bi bi-plus-lg"></i></span>
+            <strong>إضافة مريض جديد</strong>
+          </button>
+        </div>
+      </section>
+
+      <section class="content-card services-section">
+        <h2><span>2.</span> اختر الخدمة أو الباقة</h2>
+
+        <div class="mini-tabs">
+          <button>الكل</button>
+          <button class="active">الباقات</button>
+          <button>التحاليل</button>
+        </div>
+
+        <div class="service-grid">
+          <button
+            *ngFor="let service of services; let i = index"
+            class="service-card"
+            [class.selected]="selectedService === i"
+            (click)="selectService(i)">
+            <div class="service-icon" [ngClass]="service.tone">
+              <i class="bi" [ngClass]="service.icon"></i>
+            </div>
+            <div class="service-copy">
+              <strong>{{ service.title }}</strong>
+              <span>{{ service.price }} ر.س</span>
+            </div>
+            <i *ngIf="selectedService === i" class="bi bi-check-circle-fill selected-mark"></i>
+          </button>
+
+          <button class="service-card all-services">
+            <i class="bi bi-grid"></i>
+            <strong>عرض كل الباقات</strong>
+          </button>
+        </div>
+      </section>
+
+      <div class="two-column-row date-time-row">
+        <section class="content-card date-section">
+          <h2><span>3.</span> اختر التاريخ المفضل</h2>
+          <div class="calendar-head">
+            <button><i class="bi bi-chevron-right"></i></button>
+            <strong>مايو 2024</strong>
+            <button><i class="bi bi-chevron-left"></i></button>
+          </div>
+          <div class="calendar-grid">
+            <button
+              *ngFor="let date of calendarDays; let i = index"
+              [class.selected]="selectedDay === i"
+              (click)="selectDay(i)">
+              <small>{{ date.dayName }}</small>
+              <strong>{{ date.day }}</strong>
+              <span>{{ date.month }}</span>
+              <em>متاح</em>
+            </button>
+          </div>
+        </section>
+
+        <section class="content-card time-section">
+          <h2><span>4.</span> اختر الفترة الزمنية</h2>
+          <p class="selected-date">السبت، 25 مايو 2024</p>
+          <div class="times-grid">
+            <button
+              *ngFor="let time of times; let i = index"
+              [class.selected]="selectedTime === i"
+              (click)="selectTime(i)">
+              {{ time }}
+            </button>
+          </div>
+          <p class="visit-duration"><i class="bi bi-info-circle"></i> مدة الزيارة التقديرية: 20 - 30 دقيقة</p>
+        </section>
+      </div>
+
+      <div class="three-column-row bottom-row">
+        <section class="content-card address-section">
+          <h2><span>5.</span> تفاصيل العنوان</h2>
+          <div class="address-content">
+            <div class="map-box">
+              <img src="assets/home-booking/map.png" alt="الخريطة" />
+              <span class="map-pin"><i class="bi bi-geo-alt-fill"></i></span>
+            </div>
+            <div class="address-fields">
+              <label>
+                <span>العنوان</span>
+                <div><i class="bi bi-geo-alt"></i> حي النرجس، الرياض 13336، المملكة العربية</div>
+              </label>
+              <label>
+                <span>تفاصيل إضافية (اختياري)</span>
+                <div>عمارة رقم 12، الدور 3، شقة 305</div>
+              </label>
+              <label class="save-address"><input type="checkbox" checked /> حفظ هذا العنوان لاستخدامه لاحقاً</label>
+            </div>
+          </div>
+          <div class="address-actions">
+            <button class="primary-action">التالي: الموعد <i class="bi bi-chevron-left"></i></button>
+            <button class="secondary-action">حفظ كمسودة</button>
+          </div>
+        </section>
+
+        <section class="content-card payment-section">
+          <h2><span>6.</span> طريقة الدفع</h2>
+
+          <button class="payment-option" [class.selected]="selectedPayment === 0" (click)="selectPayment(0)">
+            <span class="pay-radio"></span>
+            <div>
+              <strong>بطاقة / مدى / فيزا / ماستركارد</strong>
+              <span class="card-brands"><b>mada</b><b>VISA</b><b class="master">●●</b></span>
+            </div>
+            <i class="bi bi-arrow-left"></i>
+          </button>
+
+          <button class="payment-option" [class.selected]="selectedPayment === 1" (click)="selectPayment(1)">
+            <span class="pay-radio"></span>
+            <div><strong>Apple Pay</strong></div>
+            <span class="apple-pay">Pay</span>
+          </button>
+
+          <button class="payment-option" [class.selected]="selectedPayment === 2" (click)="selectPayment(2)">
+            <span class="pay-radio"></span>
+            <div><strong>مدى - الدفع عند الاستلام</strong></div>
+            <i class="bi bi-cash-coin"></i>
+          </button>
+
+          <div class="secure-payment"><i class="bi bi-lock"></i> جميع المعاملات مؤمنة ومشفرة</div>
+        </section>
+
+        <section class="content-card notes-section">
+          <h2><span>7.</span> ملاحظات إضافية <small>(اختياري)</small></h2>
+          <textarea placeholder="أضف أي ملاحظات خاصة بموعد السحب أو متطلبات أخرى..."></textarea>
+
+          <h2 class="prescription-title"><span>8.</span> إرفاق وصفة طبية <small>(اختياري)</small></h2>
+          <p>يمكنك إرفاق صورة الوصفة الطبية إن وجدت</p>
+          <label class="upload-box">
+            <input type="file" hidden />
+            <i class="bi bi-cloud-arrow-up"></i>
+            <strong>اسحب وأفلت الملف هنا</strong>
+            <span>أو اختر ملفاً من جهازك</span>
+            <small>PDF, PNG, JPG (الحد الأقصى 5 ميجابايت)</small>
+          </label>
+        </section>
+      </div>
+    </main>
+
+    <aside class="summary-panel">
+      <div class="summary-card">
+        <h2>ملخص الحجز</h2>
+
+        <div class="summary-user">
+          <img src="assets/home-booking/avatar.png" alt="أحمد محمد" />
+          <div>
+            <small>المريض</small>
+            <strong>أحمد محمد</strong>
+            <span>34 سنة - ذكر</span>
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div class="summary-icon purple"><i class="bi bi-droplet-half"></i></div>
+          <div>
+            <small>الخدمة المختارة</small>
+            <strong>{{ selectedServiceItem.title }}</strong>
+            <span>تحاليل شاملة لصحة الرجل</span>
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div class="summary-icon blue"><i class="bi bi-calendar3"></i></div>
+          <div>
+            <small>الموعد</small>
+            <strong>السبت، 25 مايو 2024</strong>
+            <span>من 09:00 ص - 10:00 ص</span>
+          </div>
+        </div>
+
+        <div class="summary-item">
+          <div class="summary-icon blue"><i class="bi bi-geo-alt"></i></div>
+          <div>
+            <small>العنوان</small>
+            <strong>حي النرجس، الرياض 13336</strong>
+            <span>شارع الأمير تركي بن عبدالله</span>
+          </div>
+        </div>
+
+        <div class="price-lines">
+          <div><span>المجموع الفرعي</span><strong>{{ selectedServiceItem.price }} ر.س</strong></div>
+          <div><span>رسوم السحب المنزلي</span><strong>25 ر.س</strong></div>
+          <div><span>ضريبة القيمة المضافة (15%)</span><strong>63.60 ر.س</strong></div>
+        </div>
+
+        <div class="total-line">
+          <strong>المجموع التقديري</strong>
+          <span>487.60 <small>ر.س</small></span>
+        </div>
+
+        <div class="safe-box">
+          <i class="bi bi-shield-check"></i>
+          <div><strong>دفع آمن</strong><span>جميع المدفوعات مشفرة وآمنة</span></div>
+        </div>
+      </div>
+    </aside>
+  </div>

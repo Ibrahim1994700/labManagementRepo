@@ -1,0 +1,418 @@
+<main class="prescription-page" dir="rtl">
+  <div class="content-shell">
+
+    <!-- Page heading -->
+    <header class="page-header">
+      <nav class="breadcrumb-row" aria-label="breadcrumb">
+        <a href="javascript:void(0)">الرئيسية</a>
+
+        <i class="bi bi-chevron-left"></i>
+
+        <span>رفع الوصفة الطبية</span>
+      </nav>
+
+      <div class="title-row">
+        <div class="title-icon">
+          <i class="bi bi-cloud-arrow-up"></i>
+        </div>
+
+        <div>
+          <h1>رفع الوصفة الطبية</h1>
+          <p>
+            قم برفع صورة واضحة لوصفتك الطبية وسنقوم باستخراج التحاليل المطلوبة
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <section class="prescription-layout">
+
+      <!-- Left column -->
+      <aside class="left-column">
+
+        <!-- Estimate card -->
+        <article class="content-card estimate-card">
+          <div class="card-heading">
+            <h2>
+              <span class="heading-icon">
+                <i class="bi bi-calculator"></i>
+              </span>
+
+              تقدير السعر
+            </h2>
+          </div>
+
+          <div class="estimate-details">
+            <div class="estimate-line">
+              <span>عدد التحاليل</span>
+
+              <strong>
+                <span class="number">5</span>
+                تحاليل
+              </strong>
+            </div>
+
+            <div class="estimate-line price-line">
+              <span>السعر التقديري</span>
+
+              <strong>
+                <span class="price">299</span>
+                ر.س
+              </strong>
+            </div>
+          </div>
+
+          <div class="estimate-notice">
+            السعر النهائي قد يتغير بعد المراجعة
+          </div>
+        </article>
+
+        <!-- Notes -->
+        <article class="content-card notes-card">
+          <div class="card-heading">
+            <h2>
+              <span class="heading-icon">
+                <i class="bi bi-pencil"></i>
+              </span>
+
+              ملاحظات إضافية
+              <small>(اختياري)</small>
+            </h2>
+          </div>
+
+          <div class="textarea-wrapper">
+            <textarea
+              maxlength="250"
+              placeholder="أضف أي ملاحظات على الوصفة أو تفاصيل إضافية مثل التشخيص أو الأدوية الحالية..."
+              (input)="updateNotesLength($event)"
+            ></textarea>
+
+            <span class="character-count">
+              {{ notesLength }}/250
+            </span>
+          </div>
+        </article>
+
+        <!-- Help -->
+        <article class="content-card help-card">
+          <div class="card-heading">
+            <h2>
+              <span class="heading-icon">
+                <i class="bi bi-question-circle"></i>
+              </span>
+
+              مساعدة سريعة
+            </h2>
+          </div>
+
+          <div class="help-item">
+            <button type="button" class="help-question">
+              <span class="question-dot"></span>
+              ما هي الملفات المقبولة؟
+            </button>
+
+            <p>
+              نقبل ملفات الصور
+              <span dir="ltr">(JPG, PNG, HEIC)</span>
+              وملفات PDF، الحد الأقصى لحجم الملف 10MB.
+            </p>
+          </div>
+
+          <div class="help-item">
+            <button type="button" class="help-question">
+              <span class="question-dot"></span>
+              ماذا يحدث بعد الإرسال؟
+            </button>
+
+            <p>
+              سنقوم بمراجعة الوصفة واستخراج التحاليل المطلوبة، ثم سنعلمك
+              بنتيجة المراجعة عبر الإشعارات والبريد الإلكتروني.
+            </p>
+          </div>
+
+          <div class="help-item">
+            <button type="button" class="help-question">
+              <span class="question-dot"></span>
+              هل معلوماتي آمنة؟
+            </button>
+
+            <p>
+              نعم، جميع بياناتك محمية وتخضع لسياسة الخصوصية.
+            </p>
+          </div>
+
+          <button type="button" class="faq-button">
+            <span>عرض جميع الأسئلة الشائعة</span>
+            <i class="bi bi-arrow-left"></i>
+          </button>
+        </article>
+      </aside>
+
+      <!-- Center column -->
+      <section class="center-column">
+
+        <!-- Upload -->
+        <article class="content-card upload-card">
+          <div class="section-title">
+            <span class="section-number">1.</span>
+            <h2>رفع الوصفة الطبية</h2>
+          </div>
+
+          <div
+            class="upload-zone"
+            [class.dragging]="isDragging"
+            [class.has-file]="selectedFileName"
+            tabindex="0"
+            role="button"
+            (click)="fileInput.click()"
+            (keydown.enter)="fileInput.click()"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event)"
+          >
+            <input
+              #fileInput
+              type="file"
+              hidden
+              accept=".jpg,.jpeg,.png,.heic,.pdf"
+              (change)="onFileSelected($event)"
+            />
+
+            <input
+              #cameraInput
+              type="file"
+              hidden
+              accept="image/*"
+              capture="environment"
+              (change)="onFileSelected($event)"
+            />
+
+            <ng-container *ngIf="!selectedFileName; else selectedFile">
+              <div class="upload-main-icon">
+                <i class="bi bi-cloud-arrow-up"></i>
+              </div>
+
+              <p class="upload-main-text">
+                اسحب وأفلت الصورة هنا
+              </p>
+
+              <span class="upload-or">أو</span>
+
+              <div class="upload-actions">
+                <button
+                  type="button"
+                  class="upload-action-button"
+                  (click)="$event.stopPropagation(); cameraInput.click()"
+                >
+                  <i class="bi bi-camera"></i>
+                  التقاط صورة
+                </button>
+
+                <button
+                  type="button"
+                  class="upload-action-button"
+                  (click)="$event.stopPropagation(); fileInput.click()"
+                >
+                  <i class="bi bi-folder2-open"></i>
+                  اختر من الجهاز
+                </button>
+              </div>
+
+              <p class="file-requirements" dir="ltr">
+                JPG, PNG, HEIC, PDF
+                <span class="separator">•</span>
+                10MB
+                <span dir="rtl">الحد الأقصى</span>
+              </p>
+            </ng-container>
+
+            <ng-template #selectedFile>
+              <div class="selected-file">
+                <div class="selected-file-icon">
+                  <i class="bi bi-file-earmark-check"></i>
+                </div>
+
+                <strong>تم اختيار الملف</strong>
+
+                <span>{{ selectedFileName }}</span>
+
+                <button
+                  type="button"
+                  (click)="$event.stopPropagation(); removeFile()"
+                >
+                  <i class="bi bi-x-lg"></i>
+                  إزالة الملف
+                </button>
+              </div>
+            </ng-template>
+          </div>
+        </article>
+
+        <!-- Extracted tests -->
+        <article class="content-card extracted-card">
+          <div class="extracted-header">
+            <div class="section-title">
+              <span class="section-number">2.</span>
+
+              <h2>
+                التحاليل المستخرجة
+                <span class="tests-count">({{ extractedTests.length }})</span>
+              </h2>
+            </div>
+
+            <button type="button" class="edit-button">
+              <i class="bi bi-pencil"></i>
+              تعديل
+            </button>
+          </div>
+
+          <p class="extracted-description">
+            قائمة التحاليل التي تم التعرف عليها من الوصفة
+          </p>
+
+          <div class="tests-list">
+            <div
+              class="test-row"
+              *ngFor="let test of extractedTests"
+            >
+              <div class="test-name">
+                {{ test.arabicName }}
+
+                <span dir="ltr">
+                  ({{ test.code }})
+                </span>
+              </div>
+
+              <div
+                class="test-icon"
+                [ngClass]="test.tone"
+              >
+                <i class="bi bi-eyedropper"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="tests-note">
+            <i class="bi bi-info-circle"></i>
+
+            <span>
+              تم الاستخراج آلياً، قد تختلف الأسماء أو العدد بعد المراجعة اليدوية
+            </span>
+          </div>
+        </article>
+      </section>
+
+      <!-- Right column -->
+      <aside class="right-column">
+
+        <!-- Status -->
+        <article class="content-card status-card">
+          <div class="card-heading status-heading">
+            <h2>
+              <span class="heading-icon">
+                <i class="bi bi-headset"></i>
+              </span>
+
+              حالة المراجعة والدعم
+            </h2>
+          </div>
+
+          <div class="timeline">
+
+            <div class="timeline-item active">
+              <span class="timeline-dot"></span>
+
+              <div class="timeline-content">
+                <strong>تم استلام الوصفة</strong>
+                <p>بانتظار المراجعة</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+
+              <div class="timeline-content">
+                <strong>جاري المراجعة</strong>
+                <p>سيتم الاستخراج والتحقق</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+
+              <div class="timeline-content">
+                <strong>جاهز للتأكيد</strong>
+                <p>سنرسل لك النتيجة والتكلفة النهائية</p>
+              </div>
+            </div>
+
+            <div class="timeline-item">
+              <span class="timeline-dot"></span>
+
+              <div class="timeline-content">
+                <strong>تأكيد الحجز</strong>
+                <p>اختر الفرع والموعد المناسب</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="review-time">
+            <div class="review-clock">
+              <i class="bi bi-clock"></i>
+            </div>
+
+            <div>
+              <span>عادة ما تتم المراجعة خلال</span>
+
+              <strong>
+                30 - 60 دقيقة
+              </strong>
+
+              <p>سنتصل بك إذا احتجنا لأي توضيح</p>
+            </div>
+          </div>
+        </article>
+
+        <!-- Security -->
+        <article class="content-card security-card">
+          <div class="security-icon">
+            <i class="bi bi-shield-check"></i>
+          </div>
+
+          <div>
+            <h3>معلوماتك آمنة ومحمية</h3>
+            <p>نستخدم تشفيراً متقدماً لحماية بياناتك</p>
+          </div>
+        </article>
+      </aside>
+
+      <!-- Consent and submit -->
+      <section class="consent-card">
+        <label class="consent-label">
+          <input
+            type="checkbox"
+            [(ngModel)]="acceptedTerms"
+          />
+
+          <span class="custom-checkbox">
+            <i class="bi bi-check-lg"></i>
+          </span>
+
+          <span class="consent-text">
+            أتعهد بأن الوصفة المرفوعة تخصني، وأوافق على مراجعتها من قبل
+            مختبرات الحكمة.
+          </span>
+        </label>
+
+        <button
+          type="button"
+          class="submit-button"
+          [disabled]="!acceptedTerms"
+        >
+          <span>إرسال الوصفة للمراجعة</span>
+          <i class="bi bi-send"></i>
+        </button>
+      </section>
+    </section>
+  </div>
+</main>

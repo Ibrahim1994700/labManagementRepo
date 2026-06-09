@@ -8,6 +8,10 @@
   min-height: calc(100vh - 78px);
   display: flex;
   flex-direction: column;
+  /* keep a fixed width so navigating between pages doesn't resize the aside */
+  width: 230px;
+  max-width: 230px;
+  flex: 0 0 230px;
 }
 
 .sidebar-nav {

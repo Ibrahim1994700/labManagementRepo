@@ -9,7 +9,7 @@ export const authGuard: CanActivateFn = (route, state) => {
   if (dataService.CheckLocalStorageItem('token')) {
     return true;
   } else {
-  return router.createUrlTree(['/Auth/login']);
-   
+  router.navigate(['/Auth/login']);
+   return false;
   }
 };

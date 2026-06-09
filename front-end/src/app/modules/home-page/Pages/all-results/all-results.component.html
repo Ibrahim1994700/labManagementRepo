@@ -1,0 +1,369 @@
+<div class="health-results-page" dir="rtl">
+
+  <!-- Page heading -->
+  <section class="page-heading">
+    <div class="heading-title">
+      <i class="bi bi-graph-up-arrow"></i>
+
+      <div>
+        <h1>النتائج والاتجاهات الصحية</h1>
+        <p>استعرض نتائج تحاليلك وتقاريرك الطبية مع متابعة التغيرات الصحية عبر الزمن.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabs -->
+  <section class="page-tabs">
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="activeTab === 'reports'"
+      (click)="activeTab = 'reports'"
+    >
+      التقارير
+    </button>
+
+    <button
+      type="button"
+      class="tab-button"
+      [class.active]="activeTab === 'trends'"
+      (click)="activeTab = 'trends'"
+    >
+      الاتجاهات
+    </button>
+  </section>
+
+  <!-- Filters -->
+  <section class="filters-grid">
+
+    <!-- Patient -->
+    <div class="filter-group">
+      <label>اختر المريض</label>
+
+      <button type="button" class="filter-control patient-control">
+        <div class="patient-information">
+          <img
+            src="assets/images/patient-avatar.jpg"
+            alt="صورة المريض"
+          />
+
+          <span>أحمد محمد</span>
+        </div>
+
+        <i class="bi bi-chevron-down"></i>
+      </button>
+    </div>
+
+    <!-- Test -->
+    <div class="filter-group">
+      <label>اختر التحليل</label>
+
+      <button type="button" class="filter-control">
+        <span>السكر التراكمي (HbA1c)</span>
+        <i class="bi bi-chevron-down"></i>
+      </button>
+    </div>
+
+    <!-- Date range -->
+    <div class="filter-group date-filter">
+      <label>نطاق التاريخ</label>
+
+      <div class="date-range-control">
+        <i class="bi bi-calendar3"></i>
+
+        <div class="date-part">
+          <span class="date-prefix">من</span>
+          <strong>18 مايو 2024</strong>
+        </div>
+
+        <i class="bi bi-chevron-left separator-arrow"></i>
+
+        <div class="date-part">
+          <span class="date-prefix">إلى</span>
+          <strong>18 مايو 2025</strong>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- Main content -->
+  <section class="dashboard-grid">
+
+    <!-- Analysis side -->
+    <div class="analysis-column">
+
+      <!-- Chart card -->
+      <article class="dashboard-card chart-card">
+
+        <div class="chart-header">
+          <div>
+            <h2>اتجاه السكر التراكمي (HbA1c)</h2>
+
+            <span class="normal-badge">
+              ضمن المعدل الطبيعي
+            </span>
+          </div>
+
+          <div class="latest-result">
+            <span>أحدث نتيجة</span>
+            <strong>6.1%</strong>
+            <small>18 مايو 2025</small>
+          </div>
+        </div>
+
+        <div class="average-section">
+          <span>متوسط النطاق المحدد</span>
+          <strong>6.3%</strong>
+        </div>
+
+        <!-- Responsive static SVG chart -->
+        <div class="chart-wrapper">
+
+          <div class="percentage-symbol">%</div>
+
+          <svg
+            class="health-chart"
+            viewBox="0 0 760 300"
+            preserveAspectRatio="none"
+            role="img"
+            aria-label="مخطط اتجاه السكر التراكمي"
+          >
+            <defs>
+              <linearGradient id="chartAreaGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#0d6efd" stop-opacity="0.18"></stop>
+                <stop offset="100%" stop-color="#0d6efd" stop-opacity="0"></stop>
+              </linearGradient>
+            </defs>
+
+            <!-- Horizontal grid -->
+            <line x1="60" y1="38" x2="730" y2="38" class="grid-line"></line>
+            <line x1="60" y1="93" x2="730" y2="93" class="grid-line"></line>
+            <line x1="60" y1="148" x2="730" y2="148" class="grid-line"></line>
+            <line x1="60" y1="203" x2="730" y2="203" class="grid-line"></line>
+            <line x1="60" y1="258" x2="730" y2="258" class="grid-line"></line>
+
+            <!-- Red upper limit -->
+            <line
+              x1="60"
+              y1="78"
+              x2="730"
+              y2="78"
+              class="limit-line upper-limit"
+            ></line>
+
+            <!-- Green lower limit -->
+            <line
+              x1="60"
+              y1="180"
+              x2="730"
+              y2="180"
+              class="limit-line lower-limit"
+            ></line>
+
+            <!-- Area under line -->
+            <path
+              d="
+                M 70 89
+                C 125 84, 155 97, 220 109
+                C 285 120, 330 121, 395 127
+                C 455 134, 515 141, 575 145
+                C 630 150, 675 153, 720 158
+                L 720 258
+                L 70 258
+                Z
+              "
+              fill="url(#chartAreaGradient)"
+            ></path>
+
+            <!-- Chart line -->
+            <path
+              d="
+                M 70 89
+                C 125 84, 155 97, 220 109
+                C 285 120, 330 121, 395 127
+                C 455 134, 515 141, 575 145
+                C 630 150, 675 153, 720 158
+              "
+              class="trend-path"
+            ></path>
+
+            <!-- Data points -->
+            <circle cx="70" cy="89" r="6" class="chart-point"></circle>
+            <circle cx="220" cy="109" r="6" class="chart-point"></circle>
+            <circle cx="395" cy="127" r="6" class="chart-point"></circle>
+            <circle cx="575" cy="145" r="6" class="chart-point"></circle>
+            <circle cx="720" cy="158" r="7" class="chart-point"></circle>
+
+            <!-- Values -->
+            <text x="70" y="71" class="value-text">6.8%</text>
+            <text x="220" y="91" class="value-text">6.6%</text>
+            <text x="395" y="109" class="value-text">6.4%</text>
+            <text x="575" y="127" class="value-text">6.2%</text>
+
+            <!-- Latest tooltip -->
+            <g class="latest-tooltip">
+              <rect x="684" y="121" width="56" height="30" rx="6"></rect>
+              <text x="712" y="141" text-anchor="middle">6.1%</text>
+            </g>
+
+            <!-- Y-axis values -->
+            <text x="42" y="43" class="axis-text">8.0</text>
+            <text x="42" y="98" class="axis-text">7.0</text>
+            <text x="42" y="153" class="axis-text">6.0</text>
+            <text x="42" y="208" class="axis-text">5.0</text>
+            <text x="42" y="263" class="axis-text">4.0</text>
+
+            <!-- Limits labels -->
+            <text x="724" y="69" text-anchor="end" class="upper-label">
+              حد مرتفع 7.0%
+            </text>
+
+            <text x="724" y="198" text-anchor="end" class="lower-label">
+              الحد الأمثل 5.7%
+            </text>
+          </svg>
+
+          <div class="chart-dates">
+            <span>6 يناير 2025</span>
+            <span>15 فبراير 2025</span>
+            <span>2 مارس 2025</span>
+            <span>20 أبريل 2025</span>
+            <span>18 مايو 2025</span>
+          </div>
+        </div>
+
+        <div class="chart-summary">
+          <span>آخر 5 نتائج خلال النطاق المحدد</span>
+          <i class="bi bi-graph-up-arrow"></i>
+        </div>
+
+        <div class="chart-info">
+          <i class="bi bi-info-circle"></i>
+          <p>
+            قراءة تحليل HbA1c تعكس متوسط مستوى السكر في الدم خلال آخر 2–3 أشهر.
+          </p>
+        </div>
+
+      </article>
+
+      <!-- Bottom cards -->
+      <div class="bottom-cards">
+
+        <!-- Appointment card -->
+        <article class="dashboard-card appointment-card">
+          <h3>موعد المتابعة القادم</h3>
+
+          <div class="appointment-details">
+            <div>
+              <strong>25 يونيو 2025 - 10:00 ص</strong>
+              <span>استشارة متابعة مع د. سارة أحمد</span>
+            </div>
+
+            <div class="appointment-icon">
+              <i class="bi bi-calendar3"></i>
+            </div>
+          </div>
+
+          <button type="button" class="outline-button">
+            حجز موعد آخر
+          </button>
+        </article>
+
+        <!-- Advice card -->
+        <article class="dashboard-card advice-card">
+          <h3>نصائح لتحسين صحتك</h3>
+
+          <ul>
+            <li>
+              <i class="bi bi-apple"></i>
+              <span>استمر في تناول الأطعمة الغنية بالألياف والخضروات.</span>
+            </li>
+
+            <li>
+              <i class="bi bi-infinity"></i>
+              <span>ممارسة الرياضة 30 دقيقة يومياً على الأقل.</span>
+            </li>
+
+            <li>
+              <i class="bi bi-clipboard2-pulse"></i>
+              <span>راقب مستويات السكر بانتظام واتبع تعليمات الطبيب.</span>
+            </li>
+          </ul>
+
+          <button type="button" class="text-link">
+            عرض المزيد من النصائح
+            <i class="bi bi-arrow-left"></i>
+          </button>
+        </article>
+
+      </div>
+    </div>
+
+    <!-- Reports card -->
+    <aside class="dashboard-card reports-card">
+
+      <div class="reports-header">
+        <h2>التقارير والنتائج</h2>
+        <span>{{ reports.length }} تقارير</span>
+      </div>
+
+      <div class="reports-list">
+
+        <article
+          *ngFor="let report of reports"
+          class="report-item"
+          [class.selected]="report.selected"
+        >
+          <div class="report-content">
+            <div class="report-title-line">
+              <h3>{{ report.title }}</h3>
+
+              <strong *ngIf="report.value">
+                {{ report.value }}
+              </strong>
+            </div>
+
+            <div class="report-meta">
+              <span>{{ report.date }}</span>
+
+              <span
+                class="status-badge"
+                [ngClass]="report.statusClass"
+              >
+                {{ report.status }}
+              </span>
+            </div>
+          </div>
+
+          <div class="report-actions">
+            <button
+              type="button"
+              aria-label="مشاركة التقرير"
+              title="مشاركة"
+            >
+              <i class="bi bi-share"></i>
+            </button>
+
+            <button
+              type="button"
+              aria-label="تحميل التقرير"
+              title="تحميل"
+            >
+              <i class="bi bi-download"></i>
+            </button>
+          </div>
+        </article>
+
+      </div>
+
+      <button type="button" class="all-reports-button">
+        عرض جميع التقارير
+        <i class="bi bi-arrow-left"></i>
+      </button>
+
+    </aside>
+
+  </section>
+
+</div>

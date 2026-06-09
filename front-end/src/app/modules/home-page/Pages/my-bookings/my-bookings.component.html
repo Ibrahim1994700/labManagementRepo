@@ -1,0 +1,187 @@
+
+
+    <div class="content-area">
+      <section class="page-heading">
+        <h1>حجوزاتي / تتبع الطلبات</h1>
+        <p>تابع حالة حجوزاتك وطلباتك من هنا</p>
+      </section>
+
+      <section class="summary-grid">
+        <article *ngFor="let card of summaries" class="summary-card">
+          <div class="summary-text">
+            <h2>{{ card.title }}</h2>
+            <strong>{{ card.value }}</strong>
+            <p>{{ card.caption }}</p>
+          </div>
+          <div class="summary-icon" [ngClass]="card.tone">
+            <i class="bi" [ngClass]="card.icon"></i>
+          </div>
+        </article>
+      </section>
+
+      <section class="tabs-row" aria-label="تصفية الحجوزات">
+        <button
+          *ngFor="let tab of tabs"
+          type="button"
+          class="tab-button"
+          [class.active]="activeTab === tab"
+          (click)="setTab(tab)"
+        >
+          {{ tab }}
+        </button>
+      </section>
+
+      <section class="bookings-panel">
+        <div class="filter-row">
+          <button type="button" class="filter-btn">
+            <i class="bi bi-funnel"></i>
+            فلتر
+          </button>
+
+          <div class="table-search">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="ابحث برقم الحجز، نوع التحليل أو اسم المريض..." />
+          </div>
+
+          <button type="button" class="period-btn">
+            <i class="bi bi-calendar3"></i>
+            آخر فترة
+          </button>
+        </div>
+
+        <div class="bookings-table">
+          <div class="table-head table-grid">
+            <div>رقم الحجز</div>
+            <div>نوع التحليل</div>
+            <div>اسم المريض</div>
+            <div>التاريخ</div>
+            <div>الوقت</div>
+            <div>الفرع</div>
+            <div>حالة الدفع</div>
+            <div>حالة الحجز</div>
+            <div></div>
+          </div>
+
+          <ng-container *ngFor="let booking of bookings">
+            <button
+              type="button"
+              class="table-row table-grid"
+              [class.expanded]="expandedBookingId === booking.id"
+              (click)="toggleBooking(booking.id)"
+            >
+              <div class="booking-number">{{ booking.id }}</div>
+              <div>{{ booking.test }}</div>
+              <div>{{ booking.patient }}</div>
+              <div>{{ booking.date }}</div>
+              <div>{{ booking.time }}</div>
+              <div>{{ booking.branch }}</div>
+              <div>
+                <span class="pill" [ngClass]="paymentClass(booking.payment)">{{ booking.payment }}</span>
+              </div>
+              <div>
+                <span class="pill" [ngClass]="statusClass(booking.status)">{{ booking.status }}</span>
+              </div>
+              <div class="row-chevron">
+                <i class="bi" [ngClass]="expandedBookingId === booking.id ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+              </div>
+            </button>
+
+            <div *ngIf="expandedBookingId === booking.id" class="booking-details">
+              <section class="quick-actions">
+                <h3>إجراءات سريعة</h3>
+                <button type="button" class="outline-action">
+                  <span>عرض التفاصيل</span>
+                  <i class="bi bi-eye"></i>
+                </button>
+                <button type="button" class="outline-action">
+                  <span>إعادة الجدولة</span>
+                  <i class="bi bi-calendar3"></i>
+                </button>
+                <button type="button" class="outline-action danger">
+                  <span>إلغاء الحجز</span>
+                  <i class="bi bi-trash3"></i>
+                </button>
+                <button type="button" class="outline-action">
+                  <span>تحميل التقرير</span>
+                  <i class="bi bi-download"></i>
+                </button>
+              </section>
+
+              <section class="booking-info">
+                <h3>تفاصيل الحجز</h3>
+                <div class="info-list">
+                  <div class="info-row">
+                    <i class="bi bi-calendar3"></i>
+                    <span class="info-label">رقم الحجز</span>
+                    <strong>{{ booking.id }}</strong>
+                  </div>
+                  <div class="info-row">
+                    <i class="bi bi-file-earmark-text"></i>
+                    <span class="info-label">نوع التحليل</span>
+                    <strong>{{ booking.test }}</strong>
+                  </div>
+                  <div class="info-row">
+                    <i class="bi bi-person"></i>
+                    <span class="info-label">اسم المريض</span>
+                    <strong>{{ booking.patient }}</strong>
+                  </div>
+                  <div class="info-row">
+                    <i class="bi bi-telephone"></i>
+                    <span class="info-label">رقم الجوال</span>
+                    <strong dir="ltr">+966 50 123 4567</strong>
+                  </div>
+                  <div class="info-row">
+                    <i class="bi bi-geo-alt"></i>
+                    <span class="info-label">الفرع</span>
+                    <strong>فرع العليا - الرياض</strong>
+                  </div>
+                  <div class="info-row">
+                    <i class="bi bi-calendar-event"></i>
+                    <span class="info-label">تاريخ الحجز</span>
+                    <strong>18 مايو 2024 - 09:10 ص</strong>
+                  </div>
+                  <div class="info-row">
+                    <i class="bi bi-credit-card"></i>
+                    <span class="info-label">طريقة الدفع</span>
+                    <strong>مدى 4242 ****</strong>
+                  </div>
+                </div>
+              </section>
+
+              <section class="order-tracking">
+                <h3>تتبع حالة الطلب</h3>
+                <div class="tracking-list">
+                  <div class="tracking-item done">
+                    <div class="track-time"><span>2024-05-18</span><small>09:15 ص</small></div>
+                    <div class="track-icon"><i class="bi bi-check-lg"></i></div>
+                    <div class="track-copy"><strong>تم الاستلام</strong><span>تم استلام طلبك بنجاح</span></div>
+                  </div>
+                  <div class="tracking-item done">
+                    <div class="track-time"><span>2024-05-18</span><small>09:20 ص</small></div>
+                    <div class="track-icon"><i class="bi bi-check-lg"></i></div>
+                    <div class="track-copy"><strong>تم التأكيد</strong><span>تم تأكيد الحجز والموعد</span></div>
+                  </div>
+                  <div class="tracking-item done">
+                    <div class="track-time"><span>2024-05-18</span><small>09:35 ص</small></div>
+                    <div class="track-icon"><i class="bi bi-check-lg"></i></div>
+                    <div class="track-copy"><strong>تم جمع العينة</strong><span>تم جمع العينة بنجاح</span></div>
+                  </div>
+                  <div class="tracking-item current">
+                    <div class="track-time"></div>
+                    <div class="track-icon"><i class="bi bi-flask"></i></div>
+                    <div class="track-copy"><strong>في المختبر</strong><span>جاري تحليل العينة في المختبر</span></div>
+                  </div>
+                  <div class="tracking-item pending">
+                    <div class="track-time"></div>
+                    <div class="track-icon"><i class="bi bi-file-earmark"></i></div>
+                    <div class="track-copy"><strong>التقرير جاهز</strong><span>سيتم إشعارك عند جاهزية التقرير</span></div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </ng-container>
+        </div>
+      </section>
+    </div>
+
+  

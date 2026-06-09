@@ -1,0 +1,491 @@
+<section class="profile-page" dir="rtl">
+
+  <!-- عنوان الصفحة -->
+  <div class="page-heading">
+    <h1>الملف الشخصي والإعدادات</h1>
+    <p>إدارة معلوماتك الشخصية، تفضيلاتك وأمان حسابك.</p>
+  </div>
+
+  <!-- بطاقة معلومات المستخدم -->
+  <section class="profile-summary app-card">
+
+    <div class="summary-contact">
+      <div class="summary-info-row">
+        <i class="bi bi-envelope"></i>
+
+        <div>
+          <span>البريد الإلكتروني</span>
+          <strong dir="ltr">ahmad.mohammed.com</strong>
+        </div>
+      </div>
+
+      <div class="summary-info-row">
+        <i class="bi bi-telephone"></i>
+
+        <div>
+          <span>رقم الجوال</span>
+          <strong dir="ltr">+966 50 123 4567</strong>
+        </div>
+      </div>
+
+      <div class="summary-info-row">
+        <i class="bi bi-person-vcard"></i>
+
+        <div>
+          <span>رقم الهوية</span>
+          <strong>1234567890</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-personal">
+      <h2>أحمد محمد</h2>
+
+      <div class="personal-short-data">
+        <span>
+          <i class="bi bi-gender-male"></i>
+          ذكر
+        </span>
+
+        <span>28 سنة</span>
+      </div>
+
+      <div class="summary-line">
+        <i class="bi bi-calendar3"></i>
+        <span>تاريخ الميلاد: 15 مايو 1996</span>
+      </div>
+
+      <div class="summary-line">
+        <i class="bi bi-person-badge"></i>
+        <span>رقم المريض: 1845623</span>
+      </div>
+    </div>
+
+    <div class="summary-avatar">
+      <img
+        src="assets/images/profile-avatar.png"
+        alt="صورة الملف الشخصي"
+      />
+
+      <button type="button" class="primary-btn edit-profile-btn">
+        <i class="bi bi-pencil"></i>
+        تعديل الملف الشخصي
+      </button>
+    </div>
+
+  </section>
+
+  <!-- التبويبات -->
+  <nav class="profile-tabs app-card" aria-label="تبويبات الملف الشخصي">
+
+    <button
+      type="button"
+      [class.active]="activeTab === 'personal'"
+      (click)="setActiveTab('personal')"
+    >
+      <i class="bi bi-person"></i>
+      المعلومات الشخصية
+    </button>
+
+    <button
+      type="button"
+      [class.active]="activeTab === 'addresses'"
+      (click)="setActiveTab('addresses')"
+    >
+      <i class="bi bi-geo-alt"></i>
+      العناوين
+    </button>
+
+    <button
+      type="button"
+      [class.active]="activeTab === 'payment'"
+      (click)="setActiveTab('payment')"
+    >
+      <i class="bi bi-credit-card"></i>
+      وسائل الدفع
+    </button>
+
+    <button
+      type="button"
+      [class.active]="activeTab === 'insurance'"
+      (click)="setActiveTab('insurance')"
+    >
+      <i class="bi bi-shield-check"></i>
+      التأمين
+    </button>
+
+    <button
+      type="button"
+      [class.active]="activeTab === 'security'"
+      (click)="setActiveTab('security')"
+    >
+      <i class="bi bi-lock"></i>
+      الأمان وكلمة المرور
+    </button>
+
+    <button
+      type="button"
+      [class.active]="activeTab === 'notifications'"
+      (click)="setActiveTab('notifications')"
+    >
+      <i class="bi bi-bell"></i>
+      تفضيلات الإشعارات
+    </button>
+
+    <button
+      type="button"
+      [class.active]="activeTab === 'language'"
+      (click)="setActiveTab('language')"
+    >
+      <i class="bi bi-globe"></i>
+      اللغة
+    </button>
+
+  </nav>
+
+  <!-- محتوى الصفحة -->
+  <div class="settings-grid">
+
+    <!-- معلومات التواصل -->
+    <section class="contact-panel app-card panel-card">
+
+      <h3>معلومات التواصل</h3>
+
+      <div class="form-field">
+        <label for="email">البريد الإلكتروني</label>
+
+        <input
+          id="email"
+          type="email"
+          value="ahmad.mohammed@email.com"
+          dir="ltr"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="mobile">رقم الجوال</label>
+
+        <input
+          id="mobile"
+          type="text"
+          value="+966 50 123 4567"
+          dir="ltr"
+        />
+      </div>
+
+      <div class="form-field">
+        <label for="phone">
+          رقم الهاتف
+          <span class="optional-label">(اختياري)</span>
+        </label>
+
+        <input
+          id="phone"
+          type="text"
+          value="+966 11 234 5678"
+          dir="ltr"
+        />
+      </div>
+
+      <div class="marketing-option">
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span class="switch-slider"></span>
+        </label>
+
+        <div>
+          <h4>تلقي العروض والرسائل التسويقية</h4>
+          <p>احصل على أحدث العروض والتنبيهات عبر البريد والجوال</p>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- المعلومات الشخصية -->
+    <section class="personal-panel app-card panel-card">
+
+      <h3>المعلومات الشخصية</h3>
+
+      <div class="personal-form-grid">
+
+        <div class="form-field">
+          <label for="firstName">الاسم الأول</label>
+          <input id="firstName" type="text" value="أحمد" />
+        </div>
+
+        <div class="form-field">
+          <label for="familyName">اسم العائلة</label>
+          <input id="familyName" type="text" value="محمد" />
+        </div>
+
+        <div class="form-field">
+          <label for="gender">النوع</label>
+
+          <div class="select-wrapper">
+            <select id="gender">
+              <option selected>ذكر</option>
+              <option>أنثى</option>
+            </select>
+
+            <i class="bi bi-chevron-down"></i>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="birthDate">تاريخ الميلاد</label>
+
+          <div class="input-with-icon">
+            <input
+              id="birthDate"
+              type="text"
+              value="15/05/1996"
+              dir="ltr"
+            />
+
+            <i class="bi bi-calendar3"></i>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="identityNumber">رقم الهوية</label>
+
+          <input
+            id="identityNumber"
+            type="text"
+            value="1234567890"
+            dir="ltr"
+          />
+        </div>
+
+        <div class="form-field">
+          <label for="nationality">الجنسية</label>
+
+          <div class="select-wrapper">
+            <select id="nationality">
+              <option selected>سعودي</option>
+              <option>أردني</option>
+              <option>مصري</option>
+            </select>
+
+            <i class="bi bi-chevron-down"></i>
+          </div>
+        </div>
+
+        <div class="form-field">
+          <label for="job">المهنة</label>
+          <input id="job" type="text" value="مهندس برمجيات" />
+        </div>
+
+        <div class="form-field">
+          <label for="bloodType">فصيلة الدم</label>
+
+          <div class="select-wrapper">
+            <select id="bloodType">
+              <option selected>O+</option>
+              <option>O-</option>
+              <option>A+</option>
+              <option>A-</option>
+              <option>B+</option>
+              <option>B-</option>
+              <option>AB+</option>
+              <option>AB-</option>
+            </select>
+
+            <i class="bi bi-chevron-down"></i>
+          </div>
+        </div>
+
+      </div>
+
+      <button type="button" class="primary-btn save-changes-btn">
+        حفظ التغييرات
+      </button>
+
+    </section>
+
+    <!-- الصورة وحالة الحساب -->
+    <aside class="side-panel">
+
+      <section class="app-card avatar-card">
+
+        <h3>صورة الملف الشخصي</h3>
+
+        <img
+          src="assets/images/profile-avatar.png"
+          alt="صورة الملف الشخصي"
+        />
+
+        <p>الحد الأقصى 2MB، JPG, PNG</p>
+
+        <label class="outline-btn upload-btn">
+          تغيير الصورة
+          <input type="file" accept=".jpg,.jpeg,.png" hidden />
+        </label>
+
+      </section>
+
+      <section class="app-card account-status-card">
+
+        <div class="status-header">
+          <div>
+            <h3>حالة الحساب</h3>
+            <p>تم تفعيل حسابك في</p>
+            <strong>12 يناير 2023</strong>
+          </div>
+
+          <span class="active-badge">مفعل</span>
+        </div>
+
+        <button type="button" class="outline-btn logout-btn">
+          <i class="bi bi-box-arrow-left"></i>
+          تسجيل الخروج من جميع الأجهزة
+        </button>
+
+      </section>
+
+    </aside>
+
+    <!-- الملاحظات الطبية -->
+    <section class="notes-panel app-card panel-card">
+
+      <div class="panel-title-with-icon">
+        <h3>ملاحظات طبية مهمة</h3>
+        <i class="bi bi-info-circle"></i>
+      </div>
+
+      <p class="panel-description">
+        أضف أي معلومات طبية مهمة ليتم مشاركتها مع المختبر عند إجراء التحاليل.
+      </p>
+
+      <textarea
+        maxlength="500"
+        placeholder="مثال: حساسية من أدوية معينة، حالة صحية مزمنة، وغيرها..."
+      ></textarea>
+
+      <div class="textarea-footer">
+        <span>0 حرف / 500</span>
+
+        <button type="button" class="outline-btn">
+          حفظ الملاحظات
+        </button>
+      </div>
+
+    </section>
+
+    <!-- العناوين المحفوظة -->
+    <section class="addresses-panel app-card panel-card">
+
+      <div class="addresses-header">
+        <h3>العناوين المحفوظة</h3>
+
+        <button type="button" class="outline-btn add-address-btn">
+          <i class="bi bi-plus-lg"></i>
+          إضافة عنوان جديد
+        </button>
+      </div>
+
+      <article class="address-item">
+
+        <div class="drag-handle">
+          <i class="bi bi-grip-vertical"></i>
+        </div>
+
+        <div class="address-content">
+          <div class="address-title">
+            <h4>المنزل</h4>
+            <span>الرئيسي</span>
+          </div>
+
+          <p>حي النرجس، شارع أحمد بن حنبل، رقم 25</p>
+          <p>الرياض، 13336، المملكة العربية السعودية</p>
+          <strong dir="ltr">+966 50 123 4567</strong>
+        </div>
+
+        <div class="address-actions">
+          <button type="button" aria-label="تعديل العنوان">
+            <i class="bi bi-pencil"></i>
+          </button>
+
+          <button type="button" class="delete-button" aria-label="حذف العنوان">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+
+      </article>
+
+      <article class="address-item">
+
+        <div class="drag-handle">
+          <i class="bi bi-grip-vertical"></i>
+        </div>
+
+        <div class="address-content">
+          <div class="address-title">
+            <h4>العمل</h4>
+          </div>
+
+          <p>طريق الملك فهد، برج العليا، الطابق 12</p>
+          <p>الرياض، 12214، المملكة العربية السعودية</p>
+          <strong dir="ltr">+966 50 123 4567</strong>
+        </div>
+
+        <div class="address-actions">
+          <button type="button" aria-label="تعديل العنوان">
+            <i class="bi bi-pencil"></i>
+          </button>
+
+          <button type="button" class="delete-button" aria-label="حذف العنوان">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
+
+      </article>
+
+    </section>
+
+    <!-- تفضيلات الخصوصية -->
+    <section class="privacy-panel app-card panel-card">
+
+      <h3>تفضيلات الخصوصية</h3>
+
+      <div class="privacy-option">
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span class="switch-slider"></span>
+        </label>
+
+        <div>
+          <h4>مشاركة نتائجي مع الطبيب</h4>
+          <p>السماح لمقدمي الرعاية الصحية بالوصول إلى نتائج تحاليلك</p>
+        </div>
+      </div>
+
+      <div class="privacy-option">
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span class="switch-slider"></span>
+        </label>
+
+        <div>
+          <h4>إخفاء النتائج الحساسة</h4>
+          <p>إخفاء بعض النتائج الحساسة في الإشعارات والملخصات</p>
+        </div>
+      </div>
+
+      <div class="privacy-option">
+        <label class="switch">
+          <input type="checkbox" checked />
+          <span class="switch-slider"></span>
+        </label>
+
+        <div>
+          <h4>تسجيل نشاط الدخول</h4>
+          <p>تلقي إشعار عند تسجيل الدخول من جهاز جديد</p>
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+</section>

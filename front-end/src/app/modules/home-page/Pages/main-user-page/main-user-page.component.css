@@ -836,17 +836,7 @@
     display: block;
   }
 
-  .sidebar {
-    min-height: auto;
-    border-left: 0;
-    border-bottom: 1px solid var(--line);
-    padding: 8px 12px;
-  }
-
-  .sidebar-nav {
-    flex-direction: row;
-    overflow-x: auto;
-  }
+ 
 
   .nav-item {
     flex: 0 0 auto;

@@ -1,0 +1,240 @@
+<div class="tests-page" dir="rtl">
+  <div class="catalog-layout">
+    <!-- الصفحة الرئيسية فقط: لا Header ولا Sidebar رئيسي ولا Footer -->
+    <main class="catalog-main">
+      <section class="page-intro">
+        <div class="intro-copy">
+          <h1>التحاليل الفردية</h1>
+          <p>اختر التحاليل التي تحتاجها وأضفها إلى السلة بسهولة</p>
+        </div>
+
+        <img
+          class="intro-illustration"
+          src="../../../../../assets/img/lab-banner.png"
+          alt="أدوات مختبر"
+        />
+      </section>
+
+      <label class="main-search">
+        <input
+          type="search"
+          [(ngModel)]="searchTerm"
+          placeholder="ابحث عن تحليل باسم أو رمز التحليل..."
+        />
+        <i class="bi bi-search"></i>
+      </label>
+
+      <div class="category-strip" aria-label="تصنيفات التحاليل">
+        <button
+          type="button"
+          class="category-chip"
+          *ngFor="let category of categories; trackBy: trackByValue"
+          [class.active]="activeCategory === category"
+          (click)="activeCategory = category"
+        >
+          {{ category }}
+        </button>
+
+        <button type="button" class="category-chip more-chip">
+          <i class="bi bi-chevron-down"></i>
+          المزيد
+        </button>
+      </div>
+
+      <section class="filter-panel">
+        <div class="filter-selects">
+          <label class="select-control">
+            <span>ترتيب حسب</span>
+            <select [(ngModel)]="sortBy">
+              <option>الأكثر شيوعاً</option>
+              <option>السعر: من الأقل</option>
+              <option>السعر: من الأعلى</option>
+            </select>
+          </label>
+
+          <label class="select-control">
+            <span>نوع العينة</span>
+            <select>
+              <option>جميع الأنواع</option>
+              <option>دم</option>
+              <option>بول</option>
+            </select>
+          </label>
+
+          <label class="select-control">
+            <span>وقت النتيجة</span>
+            <select>
+              <option>جميع الأوقات</option>
+              <option>نفس اليوم</option>
+              <option>خلال 24 ساعة</option>
+            </select>
+          </label>
+
+          <label class="select-control">
+            <span>السعر</span>
+            <select>
+              <option>جميع الأسعار</option>
+              <option>أقل من 50 ر.س</option>
+              <option>50 - 100 ر.س</option>
+            </select>
+          </label>
+
+          <label class="select-control">
+            <span>المختبر</span>
+            <select>
+              <option>جميع المختبرات</option>
+              <option>مختبر الحكمة</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="filter-actions">
+          <button type="button" class="reset-btn">
+            <i class="bi bi-arrow-counterclockwise"></i>
+            إعادة تعيين
+          </button>
+          <button type="button" class="filter-btn">
+            <i class="bi bi-sliders2"></i>
+            تصفية
+          </button>
+        </div>
+      </section>
+
+      <div class="results-count">
+        <i class="bi bi-record-circle"></i>
+        85 تحليل متاح
+      </div>
+
+      <section class="tests-grid">
+        <article
+          class="test-card"
+          *ngFor="let test of visibleTests; trackBy: trackByCode"
+        >
+          <header class="test-card-head">
+            <div class="test-title-wrap">
+              <span class="test-icon" [ngClass]="test.tone">
+                <i class="bi" [ngClass]="test.icon"></i>
+              </span>
+
+              <div>
+                <h2>{{ test.name }}</h2>
+                <span class="test-short">{{ test.short }}</span>
+                <small>الكود: {{ test.code }}</small>
+              </div>
+            </div>
+
+            <button type="button" class="favorite-btn" aria-label="إضافة للمفضلة">
+              <i class="bi bi-heart"></i>
+            </button>
+          </header>
+
+          <div class="test-divider"></div>
+
+          <div class="test-details">
+            <div class="detail-row">
+              <span>نوع العينة</span>
+              <strong>{{ test.sample }}</strong>
+            </div>
+            <div class="detail-row">
+              <span>التحضير</span>
+              <strong>{{ test.preparation }}</strong>
+            </div>
+            <div class="detail-row">
+              <span>وقت النتيجة</span>
+              <strong>{{ test.resultTime }}</strong>
+            </div>
+          </div>
+
+          <div class="test-price">
+            <strong>{{ test.price }}</strong>
+            <span>ر.س</span>
+          </div>
+
+          <div class="test-actions">
+            <button type="button" class="add-cart-btn">
+              <i class="bi bi-cart3"></i>
+              أضف إلى السلة
+            </button>
+            <button type="button" class="details-btn">عرض التفاصيل</button>
+          </div>
+        </article>
+      </section>
+
+      <div class="catalog-bottom">
+        <p>عرض من 1 - 11 من 85 تحليل</p>
+
+        <nav class="pagination" aria-label="التنقل بين الصفحات">
+          <button type="button" aria-label="آخر صفحة"><i class="bi bi-chevron-double-right"></i></button>
+          <button type="button" aria-label="الصفحة التالية"><i class="bi bi-chevron-right"></i></button>
+          <button type="button" class="active">1</button>
+          <button type="button">2</button>
+          <button type="button">3</button>
+          <button type="button">4</button>
+          <button type="button">5</button>
+          <button type="button" aria-label="الصفحة السابقة"><i class="bi bi-chevron-left"></i></button>
+          <button type="button" aria-label="أول صفحة"><i class="bi bi-chevron-double-left"></i></button>
+        </nav>
+
+        <label class="page-size">
+          <span>عرض</span>
+          <select>
+            <option>12</option>
+            <option>24</option>
+            <option>36</option>
+          </select>
+          <span>لكل صفحة</span>
+        </label>
+      </div>
+    </main>
+
+    <!-- هذا الشريط جزء من محتوى الصفحة وليس الـ Sidebar الرئيسي -->
+    <aside class="content-rail">
+      <section class="rail-card compare-card">
+        <header class="rail-card-header">
+          <h2>مقارنة التحاليل</h2>
+          <i class="bi bi-sliders2"></i>
+        </header>
+
+        <div class="compare-empty">
+          <i class="bi bi-file-earmark-medical"></i>
+          <p>لم تقم بإضافة أي تحاليل للمقارنة</p>
+          <span>قارن بين التحاليل بسهولة لاختيار الأنسب لك</span>
+        </div>
+
+        <button type="button" class="rail-outline-btn">
+          <i class="bi bi-plus-lg"></i>
+          أضف تحاليل للمقارنة
+        </button>
+      </section>
+
+      <section class="rail-card recent-card">
+        <header class="rail-card-header plain">
+          <h2>التحاليل الأخيرة</h2>
+        </header>
+
+        <div class="recent-list">
+          <div class="recent-item" *ngFor="let item of recentTests; trackBy: trackByName">
+            <strong>{{ item.name }}</strong>
+            <div>
+              <span class="status-pill" [class.warning]="item.status !== 'طبيعي'">
+                {{ item.status }}
+              </span>
+              <small>{{ item.date }}</small>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="rail-outline-btn results-btn">
+          عرض جميع النتائج
+          <i class="bi bi-arrow-left"></i>
+        </button>
+      </section>
+
+      <img
+        class="home-visit-ad"
+        src="../../../../../assets/img/home-visit-ad.png"
+        alt="خدمة سحب منزلي سريع"
+      />
+    </aside>
+  </div>
+</div>

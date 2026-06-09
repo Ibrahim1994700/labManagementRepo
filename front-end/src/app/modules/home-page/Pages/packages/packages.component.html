@@ -1,0 +1,347 @@
+<div class="packages-page" dir="rtl">
+  <div class="packages-container">
+
+    <!-- Page heading -->
+    <section class="page-heading">
+      <div class="heading-content">
+        <div class="heading-title-row">
+          <h1>الباقات الصحية</h1>
+
+          <button type="button" class="favorite-button">
+            <i class="bi bi-star"></i>
+          </button>
+        </div>
+
+        <p>اختر الباقة المناسبة لاحتياجاتك واحصل على أفضل قيمة لصحتك</p>
+      </div>
+
+      <button type="button" class="compare-button">
+        <i class="bi bi-sliders"></i>
+        مقارنة الباقات
+      </button>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories-row">
+      <button
+        *ngFor="let category of categories"
+        type="button"
+        class="category-button"
+        [class.active]="activeCategory === category.label"
+        (click)="selectCategory(category.label)"
+      >
+        <span>{{ category.label }}</span>
+
+        <i
+          *ngIf="category.icon"
+          class="bi"
+          [ngClass]="category.icon"
+          [style.color]="category.color"
+        ></i>
+      </button>
+    </section>
+
+    <section class="content-layout">
+
+      <!-- Filters panel -->
+      <aside class="filters-panel">
+        <div class="filters-header">
+          <h2>تصفية النتائج</h2>
+          <button type="button" class="reset-button">إعادة تعيين</button>
+        </div>
+
+        <div class="filter-section">
+          <h3>السعر</h3>
+
+          <div class="price-slider">
+            <span class="slider-track"></span>
+            <span class="slider-active-track"></span>
+            <span class="slider-handle slider-handle-start"></span>
+            <span class="slider-handle slider-handle-end"></span>
+          </div>
+
+          <div class="price-values">
+            <span>1000 ر.س</span>
+            <span>100 ر.س</span>
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <h3>وقت ظهور النتائج</h3>
+
+          <label class="filter-check">
+            <input type="checkbox">
+            <span>24 ساعة</span>
+          </label>
+
+          <label class="filter-check">
+            <input type="checkbox">
+            <span>1-2 يوم عمل</span>
+          </label>
+
+          <label class="filter-check">
+            <input type="checkbox">
+            <span>2-3 يوم عمل</span>
+          </label>
+
+          <label class="filter-check">
+            <input type="checkbox">
+            <span>3-5 أيام عمل</span>
+          </label>
+        </div>
+
+        <div class="filter-section">
+          <h3>الصيام المطلوب</h3>
+
+          <label class="filter-check">
+            <input type="checkbox">
+            <span>بدون صيام</span>
+          </label>
+
+          <label class="filter-check">
+            <input type="checkbox">
+            <span>صيام 8 ساعات</span>
+          </label>
+
+          <label class="filter-check">
+            <input type="checkbox">
+            <span>صيام 10 ساعات</span>
+          </label>
+
+          <label class="filter-check">
+            <input type="checkbox">
+            <span>صيام 12 ساعة</span>
+          </label>
+        </div>
+
+        <div class="filter-section">
+          <h3>عدد التحاليل</h3>
+
+          <label class="filter-check">
+            <input type="checkbox">
+            <span>أقل من 20 تحليل</span>
+          </label>
+
+          <label class="filter-check">
+            <input type="checkbox">
+            <span>20 - 40 تحليل</span>
+          </label>
+
+          <label class="filter-check">
+            <input type="checkbox">
+            <span>أكثر من 40 تحليل</span>
+          </label>
+        </div>
+
+        <div class="filter-section categories-filter">
+          <h3>الفئات</h3>
+
+          <button
+            *ngFor="let category of categories.slice(1)"
+            type="button"
+            class="filter-category-button"
+            (click)="selectCategory(category.label)"
+          >
+            <span
+              class="category-dot"
+              [style.background-color]="category.color"
+            ></span>
+
+            <span>{{ category.label }}</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Main packages content -->
+      <main class="packages-content">
+
+        <!-- Search and sorting -->
+        <section class="controls-row">
+          <div class="results-number">
+            عرض {{ filteredPackages.length }} من 18 باقة
+          </div>
+
+          <div class="control-select small-select">
+            <select aria-label="ترتيب حسب">
+              <option>ترتيب حسب</option>
+              <option>السعر من الأقل</option>
+              <option>السعر من الأعلى</option>
+              <option>عدد التحاليل</option>
+            </select>
+
+            <i class="bi bi-chevron-down"></i>
+          </div>
+
+          <div class="control-select popularity-select">
+            <select [(ngModel)]="sortValue" aria-label="الأكثر شيوعاً">
+              <option>الأكثر شيوعاً</option>
+              <option>الأحدث</option>
+              <option>الأقل سعراً</option>
+              <option>الأعلى سعراً</option>
+            </select>
+
+            <i class="bi bi-chevron-down"></i>
+          </div>
+
+          <div class="search-control">
+            <i class="bi bi-search"></i>
+
+            <input
+              type="text"
+              [(ngModel)]="searchText"
+              placeholder="ابحث عن باقة..."
+              aria-label="البحث عن باقة"
+            >
+          </div>
+        </section>
+
+        <!-- Featured package -->
+        <article class="featured-package">
+          <div class="featured-price">
+            <span class="featured-discount">خصم 26%</span>
+
+            <div class="price-line">
+              <strong>599</strong>
+              <span class="currency">ر.س</span>
+              <del>799 ر.س</del>
+            </div>
+
+            <button type="button" class="primary-action">
+              احجز الآن
+              <i class="bi bi-arrow-left"></i>
+            </button>
+
+            <button type="button" class="secondary-action">
+              عرض التفاصيل
+            </button>
+          </div>
+
+          <div class="featured-information">
+            <span class="popular-label">الأكثر شيوعاً</span>
+
+            <h2>الباقة الشاملة المتكاملة</h2>
+
+            <p>
+              باقة متكاملة لفحص شامل لأهم مؤشرات الصحة للكشف المبكر والوقاية.
+            </p>
+
+            <div class="featured-stats">
+              <div class="featured-stat">
+                <span class="stat-icon stat-purple">
+                  <i class="bi bi-person"></i>
+                </span>
+
+                <div>
+                  <strong>3-6 أيام عمل</strong>
+                  <span>وقت ظهور النتائج</span>
+                </div>
+              </div>
+
+              <div class="featured-stat">
+                <span class="stat-icon stat-green">
+                  <i class="bi bi-stopwatch"></i>
+                </span>
+
+                <div>
+                  <strong>صيام 8-10 ساعات</strong>
+                  <span>الصيام المطلوب</span>
+                </div>
+              </div>
+
+              <div class="featured-stat">
+                <span class="stat-icon stat-cyan">
+                  <i class="bi bi-card-checklist"></i>
+                </span>
+
+                <div>
+                  <strong>90 تحليل</strong>
+                  <span>عدد التحاليل</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="featured-image">
+            <img
+              src="assets/images/health-family.png"
+              alt="عائلة سعيدة"
+            >
+          </div>
+        </article>
+
+        <!-- Package cards -->
+        <section class="packages-grid">
+          <article
+            *ngFor="let item of filteredPackages"
+            class="package-card"
+          >
+            <div class="package-card-header">
+              <div class="package-heading">
+                <div
+                  class="package-icon"
+                  [style.background]="item.softColor"
+                  [style.color]="item.color"
+                >
+                  <i class="bi" [ngClass]="item.icon"></i>
+                </div>
+
+                <div class="package-title-content">
+                  <h3>{{ item.title }}</h3>
+                  <p>{{ item.description }}</p>
+                </div>
+              </div>
+
+              <span class="discount-badge">
+                خصم {{ item.discount }}%
+              </span>
+            </div>
+
+            <div class="package-stats">
+              <div class="package-stat">
+                <strong>{{ item.resultTime }}</strong>
+                <span>وقت ظهور النتيجة</span>
+              </div>
+
+              <div class="package-stat">
+                <i class="bi bi-stopwatch"></i>
+                <span>{{ item.fasting }}</span>
+              </div>
+
+              <div class="package-stat">
+                <strong>{{ item.tests }}</strong>
+                <span>تحليل</span>
+              </div>
+            </div>
+
+            <div class="package-price-row">
+              <div class="package-price">
+                <strong>{{ item.currentPrice }}</strong>
+                <span>ر.س</span>
+                <del>{{ item.oldPrice }} ر.س</del>
+              </div>
+
+              <span class="cashback-label">كسب 3 ر.س</span>
+            </div>
+
+            <div class="package-actions">
+              <button type="button" class="details-button">
+                عرض التفاصيل
+              </button>
+
+              <button type="button" class="book-button">
+                احجز الآن
+              </button>
+            </div>
+          </article>
+        </section>
+
+        <div class="show-more-wrapper">
+          <button type="button" class="show-more-button">
+            <i class="bi bi-check-lg"></i>
+            عرض المزيد من الباقات
+          </button>
+        </div>
+      </main>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,379 @@
+<div class="support-page" dir="rtl">
+  <div class="support-container">
+
+    <!-- Page heading -->
+    <section class="page-heading">
+      <div class="heading-title">
+        <span class="heading-icon">
+          <i class="bi bi-headset"></i>
+        </span>
+
+        <div>
+          <h1>الدعم والمساعدة</h1>
+          <p>نحن هنا لمساعدتك، تواصل معنا أو ابحث في مركز المساعدة.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact methods -->
+    <section class="contact-section">
+      <h2 class="section-main-title">تواصل معنا</h2>
+
+      <div class="contact-grid">
+        <article
+          class="contact-card"
+          *ngFor="let contact of contactMethods"
+        >
+          <div class="contact-card-header">
+            <div class="contact-content">
+              <h3>{{ contact.title }}</h3>
+              <p>{{ contact.description }}</p>
+
+              <a
+                *ngIf="contact.value"
+                class="contact-value"
+                [href]="contact.link"
+              >
+                {{ contact.value }}
+              </a>
+
+              <span
+                *ngIf="contact.status"
+                class="contact-status"
+              >
+                {{ contact.status }}
+              </span>
+            </div>
+
+            <div
+              class="contact-icon"
+              [ngClass]="contact.tone"
+            >
+              <i class="bi" [ngClass]="contact.icon"></i>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="contact-button"
+            (click)="handleContact(contact.type)"
+          >
+            {{ contact.buttonText }}
+          </button>
+        </article>
+      </div>
+    </section>
+
+    <!-- Main support area -->
+    <section class="support-layout">
+
+      <!-- Ticket form -->
+      <article class="panel ticket-panel">
+        <div class="panel-heading">
+          <h2>إرسال تذكرة دعم</h2>
+          <p>
+            صف مشكلتك بالتفصيل وسيقوم فريق الدعم بالرد عليك في أقرب وقت ممكن.
+          </p>
+        </div>
+
+        <form
+          class="ticket-form"
+          #ticketForm="ngForm"
+          (ngSubmit)="submitTicket()"
+        >
+          <div class="form-grid">
+            <div class="field-group">
+              <label for="subject">الموضوع</label>
+
+              <select
+                id="subject"
+                name="subject"
+                class="form-control-custom"
+                [(ngModel)]="ticket.subject"
+                required
+              >
+                <option value="" disabled>اختر موضوع الطلب</option>
+                <option value="results">النتائج والتحاليل</option>
+                <option value="home">السحب المنزلي</option>
+                <option value="payment">الدفع والفواتير</option>
+                <option value="insurance">التأمين</option>
+                <option value="prescription">رفع الوصفة الطبية</option>
+                <option value="other">موضوع آخر</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="priority">أولوية الطلب</label>
+
+              <select
+                id="priority"
+                name="priority"
+                class="form-control-custom"
+                [(ngModel)]="ticket.priority"
+              >
+                <option value="low">منخفضة</option>
+                <option value="medium">متوسطة</option>
+                <option value="high">عالية</option>
+                <option value="urgent">عاجلة</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="details">تفاصيل الطلب</label>
+
+            <div class="textarea-wrapper">
+              <textarea
+                id="details"
+                name="details"
+                class="form-control-custom ticket-textarea"
+                maxlength="1000"
+                placeholder="يرجى وصف المشكلة أو الاستفسار بالتفصيل..."
+                [(ngModel)]="ticket.details"
+                required
+              ></textarea>
+
+              <span class="character-count">
+                {{ ticket.details.length }}/1000
+              </span>
+            </div>
+          </div>
+
+          <div class="attachment-area">
+            <div class="attachment-text">
+              <h4>إرفاق ملفات <span>(اختياري)</span></h4>
+              <p>
+                يمكنك إرفاق صور أو ملفات توضح المشكلة.
+                الحد الأقصى 5 ملفات بحجم لا يتجاوز 10 ميجابايت لكل ملف.
+              </p>
+              <small>PDF, JPG, PNG</small>
+            </div>
+
+            <label class="attachment-button">
+              <i class="bi bi-paperclip"></i>
+              إرفاق ملف
+
+              <input
+                type="file"
+                hidden
+                multiple
+                accept=".pdf,.jpg,.jpeg,.png"
+                (change)="onFilesSelected($event)"
+              />
+            </label>
+          </div>
+
+          <div
+            class="selected-files"
+            *ngIf="selectedFiles.length"
+          >
+            <div
+              class="selected-file"
+              *ngFor="let file of selectedFiles; let index = index"
+            >
+              <span>
+                <i class="bi bi-file-earmark"></i>
+                {{ file.name }}
+              </span>
+
+              <button
+                type="button"
+                aria-label="حذف الملف"
+                (click)="removeFile(index)"
+              >
+                <i class="bi bi-x"></i>
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="submit-ticket-button"
+            [disabled]="ticketForm.invalid"
+          >
+            إرسال التذكرة
+          </button>
+        </form>
+      </article>
+
+      <!-- FAQ -->
+      <div class="middle-column">
+        <article class="panel faq-panel">
+          <div class="panel-heading">
+            <h2>الأسئلة الشائعة</h2>
+            <p>إجابات سريعة على أكثر الأسئلة شيوعاً</p>
+          </div>
+
+          <div class="faq-list">
+            <div
+              class="faq-item"
+              *ngFor="let faq of faqItems; let index = index"
+              [class.open]="faq.open"
+            >
+              <button
+                type="button"
+                class="faq-question"
+                (click)="toggleFaq(index)"
+                [attr.aria-expanded]="faq.open"
+              >
+                <span>{{ faq.question }}</span>
+
+                <i
+                  class="bi"
+                  [ngClass]="
+                    faq.open
+                      ? 'bi-chevron-up'
+                      : 'bi-chevron-down'
+                  "
+                ></i>
+              </button>
+
+              <div
+                class="faq-answer"
+                *ngIf="faq.open"
+              >
+                {{ faq.answer }}
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Response times -->
+        <article class="panel response-panel">
+          <div class="panel-heading compact-heading">
+            <h2>أوقات الاستجابة</h2>
+            <p>نلتزم بالرد على جميع استفساراتكم في أسرع وقت ممكن</p>
+          </div>
+
+          <div class="response-grid">
+            <div
+              class="response-card"
+              *ngFor="let item of responseTimes"
+              [ngClass]="item.tone"
+            >
+              <div class="response-icon">
+                <i class="bi" [ngClass]="item.icon"></i>
+              </div>
+
+              <span>{{ item.title }}</span>
+              <strong>{{ item.time }}</strong>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Right help cards -->
+      <aside class="help-column">
+
+        <article class="panel instant-help">
+          <div class="instant-help-heading">
+            <div>
+              <h2>تحتاج مساعدة فورية؟</h2>
+              <p>فريق الدعم متاح على مدار الساعة طوال أيام الأسبوع</p>
+            </div>
+
+            <div class="side-icon">
+              <i class="bi bi-headset"></i>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="primary-help-button"
+            (click)="startChat()"
+          >
+            بدء دردشة فورية
+          </button>
+        </article>
+
+        <article class="panel quick-tips">
+          <h2>نصائح سريعة</h2>
+
+          <ul>
+            <li *ngFor="let tip of quickTips">
+              <i class="bi bi-check-circle-fill"></i>
+              <span>{{ tip }}</span>
+            </li>
+          </ul>
+
+          <button
+            type="button"
+            class="outline-small-button"
+          >
+            عرض كل النصائح
+          </button>
+        </article>
+
+        <article class="panel trust-panel">
+          <div class="trust-heading">
+            <h2>ثق بنا</h2>
+            <p>مختبرات معتمدة وموثوقة</p>
+          </div>
+
+          <div class="trust-logos">
+            <div class="trust-logo">
+              <strong>وزارة الصحة</strong>
+              <span>معتمد</span>
+            </div>
+
+            <div class="trust-logo">
+              <strong>ISO 15189</strong>
+              <span>معتمد</span>
+            </div>
+
+            <div class="trust-logo">
+              <strong>CBAHI</strong>
+              <span>معتمد</span>
+            </div>
+          </div>
+        </article>
+      </aside>
+    </section>
+
+    <!-- Knowledge center -->
+    <section class="panel knowledge-section">
+      <div class="knowledge-heading">
+        <div>
+          <h2>مركز المعرفة</h2>
+          <p>مقالات وإرشادات تساعدك في استخدام خدماتنا</p>
+        </div>
+
+        <div class="knowledge-heading-icon">
+          <i class="bi bi-journal-text"></i>
+        </div>
+      </div>
+
+      <div class="knowledge-grid">
+        <article
+          class="knowledge-card"
+          *ngFor="let article of knowledgeArticles"
+        >
+          <div class="knowledge-card-top">
+            <div
+              class="knowledge-icon"
+              [ngClass]="article.tone"
+            >
+              <i class="bi" [ngClass]="article.icon"></i>
+            </div>
+
+            <span
+              class="knowledge-category"
+              [ngClass]="article.tone"
+            >
+              {{ article.category }}
+            </span>
+          </div>
+
+          <h3>{{ article.title }}</h3>
+          <p>{{ article.description }}</p>
+
+          <button type="button" class="read-more-button">
+            قراءة المزيد
+            <i class="bi bi-arrow-left"></i>
+          </button>
+        </article>
+      </div>
+    </section>
+
+  </div>
+</div>
