@@ -1,0 +1,233 @@
+  <div class="main-content">
+    <section class="page-heading">
+      <h1>لوحة تحكم الممرض / موظف المختبر</h1>
+      <p>إدارة العمليات اليومية ومتابعة مهام المختبر والمرضى بكفاءة وسهولة.</p>
+    </section>
+
+    <section class="stats-grid">
+      <article class="stat-card" *ngFor="let stat of stats">
+        <div class="stat-top">
+          <div>
+            <p class="stat-title">{{ stat.title }}</p>
+            <div class="stat-value">
+              <strong>{{ stat.value }}</strong>
+              <span *ngIf="stat.suffix">{{ stat.suffix }}</span>
+            </div>
+          </div>
+
+          <div class="stat-icon" [ngClass]="'tone-' + stat.tone">
+            <i class="bi" [ngClass]="stat.icon"></i>
+          </div>
+        </div>
+
+        <div class="stat-change">
+          <strong [class.negative]="stat.change.startsWith('-')">{{ stat.change }}</strong>
+          <span>{{ stat.hint }}</span>
+        </div>
+
+        <button type="button" class="stat-link">{{ stat.link }}</button>
+      </article>
+    </section>
+
+    <section class="dashboard-grid top-grid">
+      <article class="panel appointments-panel">
+        <div class="panel-header">
+          <div class="panel-title">
+            <i class="bi bi-calendar3"></i>
+            <h2>مواعيد اليوم</h2>
+          </div>
+
+          <div class="panel-filters">
+            <button type="button" class="filter-btn">
+              كل الفروع
+              <i class="bi bi-chevron-down"></i>
+            </button>
+            <button type="button" class="filter-btn">عرض الكل</button>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="appointments-table">
+            <thead>
+              <tr>
+                <th>الوقت</th>
+                <th>اسم المريض</th>
+                <th>الفرع</th>
+                <th>الحالة</th>
+                <th>حالة الدفع</th>
+                <th>إجراء سريع</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let appointment of appointments">
+                <td class="time-cell">{{ appointment.time }}</td>
+                <td>
+                  <strong>{{ appointment.patient }}</strong>
+                  <small>{{ appointment.id }}</small>
+                </td>
+                <td>
+                  <span class="branch">
+                    <i class="bi bi-geo-alt"></i>
+                    {{ appointment.branch }}
+                  </span>
+                </td>
+                <td>
+                  <span class="status-pill" [ngClass]="appointment.statusClass">
+                    {{ appointment.status }}
+                  </span>
+                </td>
+                <td>
+                  <span class="payment-pill" [ngClass]="appointment.paymentClass">
+                    {{ appointment.payment }}
+                  </span>
+                </td>
+                <td>
+                  <button type="button" class="outline-action">
+                    <i class="bi" [ngClass]="appointment.actionIcon"></i>
+                    {{ appointment.action }}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="panel-footer">
+          <button type="button" class="all-link">
+            عرض جميع المواعيد
+            <i class="bi bi-arrow-left"></i>
+          </button>
+
+          <div class="pagination">
+            <button type="button"><i class="bi bi-chevron-right"></i></button>
+            <button type="button" class="active">1</button>
+            <button type="button">2</button>
+            <button type="button">3</button>
+            <button type="button">4</button>
+            <button type="button">5</button>
+            <button type="button"><i class="bi bi-chevron-left"></i></button>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel actions-panel">
+        <div class="panel-header compact">
+          <div class="panel-title">
+            <h2>إجراءات مطلوبة الآن</h2>
+            <span class="count-badge">4</span>
+          </div>
+        </div>
+
+        <div class="pending-list">
+          <button type="button" class="pending-item" *ngFor="let item of pendingActions">
+            <span class="pending-dot"></span>
+            <span class="pending-copy">
+              <strong>{{ item.title }}</strong>
+              <small>{{ item.meta }}</small>
+            </span>
+            <span class="pending-icon" [ngClass]="'tone-' + item.tone">
+              <i class="bi" [ngClass]="item.icon"></i>
+            </span>
+          </button>
+        </div>
+
+        <button type="button" class="all-link panel-bottom-link">
+          عرض جميع الإجراءات
+          <i class="bi bi-arrow-left"></i>
+        </button>
+      </article>
+    </section>
+
+    <section class="dashboard-grid bottom-grid">
+      <article class="panel compact-panel lab-status">
+        <div class="panel-header compact">
+          <div class="panel-title">
+            <i class="bi bi-clipboard2-pulse"></i>
+            <h2>حالة المختبر اليوم</h2>
+          </div>
+        </div>
+
+        <div class="lab-status-grid">
+          <div class="lab-mini-card">
+            <div class="lab-mini-head">
+              <span>قيد التحليل</span>
+              <i class="bi bi-flask tone-purple-text"></i>
+            </div>
+            <strong>32</strong>
+            <small>عينة قيد المعالجة</small>
+          </div>
+
+          <div class="lab-mini-card">
+            <div class="lab-mini-head">
+              <span>غرفة جمع العينات</span>
+              <i class="bi bi-test-tube tone-blue-text"></i>
+            </div>
+            <strong>8</strong>
+            <small>قيد الخدمة</small>
+          </div>
+
+          <div class="lab-mini-card">
+            <div class="lab-mini-head">
+              <span>قاعة الانتظار</span>
+              <i class="bi bi-people tone-dark-text"></i>
+            </div>
+            <strong>14</strong>
+            <small>مريض ينتظر</small>
+          </div>
+        </div>
+
+        <button type="button" class="all-link panel-bottom-link">
+          عرض تفصيلي لحالة المختبر
+          <i class="bi bi-arrow-left"></i>
+        </button>
+      </article>
+
+      <article class="panel compact-panel activity-panel">
+        <div class="panel-header compact">
+          <div class="panel-title">
+            <i class="bi bi-activity"></i>
+            <h2>النشاط الأخير</h2>
+          </div>
+        </div>
+
+        <div class="activity-list">
+          <div class="activity-row" *ngFor="let item of activity">
+            <span class="activity-time">{{ item.time }}</span>
+            <span class="activity-line">
+              <i [ngClass]="'tone-' + item.tone"></i>
+            </span>
+            <span class="activity-copy">
+              <strong [ngClass]="'text-' + item.tone">{{ item.title }}</strong>
+              <small>{{ item.name }}</small>
+            </span>
+          </div>
+        </div>
+
+        <button type="button" class="all-link panel-bottom-link">
+          عرض كل النشاط
+          <i class="bi bi-arrow-left"></i>
+        </button>
+      </article>
+
+      <article class="panel compact-panel quick-panel">
+        <div class="panel-header compact">
+          <div class="panel-title">
+            <i class="bi bi-lightning-charge"></i>
+            <h2>إجراءات سريعة</h2>
+          </div>
+        </div>
+
+        <div class="quick-grid">
+          <button type="button" *ngFor="let action of quickActions">
+            <i class="bi" [ngClass]="action.icon"></i>
+            <span>{{ action.label }}</span>
+          </button>
+        </div>
+
+        <button type="button" class="all-link panel-bottom-link">
+          عرض كل الأدوات
+          <i class="bi bi-arrow-left"></i>
+        </button>
+      </article>
+    </section>
+  </div>

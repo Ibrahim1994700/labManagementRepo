@@ -1,0 +1,110 @@
+ 
+
+
+.sidebar {
+  border-left: 1px solid var(--line);
+  background: #fff;
+  padding: 18px 15px 28px;
+  min-height: calc(100vh - 78px);
+  display: flex;
+  flex-direction: column;
+  /* keep a fixed width so navigating between pages doesn't resize the aside */
+  width: 230px;
+  max-width: 230px;
+  flex: 0 0 230px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-item {
+  min-height: 43px;
+  padding: 0 15px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-decoration: none;
+  color: #4d5866;
+  font-size: 14px;
+  font-weight: 500;
+  transition: .2s ease;
+}
+
+.nav-item i {
+  width: 20px;
+  text-align: center;
+  font-size: 18px;
+  color: #4c5967;
+}
+
+.nav-item:hover {
+  background: #f6f9fc;
+}
+
+.nav-item.active {
+  background: #eaf3ff;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.nav-item.active i {
+  color: var(--primary);
+}
+
+.sidebar-card {
+  border: 1px solid #e5ebf1;
+  border-radius: 10px;
+  padding: 16px 14px;
+  display: flex;
+  gap: 12px;
+  background: #fff;
+}
+
+.help-card {
+  margin-top: auto;
+}
+
+.trust-card {
+  margin-top: 35px;
+}
+
+.sidebar-card .card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: #edf5ff;
+  color: var(--primary);
+  font-size: 22px;
+  flex: 0 0 auto;
+}
+
+.sidebar-card h4 {
+  margin: 2px 0 5px;
+  font-size: 13px;
+  color: #2f4e75;
+  font-weight: 700;
+}
+
+.sidebar-card p {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.7;
+  color: #7e8996;
+}
+
+.sidebar-card button {
+  width: 100%;
+  margin-top: 10px;
+  border: 1px solid #3b7cb9;
+  background: #fff;
+  color: #3776b2;
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 11px;
+}

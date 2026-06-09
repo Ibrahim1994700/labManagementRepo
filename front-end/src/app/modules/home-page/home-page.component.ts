@@ -10,7 +10,7 @@ import { MainUserPageComponent } from "./Pages/main-user-page/main-user-page.com
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   standalone:true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, SidebarComponent, RouterModule, MainUserPageComponent],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, SidebarComponent, RouterModule],
   styleUrl: './home-page.component.css',
 })
 export class HomePageComponent {
