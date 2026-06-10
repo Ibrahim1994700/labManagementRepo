@@ -1,0 +1,288 @@
+<section class="payments-page" dir="rtl">
+  <div class="page-heading">
+    <div>
+      <h1>المدفوعات والفواتير</h1>
+      <nav aria-label="breadcrumb">
+        <span>الرئيسية</span>
+        <i class="bi bi-chevron-left"></i>
+        <strong>المدفوعات والفواتير</strong>
+      </nav>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card" *ngFor="let stat of stats">
+      <div class="stat-icon" [ngClass]="stat.tone">
+        <i class="bi" [ngClass]="stat.icon"></i>
+      </div>
+      <div class="stat-copy">
+        <span class="stat-title">{{ stat.title }}</span>
+        <div class="stat-value"><small *ngIf="stat.unit">{{ stat.unit }}</small>{{ stat.value }}</div>
+        <div class="stat-change" [class.down]="!stat.positive">
+          <strong>{{ stat.change }}</strong><span>عن أمس</span>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <section class="panel filters-panel">
+    <div class="filters-grid">
+      <label class="field search-field">
+        <span class="visually-hidden">بحث</span>
+        <i class="bi bi-search"></i>
+        <input [(ngModel)]="searchTerm" type="search" placeholder="بحث برقم الفاتورة أو اسم المريض..." />
+      </label>
+
+      <label class="field">
+        <span>حالة الفاتورة</span>
+        <select [(ngModel)]="invoiceStatus">
+          <option>كل الحالات</option>
+          <option>مدفوعة</option>
+          <option>جزئية</option>
+          <option>غير مدفوعة</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>طريقة الدفع</span>
+        <select [(ngModel)]="paymentMethod">
+          <option>كل الطرق</option>
+          <option>بطاقة مدى</option>
+          <option>نقدي</option>
+          <option>بطاقة ائتمان</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>الفرع</span>
+        <select [(ngModel)]="branch">
+          <option>كل الفروع</option>
+          <option>الرياض - العليا</option>
+          <option>الرياض - الملز</option>
+          <option>جدة - الروضة</option>
+        </select>
+      </label>
+
+      <label class="field">
+        <span>أمين الصندوق</span>
+        <select [(ngModel)]="cashier">
+          <option>الكل</option>
+          <option>نورة السبيعي</option>
+          <option>أحمد الشراري</option>
+          <option>سارة القحطاني</option>
+        </select>
+      </label>
+
+      <label class="field date-range">
+        <span>النطاق الزمني</span>
+        <div class="date-control">
+          <i class="bi bi-calendar3"></i>
+          <input [(ngModel)]="dateFrom" aria-label="من تاريخ" />
+          <span>إلى</span>
+          <input [(ngModel)]="dateTo" aria-label="إلى تاريخ" />
+        </div>
+      </label>
+
+      <label class="field insurance-field">
+        <span>التأمين</span>
+        <select [(ngModel)]="insurance">
+          <option>كل شركات التأمين</option>
+          <option>تكافل العربية</option>
+          <option>شركة التأمين الوطنية</option>
+        </select>
+      </label>
+
+      <button class="reset-btn" type="button" (click)="resetFilters()">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        إعادة ضبط الفلاتر
+      </button>
+    </div>
+  </section>
+
+  <section class="panel invoices-panel">
+    <div class="desktop-table-wrap">
+      <table class="invoices-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>رقم الفاتورة</th>
+            <th>المريض</th>
+            <th>رقم الطلب</th>
+            <th>المجموع الفرعي</th>
+            <th>الخصم</th>
+            <th>ضريبة القيمة المضافة</th>
+            <th>التأمين</th>
+            <th>الإجمالي</th>
+            <th>طريقة الدفع</th>
+            <th>أمين الصندوق</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let invoice of filteredInvoices; trackBy: trackById"
+              [class.selected]="invoice.id === selectedId"
+              (click)="selectInvoice(invoice.id)">
+            <td><span class="radio-dot" [class.active]="invoice.id === selectedId"></span>{{ invoice.id }}</td>
+            <td class="mono">{{ invoice.invoiceNo }}</td>
+            <td>
+              <strong>{{ invoice.patient }}</strong>
+              <small>ID: {{ invoice.nationalId }}</small>
+            </td>
+            <td class="mono">{{ invoice.orderNo }}</td>
+            <td>{{ formatMoney(invoice.subtotal) }}</td>
+            <td>{{ formatMoney(invoice.discount) }}</td>
+            <td>{{ formatMoney(invoice.vat) }}</td>
+            <td>{{ formatMoney(invoice.insurance) }}</td>
+            <td><strong>{{ formatMoney(invoice.total) }}</strong></td>
+            <td>
+              <span class="payment-cell"><i class="bi" [ngClass]="paymentIcon(invoice.payment)"></i>{{ invoice.payment }}</span>
+            </td>
+            <td>{{ invoice.cashier }}</td>
+            <td>
+              <div class="row-actions" (click)="$event.stopPropagation()">
+                <button title="طباعة"><i class="bi bi-printer"></i></button>
+                <button title="إرسال"><i class="bi bi-envelope"></i></button>
+                <button title="المزيد"><i class="bi bi-three-dots-vertical"></i></button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mobile-invoices">
+      <article class="invoice-mobile-card" *ngFor="let invoice of filteredInvoices; trackBy: trackById"
+               [class.selected]="invoice.id === selectedId"
+               (click)="selectInvoice(invoice.id)">
+        <div class="mobile-card-head">
+          <div><strong>{{ invoice.patient }}</strong><small>{{ invoice.invoiceNo }}</small></div>
+          <span class="status-pill" [ngClass]="{'paid': invoice.status === 'مدفوعة', 'partial': invoice.status === 'جزئية', 'unpaid': invoice.status === 'غير مدفوعة'}">{{ invoice.status }}</span>
+        </div>
+        <div class="mobile-card-grid">
+          <span><small>رقم الطلب</small>{{ invoice.orderNo }}</span>
+          <span><small>طريقة الدفع</small>{{ invoice.payment }}</span>
+          <span><small>أمين الصندوق</small>{{ invoice.cashier }}</span>
+          <span><small>الإجمالي</small><b>{{ formatMoney(invoice.total) }} ر.س</b></span>
+        </div>
+      </article>
+    </div>
+
+    <div class="invoice-details">
+      <aside class="action-stack">
+        <button class="primary"><i class="bi bi-cash-stack"></i> تحصيل الدفع</button>
+        <button><i class="bi bi-receipt"></i> دفع جزئي</button>
+        <button><i class="bi bi-tag"></i> تطبيق كوبون</button>
+        <button><i class="bi bi-printer"></i> طباعة الفاتورة</button>
+        <button><i class="bi bi-send"></i> إرسال الفاتورة</button>
+        <button class="danger"><i class="bi bi-arrow-counterclockwise"></i> استرداد</button>
+      </aside>
+
+      <article class="detail-card invoice-info-card">
+        <h3>تفاصيل الفاتورة</h3>
+        <dl>
+          <div><dt>كود الكوبون</dt><dd>{{ selectedInvoice.coupon }}</dd></div>
+          <div><dt>شركة التأمين</dt><dd class="success">{{ selectedInvoice.insuranceCompany }}</dd></div>
+          <div><dt>رقم وثيقة التأمين</dt><dd>{{ selectedInvoice.insuranceRef }}</dd></div>
+          <div><dt>ملاحظات</dt><dd>{{ selectedInvoice.notes }}</dd></div>
+        </dl>
+        <button class="text-link">تسجيل الملاحظات</button>
+      </article>
+
+      <article class="detail-card items-card">
+        <h3>بنود الفاتورة</h3>
+        <div class="items-table">
+          <div class="items-row items-head">
+            <span>#</span><span>التحليل / الباقة</span><span>السعر</span><span>التأمين</span><span>الخصم</span><span>الإجمالي</span>
+          </div>
+          <div class="items-row" *ngFor="let item of selectedInvoice.items; let i = index">
+            <span>{{ i + 1 }}</span><span>{{ item.name }}</span><span>{{ formatMoney(item.price) }}</span><span>{{ formatMoney(item.insurance) }}</span><span>{{ formatMoney(item.discount) }}</span><span>{{ formatMoney(item.total) }}</span>
+          </div>
+        </div>
+        <div class="items-total">
+          <span>المجموع الفرعي <b>{{ formatMoney(selectedInvoice.subtotal) }}</b></span>
+          <span>الخصم <b>{{ formatMoney(selectedInvoice.discount) }}</b></span>
+          <span>التأمين <b>{{ formatMoney(selectedInvoice.insurance) }}</b></span>
+          <span>الضريبة <b>{{ formatMoney(selectedInvoice.vat) }}</b></span>
+          <span class="grand">الإجمالي <b>{{ formatMoney(selectedInvoice.total) }} ر.س</b></span>
+        </div>
+      </article>
+
+      <article class="detail-card payment-summary">
+        <h3>ملخص السداد</h3>
+        <dl>
+          <div><dt>المجموع الفرعي</dt><dd>{{ formatMoney(selectedInvoice.subtotal) }} ر.س</dd></div>
+          <div><dt>الخصم</dt><dd>-{{ formatMoney(selectedInvoice.discount) }} ر.س</dd></div>
+          <div><dt>ضريبة القيمة المضافة</dt><dd>{{ formatMoney(selectedInvoice.vat) }} ر.س</dd></div>
+          <div><dt>التأمين</dt><dd>-{{ formatMoney(selectedInvoice.insurance) }} ر.س</dd></div>
+          <div class="summary-total"><dt>الإجمالي</dt><dd>{{ formatMoney(selectedInvoice.total) }} ر.س</dd></div>
+          <div class="paid-line"><dt>المدفوع</dt><dd>{{ formatMoney(selectedInvoice.total) }} ر.س</dd></div>
+          <div class="remaining-line"><dt>المتبقي</dt><dd>0.00 ر.س</dd></div>
+        </dl>
+      </article>
+
+      <article class="detail-card invoice-preview-card">
+        <div class="preview-toolbar">
+          <label><input [(ngModel)]="compactView" type="checkbox" /> عرض</label>
+          <span>معاينة الإيصال</span>
+          <i class="bi bi-toggle-on"></i>
+        </div>
+        <div class="receipt" [class.compact]="compactView">
+          <div class="receipt-logo"><i class="bi bi-droplet-half"></i><strong>مختبرات الحكمة</strong><small>AL HIKMA LABORATORIES</small></div>
+          <h4>فاتورة ضريبية مبسطة</h4>
+          <div class="receipt-body">
+            <span>رقم الفاتورة: <b>{{ selectedInvoice.invoiceNo }}</b></span>
+            <span>المريض: <b>{{ selectedInvoice.patient }}</b></span>
+            <span>الإجمالي: <b>{{ formatMoney(selectedInvoice.total) }} ر.س</b></span>
+          </div>
+          <div class="qr-code" aria-label="رمز الاستجابة السريعة"></div>
+        </div>
+        <button class="text-link">عرض كامل الفاتورة <i class="bi bi-arrow-left"></i></button>
+      </article>
+    </div>
+  </section>
+
+  <section class="analytics-grid">
+    <article class="panel alerts-card">
+      <h3>تنبيهات ومدفوعات معلقة</h3>
+      <div class="alert-row" *ngFor="let alert of alerts" [ngClass]="alertClass(alert.level)">
+        <span class="alert-dot"><i class="bi bi-exclamation-circle-fill"></i></span>
+        <div class="alert-main"><b>{{ alert.ref }}</b><span>{{ alert.title }}</span></div>
+        <span class="alert-amount">{{ alert.amount }}</span>
+        <span class="alert-age">{{ alert.age }}</span>
+        <span class="alert-level">{{ alert.level }}</span>
+      </div>
+      <button class="text-link center-link">عرض جميع التنبيهات <i class="bi bi-arrow-left"></i></button>
+    </article>
+
+    <article class="panel doughnut-card">
+      <h3>توزيع طرق الدفع (اليوم)</h3>
+      <div class="doughnut-layout">
+        <div class="doughnut-chart"><div><b>12,450</b><span>الإجمالي</span></div></div>
+        <ul>
+          <li><i class="legend blue"></i><span>نقدي</span><b>4,230 ر.س (34%)</b></li>
+          <li><i class="legend green"></i><span>بطاقة مدى</span><b>7,780 ر.س (55%)</b></li>
+          <li><i class="legend orange"></i><span>بطاقة ائتمان</span><b>1,420 ر.س (16%)</b></li>
+          <li><i class="legend red"></i><span>دفع لاحق</span><b>150 ر.س (1%)</b></li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="panel revenue-card">
+      <div class="chart-heading">
+        <h3>ملخص الإيرادات</h3>
+        <select aria-label="الفترة"><option>اليوم</option></select>
+      </div>
+      <div class="chart-legend"><span><i class="blue"></i>إيرادات</span><span><i class="green"></i>المتحصل</span></div>
+      <div class="bar-chart" aria-label="مخطط الإيرادات بالساعة">
+        <div class="y-axis"><span>8K</span><span>6K</span><span>4K</span><span>2K</span><span>0</span></div>
+        <div class="bars">
+          <div class="bar-pair" *ngFor="let bar of hourlyRevenue; let i = index">
+            <i class="revenue-bar" [style.height.%]="bar"></i>
+            <i class="collected-bar" [style.height.%]="hourlyCollected[i]"></i>
+          </div>
+        </div>
+        <div class="x-axis"><span>00:00</span><span>04:00</span><span>08:00</span><span>12:00</span><span>16:00</span><span>20:00</span><span>24:00</span></div>
+      </div>
+    </article>
+  </section>
+</section>

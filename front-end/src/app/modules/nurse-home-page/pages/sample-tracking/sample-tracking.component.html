@@ -1,0 +1,263 @@
+<section class="sample-tracking" dir="rtl">
+  <div class="page-heading">
+    <h1>تتبع العينات وسلسلة النقل</h1>
+    <p>تتبع حالة العينات من لحظة جمعها حتى وصولها إلى القسم المختص، وبدء التحليل.</p>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card" *ngFor="let stat of stats" [attr.data-tone]="stat.tone">
+      <span class="stat-icon"><i class="bi" [ngClass]="stat.icon"></i></span>
+      <div class="stat-content">
+        <h2>{{ stat.title }}</h2>
+        <strong>{{ stat.value }}</strong>
+        <span>{{ stat.unit }}</span>
+        <button type="button">{{ stat.hint }}</button>
+      </div>
+    </article>
+  </div>
+
+  <section class="filters-card" aria-label="مرشحات العينات">
+    <button class="outline-button filter-options" type="button">
+      <i class="bi bi-funnel"></i>
+      خيارات التصفية
+    </button>
+
+    <label class="field search-field">
+      <span>رقم الباركود أو رقم الطلب</span>
+      <div class="control-with-icon">
+        <i class="bi bi-search"></i>
+        <input [(ngModel)]="searchText" type="search" placeholder="ابحث بالباركود أو رقم الطلب..." />
+      </div>
+    </label>
+
+    <label class="field compact-field">
+      <span>نوع العينة</span>
+      <select [(ngModel)]="selectedType">
+        <option>كل الأنواع</option>
+        <option>صورة دم كاملة</option>
+        <option>سكر صائم</option>
+        <option>وظائف الكبد</option>
+        <option>فيتامين د</option>
+      </select>
+    </label>
+
+    <label class="field compact-field">
+      <span>حالة العينة</span>
+      <select [(ngModel)]="selectedStatus">
+        <option>كل الحالات</option>
+        <option>في المختبر</option>
+        <option>في النقل</option>
+        <option>بانتظار الاستلام</option>
+      </select>
+    </label>
+
+    <label class="field compact-field">
+      <span>القسم</span>
+      <select [(ngModel)]="selectedDepartment">
+        <option>كل الأقسام</option>
+        <option>الهيماتولوجي</option>
+        <option>الكيمياء الحيوية</option>
+        <option>المناعة</option>
+      </select>
+    </label>
+
+    <label class="field compact-field">
+      <span>الفرع</span>
+      <select [(ngModel)]="selectedBranch">
+        <option>كل الفروع</option>
+        <option>فرع العليا</option>
+        <option>فرع الرياض</option>
+        <option>فرع جدة</option>
+      </select>
+    </label>
+
+    <label class="field date-field">
+      <span>التاريخ</span>
+      <div class="date-range">
+        <i class="bi bi-calendar3"></i>
+        <span>2024/05/01</span>
+        <b>–</b>
+        <span>2024/05/31</span>
+      </div>
+    </label>
+
+    <button class="outline-button reset-button" type="button" (click)="resetFilters()">
+      <i class="bi bi-arrow-repeat"></i>
+      إعادة ضبط
+    </button>
+  </section>
+
+  <section class="records-card">
+    <div class="desktop-table-wrap">
+      <table class="samples-table">
+        <thead>
+          <tr>
+            <th class="check-column"><input type="checkbox" aria-label="تحديد الكل" /></th>
+            <th>#</th>
+            <th>رقم الباركود</th>
+            <th>المريض</th>
+            <th>نوع العينة</th>
+            <th>نوع الأنبوب</th>
+            <th>وقت الجمع</th>
+            <th>المندوب / الناقل</th>
+            <th>الموقع الحالي</th>
+            <th>الحالة</th>
+            <th>التعامل / درجة الحرارة</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let sample of filteredSamples; trackBy: trackBySample"
+            [class.selected-row]="selectedSampleId === sample.id"
+            (click)="selectSample(sample.id)"
+          >
+            <td class="check-column">
+              <input
+                type="radio"
+                name="selectedSample"
+                [checked]="selectedSampleId === sample.id"
+                (click)="$event.stopPropagation()"
+                (change)="selectSample(sample.id)"
+                aria-label="تحديد العينة"
+              />
+            </td>
+            <td>{{ sample.id }}</td>
+            <td><button class="barcode-link" type="button">{{ sample.barcode }}</button></td>
+            <td>
+              <div class="patient-cell">
+                <strong>{{ sample.patient }}</strong>
+                <small>{{ sample.age }} سنة / {{ sample.gender }}</small>
+              </div>
+            </td>
+            <td>{{ sample.sampleType }}</td>
+            <td>{{ sample.tubeType }}</td>
+            <td>{{ sample.collectionTime }}</td>
+            <td><span class="courier-link">{{ sample.collector }}</span></td>
+            <td><i class="bi bi-geo-alt"></i> {{ sample.currentLocation }}</td>
+            <td><span class="status-badge" [ngClass]="statusClass(sample.status)">{{ sample.status }}</span></td>
+            <td><strong>{{ sample.temperature }}</strong></td>
+            <td>
+              <div class="row-actions">
+                <button type="button" aria-label="عرض"><i class="bi bi-eye"></i></button>
+                <button type="button" aria-label="المزيد"><i class="bi bi-three-dots"></i></button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mobile-samples">
+      <article
+        class="sample-mobile-card"
+        *ngFor="let sample of filteredSamples; trackBy: trackBySample"
+        [class.selected-mobile-card]="selectedSampleId === sample.id"
+        (click)="selectSample(sample.id)"
+      >
+        <div class="mobile-card-head">
+          <div>
+            <button class="barcode-link" type="button">{{ sample.barcode }}</button>
+            <span>#{{ sample.id }}</span>
+          </div>
+          <span class="status-badge" [ngClass]="statusClass(sample.status)">{{ sample.status }}</span>
+        </div>
+
+        <div class="mobile-patient">
+          <strong>{{ sample.patient }}</strong>
+          <small>{{ sample.age }} سنة / {{ sample.gender }}</small>
+        </div>
+
+        <dl class="mobile-data-grid">
+          <div><dt>نوع العينة</dt><dd>{{ sample.sampleType }}</dd></div>
+          <div><dt>الأنبوب</dt><dd>{{ sample.tubeType }}</dd></div>
+          <div><dt>وقت الجمع</dt><dd>{{ sample.collectionTime }}</dd></div>
+          <div><dt>الناقل</dt><dd>{{ sample.collector }}</dd></div>
+          <div><dt>الموقع الحالي</dt><dd>{{ sample.currentLocation }}</dd></div>
+          <div><dt>درجة الحرارة</dt><dd>{{ sample.temperature }}</dd></div>
+        </dl>
+
+        <div class="mobile-actions">
+          <button type="button"><i class="bi bi-eye"></i> عرض التفاصيل</button>
+          <button type="button"><i class="bi bi-three-dots"></i></button>
+        </div>
+      </article>
+    </div>
+
+    <div class="empty-state" *ngIf="filteredSamples.length === 0">
+      <i class="bi bi-search"></i>
+      <strong>لا توجد نتائج مطابقة</strong>
+      <span>جرّب تعديل البحث أو إعادة ضبط المرشحات.</span>
+    </div>
+  </section>
+
+  <section class="details-card" *ngIf="selectedSample as sample">
+    <header class="details-header">
+      <div class="details-title">
+        <button class="collapse-button" type="button" aria-label="طي التفاصيل">
+          <i class="bi bi-chevron-up"></i>
+        </button>
+        <span>تفاصيل العينة</span>
+        <strong>{{ sample.barcode }}</strong>
+        <span class="status-badge status-lab">في المختبر</span>
+      </div>
+
+      <button class="timeline-link" type="button">
+        عرض المخطط الزمني بالكامل
+        <i class="bi bi-arrow-left"></i>
+      </button>
+    </header>
+
+    <div class="details-body">
+      <aside class="info-column">
+        <article class="info-card">
+          <h3><i class="bi bi-diagram-3"></i> معلومات الاستلام</h3>
+          <div class="person-row">
+            <span class="avatar avatar-woman">س</span>
+            <div><small>المستلم</small><strong>أحمد العتيبي</strong></div>
+          </div>
+          <div class="info-row"><span><i class="bi bi-bookmark-star"></i> القسم</span><strong>قسم الهيماتولوجي</strong></div>
+          <div class="info-row"><span><i class="bi bi-clock"></i> وقت الاستلام</span><strong>20/05/2024 - 09:50 ص</strong></div>
+          <div class="info-row success-row"><span><i class="bi bi-check-circle"></i> تم التحقق من الشروط</span><strong>نعم</strong></div>
+        </article>
+
+        <article class="info-card">
+          <h3><i class="bi bi-megaphone"></i> معلومات الإرسال</h3>
+          <div class="person-row">
+            <span class="avatar avatar-man">م</span>
+            <div><small>تم جمع العينة بواسطة</small><strong>سارة القحطاني</strong></div>
+          </div>
+          <div class="info-row"><span><i class="bi bi-geo-alt"></i> الفرع</span><strong>العليا</strong></div>
+          <div class="info-row"><span><i class="bi bi-clock"></i> وقت الجمع</span><strong>20/05/2024 - 09:15 ص</strong></div>
+        </article>
+      </aside>
+
+      <div class="timeline-area">
+        <div class="timeline-track">
+          <article
+            class="timeline-step"
+            *ngFor="let step of timeline; let last = last"
+            [attr.data-tone]="step.tone"
+            [attr.data-state]="step.state"
+          >
+            <div class="step-icon"><i class="bi" [ngClass]="step.icon"></i></div>
+            <span class="step-line" *ngIf="!last"></span>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.subtitle }}</p>
+            <time>{{ step.date }}</time>
+            <strong>{{ step.user }}</strong>
+            <button *ngIf="step.state === 'current'" type="button"><i class="bi bi-person-check"></i> تم الاستلام والتحقق</button>
+          </article>
+        </div>
+
+        <div class="timeline-legend">
+          <strong>مفتاح الحالة:</strong>
+          <span><i class="dot done-dot"></i> تم</span>
+          <span><i class="dot current-dot"></i> جاري</span>
+          <span><i class="dot upcoming-dot"></i> قادم</span>
+          <span><i class="dot late-dot"></i> متأخر</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>

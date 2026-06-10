@@ -1,0 +1,309 @@
+<section class="results-page" dir="rtl">
+  <header class="page-heading">
+    <h1>إدارة النتائج ومراجعة النشر</h1>
+    <p>متابعة ومعالجة نتائج الفحوصات وضمان دقتها قبل اعتمادها ونشرها.</p>
+  </header>
+
+  <section class="summary-grid" aria-label="ملخص النتائج">
+    <article class="summary-card" *ngFor="let card of summaryCards">
+      <span class="summary-icon" [ngClass]="card.tone"><i class="bi" [ngClass]="card.icon"></i></span>
+      <div class="summary-text">
+        <h2>{{ card.title }}</h2>
+        <strong>{{ card.value }}</strong>
+        <span>{{ card.unit }}</span>
+        <button type="button">{{ card.link }}</button>
+      </div>
+    </article>
+  </section>
+
+  <section class="workspace-card">
+    <nav class="status-tabs" aria-label="حالات النتائج">
+      <button
+        type="button"
+        *ngFor="let tab of tabs"
+        [class.active]="activeTab === tab.name"
+        (click)="setActiveTab(tab.name)">
+        <span>{{ tab.name }}</span>
+        <b [class.danger-count]="tab.name === 'حرجة'">{{ tab.count | number }}</b>
+      </button>
+    </nav>
+
+    <div class="filters-row">
+      <div class="filter-search">
+        <i class="bi bi-search"></i>
+        <input [(ngModel)]="searchTerm" type="search" placeholder="ابحث برقم التقرير، المريض أو الفحص..." />
+      </div>
+
+      <label class="date-filter">
+        <i class="bi bi-calendar3"></i>
+        <span>2024/05/01&nbsp;&nbsp;-&nbsp;&nbsp;2024/05/31</span>
+      </label>
+
+      <select [(ngModel)]="branch" aria-label="الفرع">
+        <option>كل الفروع</option>
+        <option>الرياض - العليا</option>
+        <option>الرياض - الملز</option>
+        <option>جدة - الروضة</option>
+      </select>
+
+      <select [(ngModel)]="department" aria-label="القسم">
+        <option>كل الأقسام</option>
+        <option>الكيمياء</option>
+        <option>أمراض الدم</option>
+      </select>
+
+      <select [(ngModel)]="technician" aria-label="الفني">
+        <option>كل الفنيين</option>
+        <option>أحمد محمد</option>
+        <option>فاطمة الزهراني</option>
+      </select>
+
+      <button type="button" class="filter-button" (click)="resetFilters()">
+        <i class="bi bi-funnel"></i>
+        تصفية
+      </button>
+    </div>
+
+    <div class="desktop-results-table">
+      <table>
+        <thead>
+          <tr>
+            <th>رقم التقرير</th>
+            <th>المريض</th>
+            <th>الفحص</th>
+            <th>أحدث قيمة</th>
+            <th>المرجع</th>
+            <th>الفرع</th>
+            <th>الحالة</th>
+            <th>الفني المسؤول</th>
+            <th>إجراءات</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let row of filteredRows"
+            [class.selected]="selectedReport === row.reportNo"
+            (click)="selectReport(row.reportNo)">
+            <td><span class="report-number">{{ row.reportNo }}</span></td>
+            <td>
+              <div class="patient-cell">
+                <strong>{{ row.patient }}</strong>
+                <small>{{ row.age }} سنة · {{ row.gender }}</small>
+              </div>
+            </td>
+            <td class="ltr">{{ row.test }}</td>
+            <td>
+              <span class="test-value" [class.abnormal]="row.direction" [class.low]="row.direction === 'down'">
+                {{ row.value }}
+                <i *ngIf="row.direction" class="bi" [ngClass]="row.direction === 'up' ? 'bi-arrow-up' : 'bi-arrow-down'"></i>
+              </span>
+            </td>
+            <td class="ltr muted">{{ row.reference }}</td>
+            <td><i class="bi bi-geo-alt"></i> {{ row.branch }}</td>
+            <td><span class="status-pill" [ngClass]="statusClass(row.status)">{{ row.status }}</span></td>
+            <td>
+              <div class="technician-cell">
+                <span class="avatar">{{ row.initials }}</span>
+                <span>{{ row.technician }}</span>
+              </div>
+            </td>
+            <td>
+              <div class="row-actions">
+                <button type="button" title="طباعة"><i class="bi bi-printer"></i></button>
+                <button type="button" title="المزيد"><i class="bi bi-three-dots-vertical"></i></button>
+                <button type="button" title="فتح"><i class="bi bi-chevron-left"></i></button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredRows.length === 0">
+            <td colspan="9" class="empty-state">لا توجد نتائج مطابقة.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mobile-result-list">
+      <article
+        class="mobile-result-card"
+        *ngFor="let row of filteredRows"
+        [class.selected]="selectedReport === row.reportNo"
+        (click)="selectReport(row.reportNo)">
+        <div class="mobile-card-head">
+          <div>
+            <span class="report-number">{{ row.reportNo }}</span>
+            <h3>{{ row.patient }}</h3>
+            <small>{{ row.age }} سنة · {{ row.gender }}</small>
+          </div>
+          <span class="status-pill" [ngClass]="statusClass(row.status)">{{ row.status }}</span>
+        </div>
+        <div class="mobile-data-grid">
+          <div><span>الفحص</span><b class="ltr">{{ row.test }}</b></div>
+          <div><span>القيمة</span><b class="test-value" [class.abnormal]="row.direction">{{ row.value }}</b></div>
+          <div><span>المرجع</span><b class="ltr">{{ row.reference }}</b></div>
+          <div><span>الفرع</span><b>{{ row.branch }}</b></div>
+        </div>
+        <div class="mobile-technician">
+          <span class="avatar">{{ row.initials }}</span>
+          <span>{{ row.technician }}</span>
+          <i class="bi bi-chevron-left"></i>
+        </div>
+      </article>
+    </div>
+
+    <footer class="table-footer">
+      <button type="button" class="all-results">عرض جميع النتائج <i class="bi bi-arrow-left"></i></button>
+      <div class="pagination" dir="ltr">
+        <button type="button"><i class="bi bi-chevron-left"></i></button>
+        <button type="button" class="active">1</button>
+        <button type="button">2</button>
+        <button type="button">3</button>
+        <button type="button">4</button>
+        <button type="button">5</button>
+        <span>...</span>
+        <button type="button">25</button>
+        <button type="button"><i class="bi bi-chevron-right"></i></button>
+      </div>
+    </footer>
+  </section>
+
+  <section class="details-panel">
+    <div class="details-header">
+      <div class="patient-summary">
+        <span class="avatar large">م س</span>
+        <div>
+          <h2>محمد عبدالعزيز السبيعي</h2>
+          <p>35 سنة · ذكر</p>
+        </div>
+        <strong class="details-report">RPT-2024-056789</strong>
+        <span class="status-pill status-blue">قيد المراجعة</span>
+      </div>
+
+      <div class="main-actions">
+        <button type="button"><i class="bi bi-arrow-repeat"></i> تحويل للمراجعة</button>
+        <button type="button"><i class="bi bi-send"></i> إرسال للمريض</button>
+        <button type="button"><i class="bi bi-printer"></i> طباعة</button>
+        <button type="button"><i class="bi bi-file-earmark"></i> عرض التقرير</button>
+      </div>
+    </div>
+
+    <div class="order-meta">
+      <div><span>رقم المريض</span><b>MRN-00081245</b></div>
+      <div><span>رقم الطلب</span><b>ORD-2024-089765</b></div>
+      <div><span>تاريخ الطلب</span><b>2024/05/29 08:14 ص</b></div>
+      <div><span>الطبيب المعالج</span><b>د. عبدالله القحطاني</b></div>
+    </div>
+
+    <div class="details-grid">
+      <aside class="status-side-card">
+        <h3>حالة النتيجة</h3>
+        <ol class="vertical-timeline">
+          <li class="done">
+            <i class="bi bi-check-circle-fill"></i>
+            <div><b>تم الإدخال</b><span>أحمد محمد · 2024/05/29 09:20 ص</span></div>
+          </li>
+          <li class="active">
+            <i class="bi bi-record-circle"></i>
+            <div><b>قيد المراجعة</b><span>سارة القحطاني · 2024/05/29 09:35 ص</span></div>
+          </li>
+          <li>
+            <i class="bi bi-circle"></i>
+            <div><b>بانتظار الاعتماد</b><span>لم يتم بعد</span></div>
+          </li>
+          <li>
+            <i class="bi bi-circle"></i>
+            <div><b>مكتملة</b><span>لم يتم بعد</span></div>
+          </li>
+        </ol>
+        <div class="approval-actions">
+          <button type="button" class="approve"><i class="bi bi-check2"></i> اعتماد</button>
+          <button type="button"><i class="bi bi-arrow-counterclockwise"></i> إعادة للفني</button>
+        </div>
+      </aside>
+
+      <div class="chart-column">
+        <article class="chart-card">
+          <h3>اتجاه نتيجة HbA1c (%)</h3>
+          <div class="line-chart" aria-label="مخطط اتجاه HbA1c">
+            <svg viewBox="0 0 520 210" role="img">
+              <g class="grid-lines">
+                <line x1="50" y1="30" x2="500" y2="30"></line>
+                <line x1="50" y1="75" x2="500" y2="75"></line>
+                <line x1="50" y1="120" x2="500" y2="120"></line>
+                <line x1="50" y1="165" x2="500" y2="165"></line>
+              </g>
+              <polyline points="75,140 205,123 335,105 465,68" fill="none" stroke="currentColor" stroke-width="4"></polyline>
+              <g class="chart-points">
+                <circle cx="75" cy="140" r="7"></circle>
+                <circle cx="205" cy="123" r="7"></circle>
+                <circle cx="335" cy="105" r="7"></circle>
+                <circle class="critical-point" cx="465" cy="68" r="8"></circle>
+              </g>
+              <g class="chart-labels">
+                <text x="63" y="126">6.1</text>
+                <text x="193" y="109">6.8</text>
+                <text x="323" y="91">7.3</text>
+                <text class="critical-text" x="451" y="52">8.9</text>
+                <text x="55" y="194">2023/05</text>
+                <text x="184" y="194">2023/08</text>
+                <text x="314" y="194">2024/02</text>
+                <text x="444" y="194">2024/05</text>
+              </g>
+            </svg>
+          </div>
+        </article>
+
+        <article class="comment-card">
+          <h3>تعليقات</h3>
+          <p>يرجى مراجعة النتيجة مع الحالة السريرية للمريض.</p>
+          <footer><span>سارة القحطاني · فني مختبر أول</span><time>2024/05/29 09:35 ص</time></footer>
+        </article>
+      </div>
+
+      <article class="results-card">
+        <h3>نتائج الفحوصات</h3>
+        <div class="detailed-table-wrap">
+          <table class="detailed-table">
+            <thead>
+              <tr>
+                <th>الفحص</th>
+                <th>النتيجة</th>
+                <th>المرجع</th>
+                <th>الحالة</th>
+                <th>الوحدة</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let result of detailedResults">
+                <td class="ltr">{{ result.test }}</td>
+                <td [class.danger-value]="result.status === 'مرتفع'" [class.low-value]="result.status === 'منخفض'">{{ result.value }}</td>
+                <td class="ltr">{{ result.reference }}</td>
+                <td><span class="result-pill" [ngClass]="resultStatusClass(result.status)">{{ result.status }}</span></td>
+                <td class="ltr">{{ result.unit }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+
+      <div class="alerts-column">
+        <article class="critical-alert">
+          <header><i class="bi bi-exclamation-triangle"></i><h3>تنبيه نتيجة حرجة</h3></header>
+          <div class="critical-reading">
+            <span>الفحص <b class="ltr">HbA1c</b></span>
+            <strong>8.9%</strong>
+          </div>
+          <p>النتيجة أعلى من الحد الطبيعي وتحتاج متابعة عاجلة. تم إشعار الطبيب المعالج.</p>
+        </article>
+
+        <article class="history-card">
+          <h3>سجل الإجراءات</h3>
+          <ul>
+            <li><span class="history-dot green"></span><div><b>تم إدخال النتيجة</b><small>أحمد محمد · فني مختبر</small><time>2024/05/29 09:02 ص</time></div></li>
+            <li><span class="history-dot blue"></span><div><b>تم إرسال للمراجعة</b><small>أحمد محمد · فني مختبر أول</small><time>2024/05/29 09:35 ص</time></div></li>
+            <li><span class="history-dot orange"></span><div><b>في انتظار اعتماد الأخصائي</b><small>—</small></div></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+</section>

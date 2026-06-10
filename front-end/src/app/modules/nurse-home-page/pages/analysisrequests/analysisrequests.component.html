@@ -1,0 +1,294 @@
+<section class="lab-orders-page" dir="rtl">
+  <div class="page-heading">
+    <div>
+      <h1>طلبات التحاليل وتتبع حالة التنفيذ</h1>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card" *ngFor="let stat of stats">
+      <span class="stat-icon" [ngClass]="'tone-' + stat.tone">
+        <i class="bi" [ngClass]="stat.icon"></i>
+      </span>
+      <div class="stat-content">
+        <h3>{{ stat.title }}</h3>
+        <strong>{{ stat.value }}</strong>
+        <p>{{ stat.subtitle }}</p>
+        <small [class.positive]="stat.direction === 'up'" [class.negative]="stat.direction === 'down'">
+          {{ stat.change }} <span>عن أمس</span> <i class="bi bi-chevron-left"></i>
+        </small>
+      </div>
+    </article>
+  </div>
+
+  <section class="filter-card">
+    <div class="filters-grid">
+      <label class="filter-field">
+        <span>من تاريخ</span>
+        <div class="control-with-icon">
+          <input type="text" value="2024/05/01" readonly>
+          <i class="bi bi-calendar3"></i>
+        </div>
+      </label>
+
+      <label class="filter-field">
+        <span>إلى تاريخ</span>
+        <div class="control-with-icon">
+          <input type="text" value="2024/05/31" readonly>
+          <i class="bi bi-calendar3"></i>
+        </div>
+      </label>
+
+      <button type="button" class="btn-reset">
+        <i class="bi bi-arrow-clockwise"></i>
+        إعادة تعيين
+      </button>
+
+      <label class="filter-field">
+        <span>الفرع</span>
+        <select><option>كل الفروع</option></select>
+      </label>
+
+      <label class="filter-field">
+        <span>حالة العينة</span>
+        <select><option>كل الحالات</option></select>
+      </label>
+
+      <label class="filter-field">
+        <span>حالة الطلب</span>
+        <select><option>كل الحالات</option></select>
+      </label>
+
+      <label class="filter-field">
+        <span>من تاريخ</span>
+        <div class="control-with-icon">
+          <input type="text" value="2024/05/31" readonly>
+          <i class="bi bi-calendar3"></i>
+        </div>
+      </label>
+
+      <label class="filter-field">
+        <span>إلى تاريخ</span>
+        <div class="control-with-icon">
+          <input type="text" value="2024/05/31" readonly>
+          <i class="bi bi-calendar3"></i>
+        </div>
+      </label>
+
+      <button type="button" class="btn-export">
+        <i class="bi bi-download"></i>
+        تصدير
+        <i class="bi bi-chevron-down"></i>
+      </button>
+    </div>
+  </section>
+
+  <section class="orders-shell">
+    <div class="table-toolbar">
+      <div class="result-count">عرض 1 - 10 من 247 طلب</div>
+      <div class="toolbar-search">
+        <i class="bi bi-search"></i>
+        <input [(ngModel)]="searchTerm" type="search" placeholder="ابحث برقم الطلب أو اسم المريض...">
+      </div>
+    </div>
+
+    <div class="desktop-table-wrap">
+      <table class="orders-table">
+        <thead>
+          <tr>
+            <th>رقم الطلب <i class="bi bi-arrow-down-up"></i></th>
+            <th>اسم المريض</th>
+            <th>المصدر</th>
+            <th>التحاليل / الباقات المطلوبة</th>
+            <th>الفرع</th>
+            <th>تاريخ الإنشاء</th>
+            <th>حالة العينة</th>
+            <th>حالة الطلب</th>
+            <th>الموظف المسؤول</th>
+            <th>تفاصيل</th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let order of filteredOrders; trackBy: trackByOrderId">
+            <tr class="order-row" [class.active]="isSelected(order)" (click)="selectOrder(order)">
+              <td>
+                <button class="order-number" type="button">
+                  {{ order.id }}
+                  <i class="bi" [ngClass]="isSelected(order) ? 'bi-chevron-up' : 'bi-chevron-left'"></i>
+                </button>
+              </td>
+              <td>
+                <div class="patient-cell">
+                  <span class="patient-symbol"><i class="bi bi-person"></i></span>
+                  <div><strong>{{ order.patient }}</strong><small>{{ order.age }} سنة / {{ order.gender }}</small></div>
+                </div>
+              </td>
+              <td><span class="status-pill" [ngClass]="'pill-' + order.sourceTone">{{ order.source }}</span></td>
+              <td><span class="truncate-text">{{ order.tests }}</span></td>
+              <td>{{ order.branch }}</td>
+              <td>{{ order.createdAt }}</td>
+              <td><span class="status-pill" [ngClass]="'pill-' + order.sampleTone">{{ order.sampleStatus }}</span></td>
+              <td><span class="status-pill" [ngClass]="'pill-' + order.orderTone">{{ order.orderStatus }}</span></td>
+              <td>
+                <div class="employee-cell">
+                  <span class="avatar">{{ order.initials }}</span>
+                  <span>{{ order.employee }}</span>
+                </div>
+              </td>
+              <td><button class="details-btn" type="button"><i class="bi bi-chevron-down"></i></button></td>
+            </tr>
+
+            <tr class="expanded-row" *ngIf="isSelected(order)">
+              <td colspan="10">
+                <div class="expanded-content">
+                  <div class="expanded-header">
+                    <div class="expanded-title">
+                      <strong>{{ order.id }}</strong>
+                      <span class="status-pill pill-purple">قيد التنفيذ</span>
+                      <small>تاريخ الإنشاء: 2024/05/28 09:15 ص</small>
+                      <small>المصدر: حجز</small>
+                    </div>
+
+                    <div class="action-bar">
+                      <button class="action-btn danger"><i class="bi bi-trash3"></i> إلغاء الطلب</button>
+                      <button class="action-btn"><i class="bi bi-diagram-3"></i> إرسال للمختبر</button>
+                      <button class="action-btn"><i class="bi bi-upc-scan"></i> طباعة باركود</button>
+                      <button class="action-btn"><i class="bi bi-printer"></i> طباعة الفاتورة</button>
+                      <button class="action-btn"><i class="bi bi-credit-card"></i> تسجيل الدفع</button>
+                      <button class="action-btn"><i class="bi bi-plus-lg"></i> إضافة تحليل</button>
+                      <button class="action-btn"><i class="bi bi-list-check"></i> تعديل التحاليل</button>
+                      <button class="action-btn"><i class="bi bi-check-square"></i> فتح الطلب</button>
+                    </div>
+                  </div>
+
+                  <div class="detail-grid">
+                    <article class="detail-card patient-summary">
+                      <h3><i class="bi bi-person"></i> ملخص المريض</h3>
+                      <strong>أحمد محمد العتيبي</strong>
+                      <p>32 سنة / ذكر</p>
+                      <p>0501234567</p>
+                      <p>ahmed.alotaibi.com</p>
+                      <p>الرياض، المملكة العربية السعودية</p>
+                      <p>رقم الملف: P-0012345</p>
+                    </article>
+
+                    <article class="detail-card invoice-card">
+                      <h3><i class="bi bi-currency-dollar"></i> ملخص الفاتورة</h3>
+                      <dl>
+                        <div><dt>إجمالي التحاليل</dt><dd>544.00 ر.س</dd></div>
+                        <div><dt>خصم</dt><dd>0.00 ر.س</dd></div>
+                        <div><dt>ضريبة القيمة المضافة (15%)</dt><dd>81.60 ر.س</dd></div>
+                        <div><dt>رسوم الخدمة</dt><dd>0.00 ر.س</dd></div>
+                        <div class="invoice-total"><dt>الإجمالي</dt><dd>625.60 <small>ر.س</small></dd></div>
+                      </dl>
+                      <div class="payment-status"><span class="status-pill pill-green">مدفوعة</span><span>بطاقة دفع: **** 3412</span></div>
+                    </article>
+
+                    <article class="detail-card tests-card">
+                      <h3><i class="bi bi-clipboard2-pulse"></i> التحاليل / الباقات المطلوبة (4)</h3>
+                      <ol>
+                        <li><span>باقة الفحص الشامل</span><strong>350.00 ر.س</strong></li>
+                        <li><span>فيتامين د (25-OH Vitamin D)</span><strong>120.00 ر.س</strong></li>
+                        <li><span>CBC</span><strong>40.00 ر.س</strong></li>
+                        <li><span>تحليل سكر صائم</span><strong>34.00 ر.س</strong></li>
+                      </ol>
+                    </article>
+
+                    <article class="detail-card attachment-card">
+                      <h3>الوصفة المرفقة</h3>
+                      <div class="attachment-body">
+                        <div>
+                          <strong>Rx_ahmed_28052024.pdf</strong>
+                          <small>تاريخ الرفع: 2024/05/28 09:10 ص</small>
+                          <button type="button">عرض / تحميل <i class="bi bi-download"></i></button>
+                        </div>
+                        <img src="assets/prescription-document.svg" alt="معاينة الوصفة">
+                      </div>
+                    </article>
+
+                    <article class="detail-card samples-card">
+                      <h3><i class="bi bi-clipboard2-check"></i> العينات المجمعة</h3>
+                      <dl>
+                        <div><dt>عدد الأنابيب</dt><dd>4 أنابيب</dd></div>
+                        <div><dt>نوع السحب</dt><dd>وريدي</dd></div>
+                        <div><dt>تاريخ / وقت الجمع</dt><dd>2024/05/28 09:30 ص</dd></div>
+                        <div><dt>المجمعة</dt><dd>منال العتيبي</dd></div>
+                        <div><dt>حالة العينة</dt><dd><span class="status-pill pill-green">تم الجمع</span></dd></div>
+                        <div><dt>ملاحظات</dt><dd>لا يوجد</dd></div>
+                      </dl>
+                    </article>
+                  </div>
+
+                  <div class="bottom-grid">
+                    <article class="timeline-card">
+                      <div class="section-title"><h3>تتبع حالة العينة</h3><i class="bi bi-chevron-down"></i></div>
+                      <div class="timeline">
+                        <div class="timeline-step" *ngFor="let step of timeline">
+                          <span class="timeline-dot" [ngClass]="'dot-' + step.tone"><i class="bi" [ngClass]="step.icon"></i></span>
+                          <h4>{{ step.title }}</h4>
+                          <small>{{ step.date }}</small>
+                          <small>{{ step.employee }}</small>
+                        </div>
+                      </div>
+                    </article>
+
+                    <article class="history-card">
+                      <div class="section-title"><h3>سجل التحديثات</h3><i class="bi bi-clock-history"></i></div>
+                      <ul>
+                        <li><span class="history-avatar">أ</span><div><strong>أحمد الدوسري</strong><small>تم تغيير حالة الطلب إلى قيد التحليل</small></div><time>2024/05/28<br>13:20</time></li>
+                        <li><span class="history-avatar">أ</span><div><strong>أحمد الدوسري</strong><small>تم استلام العينة في المختبر</small></div><time>2024/05/28<br>11:45</time></li>
+                        <li><span class="history-avatar system"><i class="bi bi-flask"></i></span><div><strong>النظام</strong><small>تم جدولة نقل العينة</small></div><time>2024/05/28<br>11:00</time></li>
+                      </ul>
+                      <button type="button" class="history-link">عرض كل السجل <i class="bi bi-chevron-left"></i></button>
+                    </article>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mobile-orders">
+      <article class="mobile-order-card" *ngFor="let order of filteredOrders; trackBy: trackByOrderId">
+        <button type="button" class="mobile-order-head" (click)="selectOrder(order)">
+          <span><strong>{{ order.id }}</strong><small>{{ order.createdAt }}</small></span>
+          <i class="bi" [ngClass]="isSelected(order) ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+        </button>
+        <div class="mobile-order-body">
+          <div class="patient-cell"><span class="patient-symbol"><i class="bi bi-person"></i></span><div><strong>{{ order.patient }}</strong><small>{{ order.age }} سنة / {{ order.gender }}</small></div></div>
+          <div class="mobile-tags"><span class="status-pill" [ngClass]="'pill-' + order.sourceTone">{{ order.source }}</span><span class="status-pill" [ngClass]="'pill-' + order.sampleTone">{{ order.sampleStatus }}</span><span class="status-pill" [ngClass]="'pill-' + order.orderTone">{{ order.orderStatus }}</span></div>
+          <dl>
+            <div><dt>التحاليل</dt><dd>{{ order.tests }}</dd></div>
+            <div><dt>الفرع</dt><dd>{{ order.branch }}</dd></div>
+            <div><dt>الموظف</dt><dd>{{ order.employee }}</dd></div>
+          </dl>
+        </div>
+        <div class="mobile-expanded" *ngIf="isSelected(order)">
+          <div class="action-bar">
+            <button class="action-btn"><i class="bi bi-check-square"></i> فتح الطلب</button>
+            <button class="action-btn"><i class="bi bi-list-check"></i> تعديل التحاليل</button>
+            <button class="action-btn"><i class="bi bi-credit-card"></i> تسجيل الدفع</button>
+            <button class="action-btn danger"><i class="bi bi-trash3"></i> إلغاء الطلب</button>
+          </div>
+          <div class="detail-grid mobile-detail-grid">
+            <article class="detail-card patient-summary"><h3>ملخص المريض</h3><strong>{{ order.patient }}</strong><p>{{ order.age }} سنة / {{ order.gender }}</p><p>0501234567</p><p>ahmed.alotaibi.com</p></article>
+            <article class="detail-card invoice-card"><h3>ملخص الفاتورة</h3><dl><div><dt>الإجمالي</dt><dd>625.60 ر.س</dd></div><div><dt>الحالة</dt><dd><span class="status-pill pill-green">مدفوعة</span></dd></div></dl></article>
+            <article class="detail-card tests-card"><h3>التحاليل المطلوبة</h3><ol><li><span>باقة الفحص الشامل</span><strong>350.00 ر.س</strong></li><li><span>فيتامين د</span><strong>120.00 ر.س</strong></li><li><span>CBC</span><strong>40.00 ر.س</strong></li></ol></article>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <footer class="pagination-bar">
+      <div class="page-size"><select><option>10</option></select><span>لكل صفحة</span></div>
+      <nav aria-label="التنقل بين الصفحات">
+        <button><i class="bi bi-chevron-right"></i></button>
+        <button class="active">1</button><button>2</button><button>3</button><button>4</button><button>5</button><span>...</span><button>25</button>
+        <button><i class="bi bi-chevron-left"></i></button>
+      </nav>
+      <span>عرض 1 - 10 من 247 طلب</span>
+    </footer>
+  </section>
+</section>

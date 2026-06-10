@@ -1,0 +1,603 @@
+<section class="appointments-page" dir="rtl">
+  <div class="page-heading">
+    <div>
+      <h1>إدارة المواعيد والحجوزات</h1>
+
+      <p>
+        إدارة جميع حجوزات المرضى ومتابعة حالة المواعيد من الحجز حتى إتمام
+        الخدمة.
+      </p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <article class="branch-card dashboard-card">
+      <div class="branch-card-header">
+        <div>
+          <span class="small-label">الفرع</span>
+          <strong>كل الفروع</strong>
+        </div>
+
+        <div class="stat-icon tone-location">
+          <i class="bi bi-geo-alt"></i>
+        </div>
+      </div>
+
+      <select class="form-select form-select-sm">
+        <option>كل الفروع</option>
+        <option>الرياض - العليا</option>
+        <option>الرياض - الملز</option>
+        <option>جدة - الروضة</option>
+        <option>الدمام - الشاطئ</option>
+      </select>
+    </article>
+
+    <article
+      class="stat-card dashboard-card"
+      *ngFor="let stat of stats"
+    >
+      <div class="stat-main">
+        <div>
+          <span class="stat-title">{{ stat.title }}</span>
+          <strong class="stat-value">{{ stat.value }}</strong>
+        </div>
+
+        <div class="stat-icon" [ngClass]="'tone-' + stat.tone">
+          <i class="bi" [ngClass]="stat.icon"></i>
+        </div>
+      </div>
+
+      <div class="stat-footer">
+        <span
+          class="stat-percentage"
+          [class.positive]="stat.trend === 'up'"
+          [class.negative]="stat.trend === 'down'"
+        >
+          {{ stat.percentage }}
+        </span>
+
+        <span>عن أمس</span>
+      </div>
+
+      <button type="button" class="details-link">
+        عرض التفاصيل
+      </button>
+    </article>
+  </div>
+
+  <article class="appointments-container dashboard-card">
+    <div class="appointments-tabs">
+      <button
+        type="button"
+        class="tab-button"
+        [class.active]="activeTab === 'all'"
+        (click)="setActiveTab('all')"
+      >
+        الكل
+      </button>
+
+      <button
+        type="button"
+        class="tab-button"
+        [class.active]="activeTab === 'today'"
+        (click)="setActiveTab('today')"
+      >
+        اليوم
+      </button>
+
+      <button
+        type="button"
+        class="tab-button"
+        [class.active]="activeTab === 'upcoming'"
+        (click)="setActiveTab('upcoming')"
+      >
+        قادمة
+      </button>
+
+      <button
+        type="button"
+        class="tab-button"
+        [class.active]="activeTab === 'progress'"
+        (click)="setActiveTab('progress')"
+      >
+        قيد التنفيذ
+      </button>
+
+      <button
+        type="button"
+        class="tab-button"
+        [class.active]="activeTab === 'completed'"
+        (click)="setActiveTab('completed')"
+      >
+        مكتملة
+      </button>
+
+      <button
+        type="button"
+        class="tab-button"
+        [class.active]="activeTab === 'cancelled'"
+        (click)="setActiveTab('cancelled')"
+      >
+        ملغاة
+      </button>
+    </div>
+
+    <div class="filters-grid">
+      <div class="filter-control search-control">
+        <i class="bi bi-search"></i>
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="ابحث برقم الحجز، اسم المريض أو رقم الجوال..."
+        />
+      </div>
+
+      <div class="filter-control">
+        <i class="bi bi-geo-alt"></i>
+
+        <select class="form-select">
+          <option>الفرع</option>
+          <option>كل الفروع</option>
+          <option>الرياض - العليا</option>
+          <option>جدة - الروضة</option>
+        </select>
+      </div>
+
+      <div class="filter-control">
+        <i class="bi bi-chevron-down"></i>
+
+        <select class="form-select">
+          <option>نوع الحجز</option>
+          <option>الكل</option>
+          <option>حجز مسبق</option>
+          <option>حجز عادي</option>
+        </select>
+      </div>
+
+      <div class="filter-control">
+        <i class="bi bi-calendar3"></i>
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="اختر التاريخ"
+        />
+      </div>
+
+      <div class="filter-control">
+        <i class="bi bi-geo-alt"></i>
+
+        <select class="form-select">
+          <option>كل الفروع</option>
+          <option>الرياض</option>
+          <option>جدة</option>
+          <option>الدمام</option>
+        </select>
+      </div>
+
+      <div class="filter-control patient-filter">
+        <i class="bi bi-search"></i>
+
+        <input
+          type="text"
+          class="form-control"
+          placeholder="المريض / رقم الحجز"
+        />
+      </div>
+    </div>
+
+    <div class="appointments-table-wrapper">
+      <table class="table appointments-table align-middle">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>رقم الحجز</th>
+            <th>اسم المريض</th>
+            <th>الخدمة / الباقة</th>
+            <th>التاريخ</th>
+            <th>الوقت</th>
+            <th>الفرع</th>
+            <th>نوع الحجز</th>
+            <th>حالة الدفع</th>
+            <th>حالة الحجز</th>
+            <th>الإجراءات</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            *ngFor="let appointment of appointments; let i = index"
+            [class.selected-row]="
+              selectedAppointment.bookingNumber ===
+              appointment.bookingNumber
+            "
+            (click)="selectAppointment(appointment)"
+          >
+            <td>{{ i + 1 }}</td>
+
+            <td>
+              <button type="button" class="booking-number">
+                {{ appointment.bookingNumber }}
+              </button>
+            </td>
+
+            <td>
+              <div class="patient-table-info">
+                <strong>{{ appointment.patientName }}</strong>
+
+                <span>
+                  {{ appointment.phone }}
+                  <i class="bi bi-telephone"></i>
+                </span>
+              </div>
+            </td>
+
+            <td>{{ appointment.service }}</td>
+
+            <td>
+              <div class="date-cell">
+                <span>{{ appointment.date }}</span>
+                <small>{{ appointment.day }}</small>
+              </div>
+            </td>
+
+            <td>{{ appointment.time }}</td>
+
+            <td>
+              <span class="branch-name">
+                <i class="bi bi-geo-alt"></i>
+                {{ appointment.branch }}
+              </span>
+            </td>
+
+            <td>
+              <span class="data-badge badge-booking">
+                {{ appointment.bookingType }}
+              </span>
+            </td>
+
+            <td>
+              <span
+                class="data-badge"
+                [ngClass]="
+                  paymentStatusClass(appointment.paymentStatus)
+                "
+              >
+                {{ appointment.paymentStatus }}
+              </span>
+            </td>
+
+            <td>
+              <span
+                class="data-badge"
+                [ngClass]="
+                  bookingStatusClass(appointment.bookingStatus)
+                "
+              >
+                {{ appointment.bookingStatus }}
+              </span>
+            </td>
+
+            <td>
+              <div class="table-actions">
+                <button
+                  type="button"
+                  class="icon-action"
+                  title="عرض"
+                  (click)="
+                    selectAppointment(appointment);
+                    $event.stopPropagation()
+                  "
+                >
+                  <i class="bi bi-eye"></i>
+                </button>
+
+                <button
+                  type="button"
+                  class="icon-action"
+                  title="المزيد"
+                  (click)="$event.stopPropagation()"
+                >
+                  <i class="bi bi-three-dots"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="table-footer">
+      <div class="page-size">
+        <span>عرض</span>
+
+        <select class="form-select form-select-sm">
+          <option>10</option>
+          <option>20</option>
+          <option>50</option>
+        </select>
+      </div>
+
+      <div class="table-result">
+        عرض 1 إلى 7 من 124 حجزاً
+      </div>
+
+      <nav class="custom-pagination">
+        <button type="button">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+
+        <button type="button" class="active">1</button>
+        <button type="button">2</button>
+        <button type="button">3</button>
+        <button type="button">4</button>
+        <button type="button">5</button>
+        <button type="button">6</button>
+        <button type="button">7</button>
+
+        <button type="button">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+      </nav>
+    </div>
+  </article>
+
+  <div class="bottom-details-grid">
+    <article class="details-card action-panel dashboard-card">
+      <div class="selected-booking-header">
+        <div>
+          <span
+            class="data-badge"
+            [ngClass]="
+              bookingStatusClass(selectedAppointment.bookingStatus)
+            "
+          >
+            {{ selectedAppointment.bookingStatus }}
+          </span>
+
+          <strong>{{ selectedAppointment.bookingNumber }}</strong>
+        </div>
+
+        <button type="button" class="close-details">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="booking-actions-list">
+        <button type="button" class="booking-action confirm-action">
+          <span>تأكيد</span>
+          <i class="bi bi-check-circle"></i>
+        </button>
+
+        <button type="button" class="booking-action arrival-action">
+          <span>تسجيل وصول</span>
+          <i class="bi bi-person-check"></i>
+        </button>
+
+        <button type="button" class="booking-action reschedule-action">
+          <span>إعادة الجدولة</span>
+          <i class="bi bi-calendar3"></i>
+        </button>
+
+        <button type="button" class="booking-action cancel-action">
+          <span>إلغاء الحجز</span>
+          <i class="bi bi-x-circle"></i>
+        </button>
+
+        <button type="button" class="booking-action payment-action">
+          <span>تحصيل الدفع</span>
+          <i class="bi bi-wallet2"></i>
+        </button>
+
+        <button type="button" class="booking-action print-action">
+          <span>طباعة التفاصيل</span>
+          <i class="bi bi-printer"></i>
+        </button>
+      </div>
+    </article>
+
+    <article class="details-card dashboard-card">
+      <h3>معلومات المريض</h3>
+
+      <div class="patient-profile">
+        <div class="patient-avatar">
+          <i class="bi bi-person-fill"></i>
+        </div>
+
+        <div>
+          <strong>{{ selectedAppointment.patientName }}</strong>
+
+          <span>
+            {{ selectedAppointment.phone || '0555123456' }}
+            <i class="bi bi-telephone"></i>
+          </span>
+
+          <span>
+            {{
+              selectedAppointment.email ||
+                'ahmed.alotaibi@email.com'
+            }}
+            <i class="bi bi-envelope"></i>
+          </span>
+        </div>
+      </div>
+
+      <div class="information-list">
+        <div>
+          <span>تاريخ الميلاد</span>
+          <strong>
+            {{
+              selectedAppointment.birthDate ||
+                '06/01/1992 (32 سنة)'
+            }}
+          </strong>
+        </div>
+
+        <div>
+          <span>الرقم الطبي</span>
+          <strong>
+            {{
+              selectedAppointment.medicalNumber ||
+                'MR-00024567'
+            }}
+          </strong>
+        </div>
+
+        <div>
+          <span>الجنس</span>
+          <strong>{{ selectedAppointment.gender || 'ذكر' }}</strong>
+        </div>
+
+        <div>
+          <span>رقم الهوية</span>
+          <strong>
+            {{
+              selectedAppointment.identityNumber ||
+                '1087654321'
+            }}
+          </strong>
+        </div>
+
+        <div>
+          <span>المدينة</span>
+          <strong>{{ selectedAppointment.city || 'الرياض' }}</strong>
+        </div>
+      </div>
+    </article>
+
+    <article class="details-card dashboard-card">
+      <h3>معلومات الحجز</h3>
+
+      <div class="information-list booking-information">
+        <div>
+          <span>رقم الحجز</span>
+          <strong>{{ selectedAppointment.bookingNumber }}</strong>
+        </div>
+
+        <div>
+          <span>نوع الحجز</span>
+          <strong class="blue-text">
+            {{ selectedAppointment.bookingType }}
+          </strong>
+        </div>
+
+        <div>
+          <span>تاريخ الحجز</span>
+          <strong>
+            {{ selectedAppointment.date }} -
+            {{ selectedAppointment.time }}
+          </strong>
+        </div>
+
+        <div>
+          <span>القناة</span>
+          <strong>الموقع الإلكتروني</strong>
+        </div>
+
+        <div>
+          <span>حالة الدفع</span>
+
+          <strong>
+            <span
+              class="data-badge"
+              [ngClass]="
+                paymentStatusClass(
+                  selectedAppointment.paymentStatus
+                )
+              "
+            >
+              {{ selectedAppointment.paymentStatus }}
+            </span>
+          </strong>
+        </div>
+
+        <div>
+          <span>طريقة الدفع</span>
+          <strong class="payment-method">
+            <span>VISA</span>
+            {{
+              selectedAppointment.paymentMethod ||
+                '•••• 4242'
+            }}
+          </strong>
+        </div>
+
+        <div>
+          <span>المبلغ</span>
+          <strong>
+            {{ selectedAppointment.amount || '280.00 ر.س' }}
+          </strong>
+        </div>
+      </div>
+    </article>
+
+    <article class="details-card notes-card dashboard-card">
+      <div class="card-title-with-icon">
+        <h3>ملاحظات</h3>
+
+        <button type="button">
+          <i class="bi bi-pencil-square"></i>
+        </button>
+      </div>
+
+      <div class="note-content">
+        <p>المريض يفضل التواصل عبر الواتساب.</p>
+        <p>يرجى إبلاغه بنتيجة التحاليل فور ظهورها.</p>
+      </div>
+
+      <div class="attachments-section">
+        <h3>المرفقات</h3>
+
+        <div class="attachment-item">
+          <div class="attachment-icon">
+            <i class="bi bi-file-earmark-pdf"></i>
+          </div>
+
+          <div class="attachment-info">
+            <strong>تقرير طبي سابق.pdf</strong>
+            <span>735 KB</span>
+          </div>
+
+          <button type="button">
+            <i class="bi bi-download"></i>
+          </button>
+        </div>
+      </div>
+    </article>
+
+    <article class="details-card timeline-card dashboard-card">
+      <h3>تتبع الحالة</h3>
+
+      <div class="timeline">
+        <div
+          class="timeline-item"
+          *ngFor="let item of timeline; let last = last"
+          [ngClass]="item.status"
+        >
+          <div class="timeline-marker">
+            <span>
+              <i
+                class="bi"
+                [ngClass]="
+                  item.status === 'completed'
+                    ? 'bi-check'
+                    : item.status === 'current'
+                    ? 'bi-circle-fill'
+                    : ''
+                "
+              ></i>
+            </span>
+
+            <div class="timeline-line" *ngIf="!last"></div>
+          </div>
+
+          <div class="timeline-content">
+            <strong>{{ item.title }}</strong>
+            <span>{{ item.date }}</span>
+          </div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

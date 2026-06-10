@@ -2,7 +2,7 @@
       <nav class="sidebar-nav">
         <a
           *ngFor="let item of sidebarItems"
-          href="javascript:void(0)"
+          [routerLink]="item.routerLink"
           class="nav-item"
           [class.active]="item.active"
         >

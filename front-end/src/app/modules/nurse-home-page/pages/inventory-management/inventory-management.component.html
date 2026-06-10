@@ -1,0 +1,157 @@
+<section class="inventory-page" dir="rtl">
+  <header class="page-heading">
+    <h1>إدارة المخزون والمستهلكات</h1>
+    <p>إدارة المخزون والمستهلكات الطبية ومتابعة مستويات الأصناف والصلاحيات وطلبات التوريد والصرف.</p>
+  </header>
+
+  <div class="stats-grid">
+    <article class="stat-card" *ngFor="let stat of stats">
+      <div class="stat-icon" [ngClass]="stat.tone"><i class="bi" [ngClass]="stat.icon"></i></div>
+      <div class="stat-copy">
+        <h2>{{ stat.label }}</h2>
+        <strong>{{ stat.value }}</strong>
+        <span>{{ stat.unit }}</span>
+        <button type="button">{{ stat.action }}</button>
+      </div>
+    </article>
+  </div>
+
+  <section class="filter-card">
+    <button type="button" class="filter-icon-button" aria-label="خيارات التصفية"><i class="bi bi-funnel"></i></button>
+
+    <label class="field search-field">
+      <span class="visually-hidden">بحث</span>
+      <i class="bi bi-search"></i>
+      <input [(ngModel)]="searchTerm" type="search" placeholder="ابحث برقم الكود أو اسم الصنف...">
+    </label>
+
+    <label class="field">
+      <span>الفرع</span>
+      <select [(ngModel)]="selectedBranch">
+        <option *ngFor="let option of branches">{{ option }}</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>المستودع</span>
+      <select [(ngModel)]="selectedWarehouse">
+        <option *ngFor="let option of warehouses">{{ option }}</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>الفئة</span>
+      <select [(ngModel)]="selectedCategory">
+        <option *ngFor="let option of categories">{{ option }}</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>حالة المخزون</span>
+      <select [(ngModel)]="selectedState">
+        <option *ngFor="let option of stockStates">{{ option }}</option>
+      </select>
+    </label>
+
+    <button type="button" class="reset-button" (click)="resetFilters()">
+      <i class="bi bi-arrow-clockwise"></i>
+      إعادة تعيين
+    </button>
+  </section>
+
+  <section class="table-card">
+    <div class="section-title">
+      <h2>قائمة الأصناف <span>({{ filteredItems.length }})</span></h2>
+    </div>
+
+    <div class="inventory-table" role="table" aria-label="قائمة المخزون">
+      <div class="table-row table-head" role="row">
+        <div>#</div><div>الكود</div><div>اسم الصنف</div><div>الفئة</div><div>الوحدة</div><div>الكمية الحالية</div><div>الحد الأدنى</div><div>تاريخ الصلاحية</div><div>الموقع</div><div>حالة المخزون</div><div>الإجراءات</div>
+      </div>
+
+      <button
+        type="button"
+        class="table-row data-row"
+        *ngFor="let item of filteredItems; trackBy: trackByCode"
+        [class.selected]="selectedItemCode === item.code"
+        (click)="selectItem(item)"
+        role="row">
+        <div class="cell id-cell" data-label="#"><span class="selection-dot" [class.active]="selectedItemCode === item.code"></span>{{ item.id }}</div>
+        <div class="cell code-cell" data-label="الكود">{{ item.code }}</div>
+        <div class="cell item-cell" data-label="اسم الصنف"><span class="item-symbol" [ngClass]="item.symbolClass">{{ item.symbol }}</span><b>{{ item.name }}</b></div>
+        <div class="cell" data-label="الفئة">{{ item.category }}</div>
+        <div class="cell" data-label="الوحدة">{{ item.unit }}</div>
+        <div class="cell quantity-cell" data-label="الكمية الحالية" [ngClass]="quantityClass(item)">{{ item.quantity }}</div>
+        <div class="cell" data-label="الحد الأدنى">{{ item.minimum }}</div>
+        <div class="cell expiry-cell" data-label="تاريخ الصلاحية">
+          <b [class.expired-date]="item.state === 'منتهي الصلاحية'">{{ item.expiry }}</b>
+          <small *ngIf="item.daysLeft !== null" [class.warning-days]="item.daysLeft <= 90" [class.safe-days]="item.daysLeft > 90">({{ item.daysLeft }} يوم)</small>
+          <small *ngIf="item.daysLeft === null" class="expired-date">منتهي</small>
+        </div>
+        <div class="cell" data-label="الموقع">{{ item.warehouse }} - {{ item.location }}</div>
+        <div class="cell" data-label="حالة المخزون"><span class="status-pill" [ngClass]="stateClass(item.state)">{{ item.state }}</span></div>
+        <div class="cell actions-cell" data-label="الإجراءات"><span class="details-button">التفاصيل</span><i class="bi bi-three-dots-vertical"></i></div>
+      </button>
+    </div>
+
+    <footer class="table-footer">
+      <div class="pagination-copy">عرض 1 - {{ filteredItems.length }} من {{ filteredItems.length }}</div>
+      <div class="pagination"><button type="button"><i class="bi bi-chevron-right"></i></button><button type="button" class="active">1</button><button type="button"><i class="bi bi-chevron-left"></i></button></div>
+      <label class="page-size"><select [(ngModel)]="pageSize"><option>10</option><option>20</option><option>50</option></select><span>لكل صفحة</span></label>
+    </footer>
+  </section>
+
+  <section class="dashboard-grid">
+    <article class="panel item-details-panel">
+      <header class="panel-header selected-product-header">
+        <div class="product-title"><span class="item-symbol large" [ngClass]="selectedItem.symbolClass">{{ selectedItem.symbol }}</span><strong>{{ selectedItem.code }}</strong><h2>{{ selectedItem.name }}</h2></div>
+        <span class="status-pill" [ngClass]="stateClass(selectedItem.state)">{{ selectedItem.state }}</span>
+      </header>
+      <div class="details-grid">
+        <div><span>الفئة</span><b>{{ selectedItem.category }}</b></div>
+        <div><span>الكمية الحالية</span><b class="danger-value">{{ selectedItem.quantity }}</b></div>
+        <div><span>الوحدة</span><b>{{ selectedItem.unit }}</b></div>
+        <div><span>الحد الأدنى</span><b>{{ selectedItem.minimum }}</b></div>
+        <div><span>المستودع</span><b>{{ selectedItem.warehouse }}</b></div>
+        <div><span>تاريخ الصلاحية</span><b class="expiry-highlight">{{ selectedItem.expiry }} <em *ngIf="selectedItem.daysLeft">({{ selectedItem.daysLeft }} يوم)</em></b></div>
+        <div><span>الموقع</span><b>{{ selectedItem.location }}</b></div>
+        <div><span>تاريخ آخر جرد</span><b>{{ selectedItem.lastIssue }}</b></div>
+      </div>
+    </article>
+
+    <article class="panel operations-panel">
+      <header class="panel-header"><h2>آخر عمليات الصرف</h2><i class="bi bi-calendar2-week"></i></header>
+      <div class="operation-row" *ngFor="let operation of issueOperations">
+        <span class="employee">{{ operation.employee }}</span>
+        <b>{{ operation.quantity }}</b>
+        <time>{{ operation.date }} · {{ operation.time }}</time>
+      </div>
+      <button type="button" class="text-link">عرض جميع العمليات</button>
+    </article>
+
+    <article class="panel chart-panel">
+      <header class="panel-header"><h2>اتجاه الاستهلاك (آخر 6 أشهر)</h2><i class="bi bi-clipboard2-data"></i></header>
+      <div class="chart-legend"><span><i></i>استهلاك (علبة)</span></div>
+      <svg viewBox="0 0 410 180" class="line-chart" aria-label="مخطط استهلاك المخزون" role="img">
+        <g class="grid-lines">
+          <line x1="30" y1="18" x2="395" y2="18"></line>
+          <line x1="30" y1="55" x2="395" y2="55"></line>
+          <line x1="30" y1="92" x2="395" y2="92"></line>
+          <line x1="30" y1="130" x2="395" y2="130"></line>
+        </g>
+        <g class="y-labels"><text x="9" y="22">90</text><text x="9" y="59">60</text><text x="9" y="96">30</text><text x="17" y="134">0</text></g>
+        <polyline [attr.points]="chartPoints()"></polyline>
+        <circle *ngFor="let value of consumption; let i = index" [attr.cx]="chartX(i)" [attr.cy]="chartY(value)" r="4"></circle>
+        <g class="x-labels"><text *ngFor="let month of months; let i = index" [attr.x]="chartX(i)" y="153"><tspan [attr.x]="chartX(i)" dy="0">{{ month.split('\n')[0] }}</tspan><tspan [attr.x]="chartX(i)" dy="13">{{ month.split('\n')[1] }}</tspan></text></g>
+      </svg>
+    </article>
+
+    <article class="panel reorder-panel">
+      <header class="panel-header"><h2>توصية إعادة الطلب</h2><i class="bi bi-cart3"></i></header>
+      <div class="reorder-row"><span>الحد الأدنى</span><b>50 علبة</b></div>
+      <div class="reorder-row"><span>متوسط الاستهلاك الشهري</span><b>60 علبة</b></div>
+      <div class="reorder-row recommendation"><span>الكمية المقترحة</span><b>100 علبة</b></div>
+      <button type="button" class="primary-button"><i class="bi bi-truck"></i>طلب توريد</button>
+    </article>
+  </section>
+</section>

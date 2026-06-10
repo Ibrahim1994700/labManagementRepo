@@ -117,7 +117,7 @@ const routes: Routes = [
         ],
       },
 
- {
+      {
         path: 'nurse-Home',
         component: NurseHomePageComponent,
 
@@ -136,82 +136,103 @@ const routes: Routes = [
               ),
           },
           {
-            path: 'bookings',
+            path: 'Appointments',
             loadComponent: () =>
-              import('../home-page/Pages/my-bookings/my-bookings.component').then(
-                (m) => m.MyBookingsComponent,
+              import('../nurse-home-page/pages/appointmentandreservationmanagement/appointmentandreservationmanagement.component').then(
+                (m) => m.AppointmentandreservationmanagementComponent,
               ),
           },
 
           {
-            path: 'HomeWithdrawal',
+            path: 'Patient-reception',
             loadComponent: () =>
-              import('../home-page/Pages/home-withdrawal/home-withdrawal.component').then(
-                (m) => m.HomeWithdrawalComponent,
+              import('../nurse-home-page/pages/patient-reception/patient-reception.component').then(
+                (m) => m.PatientReceptionComponent,
               ),
           },
           {
-            path: 'individual-tests',
+            path: 'Nurse-HomeWithdrawal',
             loadComponent: () =>
-              import('../home-page/Pages/tests-catalog/tests-catalog.component').then(
-                (m) => m.TestsCatalogComponent,
+              import('../nurse-home-page/pages/homenursinghomewithdrawal/homenursinghomewithdrawal.component').then(
+                (m) => m.HomenursinghomewithdrawalComponent,
               ),
           },
           {
-            path: 'offers',
+            path: 'Recipe-review',
             loadComponent: () =>
-              import('../home-page/Pages/offers/offers.component').then(
-                (m) => m.OffersComponent,
+              import('../nurse-home-page/pages/recipereview/recipereview.component').then(
+                (m) => m.RecipereviewComponent,
               ),
           },
           {
-            path: 'family-account',
+            path: 'Analysis-requests',
             loadComponent: () =>
-              import('../home-page/Pages/family-account/family-account.component').then(
-                (m) => m.FamilyAccountComponent,
-              ),
-          },
-
-          {
-            path: 'Packages',
-            loadComponent: () =>
-              import('../home-page/Pages/packages/packages.component').then(
-                (m) => m.PackagesComponent,
+              import('../nurse-home-page/pages/analysisrequests/analysisrequests.component').then(
+                (m) => m.AnalysisrequestsComponent,
               ),
           },
           {
-            path: 'prescription',
+            path: 'results-review',
             loadComponent: () =>
-              import('../home-page/Pages/prescription/prescription.component').then(
-                (m) => m.PrescriptionComponent,
+              import('../nurse-home-page/pages/results-nurse/results-nurse.component').then(
+                (m) => m.ResultsNurseComponent,
+              ),
+          },
+        {
+            path: 'Bills-and-Payments',
+            loadComponent: () =>
+              import('../nurse-home-page/pages/billsand-payments/billsand-payments.component').then(
+                (m) => m.BillsandPaymentsComponent,
               ),
           },
           {
-            path: 'support',
+            path: 'Sample-tracking',
             loadComponent: () =>
-              import('../home-page/Pages/support/support.component').then(
-                (m) => m.SupportComponent,
+              import('../nurse-home-page/pages/sample-tracking/sample-tracking.component').then(
+                (m) => m.SampleTrackingComponent,
               ),
           },
-          {
-            path: 'profile',
+         
+         {
+            path: 'sample-delivery',
             loadComponent: () =>
-              import('../home-page/Pages/profile/profile.component').then(
-                (m) => m.ProfileComponent,
+              import('../nurse-home-page/pages/samples-delivery/samples-delivery.component').then(
+                (m) => m.SamplesDeliveryComponent,
               ),
           },
-          {
-            path: 'results',
+         {
+            path: 'inventory-management',
             loadComponent: () =>
-              import('../home-page/Pages/all-results/all-results.component').then(
-                (m) => m.AllResultsComponent,
+              import('../nurse-home-page/pages/inventory-management/inventory-management.component').then(
+                (m) => m.InventoryManagementComponent,
               ),
           },
-          {
-            path: 'cart',
+           {
+            path: 'reports',
             loadComponent: () =>
-              import('../../shared/Components/card/card.component').then(
-                (m) => m.CardComponent,
+              import('../nurse-home-page/pages/reports/reports.component').then(
+                (m) => m.ReportsComponent,
+              ),
+          },
+           {
+            path: 'shift-handover-management',
+            loadComponent: () =>
+              import('../nurse-home-page/pages/shifthandover-management/shifthandover-management.component').then(
+                (m) => m.ShifthandoverManagementComponent,
+              ),
+          },
+           {
+            path: 'nurse-notifications',
+            loadComponent: () =>
+              import('../nurse-home-page/pages/nurse-notifications/nurse-notifications.component').then(
+                (m) => m.NurseNotificationsComponent,
+              ),
+          },
+           {
+            path: 'nurse-Profile',
+            loadComponent: () =>
+              import('../nurse-home-page/pages/nurse-profile/nurse-profile.component').then(
+                (m) => m.NurseProfileComponent,
               ),
           },
         ],

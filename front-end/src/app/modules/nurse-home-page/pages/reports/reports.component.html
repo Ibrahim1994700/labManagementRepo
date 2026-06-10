@@ -1,0 +1,194 @@
+<section class="reports-page" dir="rtl">
+  <div class="page-heading">
+    <div>
+      <h1><i class="bi bi-graph-up-arrow"></i> التقارير التشغيلية</h1>
+      <p>تحليلات وتقارير الأداء التشغيلي لأعمال المختبر والتمريض</p>
+    </div>
+  </div>
+
+  <div class="metrics-grid">
+    <article class="metric-card" *ngFor="let metric of metrics">
+      <div class="metric-icon" [ngClass]="metric.tone">
+        <i class="bi" [ngClass]="metric.icon"></i>
+      </div>
+      <div class="metric-copy">
+        <h3>{{ metric.title }}</h3>
+        <div class="metric-value">{{ metric.value }}</div>
+        <span class="metric-unit" *ngIf="metric.unit">{{ metric.unit }}</span>
+        <div class="metric-change" [class.negative]="metric.trend === 'down' && metric.tone === 'red'">
+          <strong>{{ metric.comparison }}</strong>
+          <span>عن أمس</span>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="toolbar-card">
+    <div class="filter-grid">
+      <label class="filter-field date-field">
+        <span>الفترة الزمنية</span>
+        <div class="date-range">
+          <i class="bi bi-calendar3"></i>
+          <input [(ngModel)]="startDate" aria-label="تاريخ البداية">
+          <b>-</b>
+          <input [(ngModel)]="endDate" aria-label="تاريخ النهاية">
+        </div>
+      </label>
+
+      <label class="filter-field">
+        <span>الفرع</span>
+        <select [(ngModel)]="selectedBranch">
+          <option>كل الفروع</option>
+          <option>الرياض - العليا</option>
+          <option>جدة - الروضة</option>
+        </select>
+      </label>
+
+      <label class="filter-field">
+        <span>الممرض / الفني</span>
+        <select [(ngModel)]="selectedEmployee">
+          <option>الكل</option>
+          <option>سارة القحطاني</option>
+          <option>أحمد العتيبي</option>
+        </select>
+      </label>
+
+      <label class="filter-field">
+        <span>نوع الخدمة</span>
+        <select [(ngModel)]="selectedService">
+          <option>الكل</option>
+          <option>داخل المختبر</option>
+          <option>زيارة منزلية</option>
+        </select>
+      </label>
+
+      <button class="reset-btn" type="button" (click)="resetFilters()">
+        <i class="bi bi-arrow-repeat"></i> إعادة ضبط
+      </button>
+    </div>
+
+    <div class="actions-row">
+      <button class="action-btn pdf" type="button" (click)="exportReport('pdf')"><i class="bi bi-file-earmark-pdf"></i> تصدير PDF</button>
+      <button class="action-btn excel" type="button" (click)="exportReport('excel')"><i class="bi bi-file-earmark-excel"></i> تصدير Excel</button>
+      <button class="action-btn" type="button" (click)="exportReport('print')"><i class="bi bi-printer"></i> طباعة</button>
+      <button class="action-btn" type="button" (click)="exportReport('schedule')"><i class="bi bi-calendar-event"></i> جدولة التقرير</button>
+    </div>
+  </div>
+
+  <div class="charts-grid">
+    <article class="panel chart-panel status-panel">
+      <h2>حالة الطلبات</h2>
+      <div class="chart-legend compact">
+        <span><i class="dot green"></i> مكتملة</span>
+        <span><i class="dot blue"></i> قيد التنفيذ</span>
+        <span><i class="dot orange"></i> قيد المراجعة</span>
+        <span><i class="dot red"></i> مرفوضة</span>
+      </div>
+      <div class="stack-chart">
+        <div class="y-labels"><span>100%</span><span>75%</span><span>50%</span><span>25%</span><span>0%</span></div>
+        <div class="stack-area">
+          <div class="stack-column" *ngFor="let item of statusBars; let i = index">
+            <div class="segment rejected" [style.height.%]="item.rejected"></div>
+            <div class="segment review" [style.height.%]="item.review"></div>
+            <div class="segment running" [style.height.%]="item.running"></div>
+            <div class="segment done" [style.height.%]="item.done"></div>
+            <small>{{ ['مايو 6','مايو 13','مايو 20','مايو 27','3 يونيو','10 يونيو'][i] }}</small>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel chart-panel donut-panel">
+      <h2>أنواع التحاليل الأكثر طلباً</h2>
+      <div class="donut-layout">
+        <div class="donut-chart">
+          <div class="donut-hole"><strong>1,245</strong><span>إجمالي الطلبات</span></div>
+        </div>
+        <div class="donut-legend">
+          <div><i class="dot blue"></i><span>CBC (صورة دم كاملة)</span><b>420 (33%)</b></div>
+          <div><i class="dot orange"></i><span>FBS (سكر صائم)</span><b>280 (22%)</b></div>
+          <div><i class="dot green"></i><span>Urine Analysis (تحليل بول)</span><b>210 (17%)</b></div>
+          <div><i class="dot yellow"></i><span>Lipid Profile (دهون)</span><b>150 (12%)</b></div>
+          <div><i class="dot purple"></i><span>TSH (هرمون الغدة)</span><b>100 (8%)</b></div>
+          <div><i class="dot lavender"></i><span>أخرى</span><b>85 (7%)</b></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="panel chart-panel line-panel">
+      <h2>متوسط زمن الخدمة (دقيقة)</h2>
+      <div class="line-chart-wrap">
+        <div class="line-y"><span>40</span><span>30</span><span>20</span><span>10</span><span>0</span></div>
+        <svg viewBox="0 0 700 235" preserveAspectRatio="none" class="line-svg" aria-label="رسم متوسط زمن الخدمة">
+          <line x1="0" y1="20" x2="700" y2="20" />
+          <line x1="0" y1="70" x2="700" y2="70" />
+          <line x1="0" y1="120" x2="700" y2="120" />
+          <line x1="0" y1="170" x2="700" y2="170" />
+          <line x1="0" y1="220" x2="700" y2="220" />
+          <polyline points="25,75 130,150 235,110 340,135 445,85 550,145 670,132" />
+          <circle cx="25" cy="75" r="7"/><circle cx="130" cy="150" r="7"/><circle cx="235" cy="110" r="7"/>
+          <circle cx="340" cy="135" r="7"/><circle cx="445" cy="85" r="7"/><circle cx="550" cy="145" r="7"/><circle cx="670" cy="132" r="7"/>
+        </svg>
+        <div class="line-labels"><span>25 أبريل</span><span>2 مايو</span><span>9 مايو</span><span>16 مايو</span><span>23 مايو</span><span>30 مايو</span></div>
+        <span class="line-badge">24 د</span>
+      </div>
+    </article>
+
+    <article class="panel chart-panel hourly-panel">
+      <h2>الطلبات حسب الساعة <i class="bi bi-bar-chart"></i></h2>
+      <div class="hourly-chart">
+        <div class="hour-y"><span>200</span><span>150</span><span>100</span><span>50</span><span>0</span></div>
+        <div class="bars-area">
+          <div class="hour-bar" *ngFor="let bar of hourlyBars" [style.height.%]="bar / 2"></div>
+        </div>
+      </div>
+      <div class="hour-labels"><span>00:00</span><span>04:00</span><span>08:00</span><span>12:00</span><span>16:00</span><span>20:00</span><span>24:00</span></div>
+    </article>
+  </div>
+
+  <div class="bottom-grid">
+    <article class="panel table-panel">
+      <h2>أعلى التحاليل طلباً</h2>
+      <div class="responsive-table">
+        <table>
+          <thead><tr><th>#</th><th>التحليل</th><th>عدد الطلبات</th><th>النسبة</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let test of popularTests; let i = index">
+              <td>{{ i + 1 }}</td><td>{{ test.name }}</td><td>{{ test.value }}</td><td>{{ test.percent }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="panel table-panel">
+      <h2>أعلى الفروع أداءً</h2>
+      <div class="responsive-table">
+        <table>
+          <thead><tr><th>#</th><th>الفرع</th><th>العينات والطلبات</th><th>متوسط المعالجة</th><th>نسبة الرفض</th><th>الإيراد (ر.س)</th></tr></thead>
+          <tbody>
+            <tr *ngFor="let branch of branches">
+              <td>{{ branch.rank }}</td><td>{{ branch.name }}</td><td>{{ branch.orders }}</td><td>{{ branch.time }}</td><td>{{ branch.reject }}</td><td>{{ branch.revenue }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="panel staff-panel">
+      <h2>إنتاجية الممرضين / الفنيين</h2>
+      <div class="staff-grid">
+        <div class="staff-card" *ngFor="let member of staff">
+          <div class="staff-top">
+            <img [src]="member.avatar" [alt]="member.name">
+            <div><h3>{{ member.name }}</h3><span>{{ member.role }}</span></div>
+          </div>
+          <strong>{{ member.total }}</strong>
+          <small>طلب</small>
+          <p [class.negative]="member.change < 0">{{ member.change > 0 ? '+' : '' }}{{ member.change }}% <span>عن الفترة السابقة</span></p>
+          <div class="duration"><span>متوسط وقت الخدمة</span><b>{{ member.duration }} د</b></div>
+        </div>
+      </div>
+    </article>
+  </div>
+</section>

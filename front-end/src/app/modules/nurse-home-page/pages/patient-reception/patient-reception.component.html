@@ -1,0 +1,291 @@
+  <main class="main-content">
+      <div class="page-heading">
+        <h1>استقبال المرضى وإنشاء طلب جديد</h1>
+        <div class="breadcrumb-line">
+          <span>استقبال المرضى</span>
+          <i class="bi bi-chevron-left"></i>
+          <span>إنشاء طلب جديد</span>
+        </div>
+      </div>
+
+      <div class="stepper-card">
+        <div class="stepper-track"></div>
+        <div
+          class="step-item"
+          *ngFor="let step of steps; let index = index; trackBy: trackByIndex"
+          [class.active]="index === 0"
+        >
+          <span class="step-number">{{ index + 1 }}</span>
+          <span class="step-label">{{ step }}</span>
+        </div>
+      </div>
+
+      <div class="dashboard-grid">
+        <div class="dashboard-column right-column">
+          <section class="card queue-card">
+            <div class="queue-title">
+              <i class="bi bi-people queue-icon"></i>
+              <span>رقم الانتظار</span>
+            </div>
+            <div class="queue-number">231</div>
+            <p>الرجاء التوجه إلى منطقة الاستقبال</p>
+            <small>12:35 م، 12 يونيو 2024</small>
+            <button type="button" class="outline-primary-btn full-width">
+              <i class="bi bi-printer"></i>
+              طباعة رقم الانتظار
+            </button>
+          </section>
+
+          <section class="card instructions-card">
+            <div class="section-title amber-title">
+              <i class="bi bi-info-circle"></i>
+              <span>تعليمات مهمة للمريض</span>
+            </div>
+            <ul>
+              <li>يرجى الصيام 8-12 ساعة قبل التحاليل المطلوبة.</li>
+              <li>شرب الماء مسموح.</li>
+              <li>تجنب التدخين والكافيين قبل الفحص.</li>
+              <li>إبلاغنا عن أي أدوية تتناولها.</li>
+              <li>يفضل إجراء التحاليل صباحاً.</li>
+            </ul>
+            <a href="javascript:void(0)">عرض جميع التعليمات</a>
+          </section>
+
+          <section class="card invoice-card">
+            <div class="section-title">
+              <span>ملخص الفاتورة</span>
+            </div>
+            <div class="invoice-row"><span>الإجمالي الفرعي</span><strong>565.00 ر.س</strong></div>
+            <div class="invoice-row"><span>الخصم <small>(10%)</small></span><strong>- 56.50 ر.س</strong></div>
+            <div class="invoice-row"><span>ضريبة القيمة المضافة <small>(15%)</small></span><strong>76.28 ر.س</strong></div>
+            <div class="invoice-row"><span>تغطية التأمين</span><strong>- 250.00 ر.س</strong></div>
+            <div class="invoice-total"><span>الإجمالي المستحق</span><strong>334.78 ر.س</strong></div>
+            <a class="coverage-link" href="javascript:void(0)">تفاصيل التغطية</a>
+          </section>
+        </div>
+
+        <div class="dashboard-column center-column">
+          <section class="card patient-search-card">
+            <div class="card-header-row">
+              <div class="section-title"><span>البحث عن المريض</span></div>
+              <i class="bi bi-telephone-outbound header-action"></i>
+            </div>
+
+            <div class="form-grid two-cols">
+              <label class="field-label">
+                <span>رقم الجوال</span>
+                <div class="input-shell verified">
+                  <span class="prefix">+966</span>
+                  <input value="5 5123 4567" />
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+              </label>
+
+              <label class="field-label">
+                <span>رقم الهوية الوطنية</span>
+                <div class="input-shell verified">
+                  <i class="bi bi-person-vcard field-icon"></i>
+                  <input value="1 23 4567 890" />
+                </div>
+              </label>
+
+              <label class="field-label">
+                <span>رقم السجل الطبي (MRN)</span>
+                <div class="input-shell">
+                  <input placeholder="ادخل رقم السجل الطبي MRN" />
+                </div>
+              </label>
+
+              <label class="field-label">
+                <span>الاسم الكامل</span>
+                <div class="input-shell">
+                  <input placeholder="الاسم الأول، اسم العائلة أو كليهما" />
+                </div>
+              </label>
+            </div>
+
+            <div class="search-actions">
+              <button class="primary-btn" type="button">
+                <i class="bi bi-search"></i>
+                بحث
+              </button>
+              <button class="secondary-btn" type="button">مسح الحقول</button>
+            </div>
+          </section>
+
+          <section class="card patient-data-card">
+            <div class="section-title"><span>بيانات المريض الجديد</span></div>
+            <div class="form-grid two-cols">
+              <label class="field-label required">
+                <span>الاسم الأول</span>
+                <div class="input-shell"><input value="أحمد" /></div>
+              </label>
+              <label class="field-label required">
+                <span>اسم العائلة</span>
+                <div class="input-shell"><input value="الحربي" /></div>
+              </label>
+            </div>
+
+            <div class="inline-fields">
+              <div class="gender-field">
+                <span class="label-title required-dot">الجنس</span>
+                <label><input type="radio" checked name="gender" /> <span>ذكر</span></label>
+                <label><input type="radio" name="gender" /> <span>أنثى</span></label>
+              </div>
+              <label class="field-label required birth-field">
+                <span>تاريخ الميلاد</span>
+                <div class="input-shell">
+                  <i class="bi bi-calendar3 field-icon"></i>
+                  <input value="05/06/1990" />
+                </div>
+              </label>
+            </div>
+
+            <div class="form-grid two-cols">
+              <label class="field-label required">
+                <span>رقم الجوال</span>
+                <div class="input-shell verified">
+                  <span class="prefix">+966</span>
+                  <input value="5 5123 4567" />
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+              </label>
+              <label class="field-label">
+                <span>البريد الإلكتروني</span>
+                <div class="input-shell"><input value="ahmed.alharbi@example.com" /></div>
+              </label>
+              <label class="field-label required">
+                <span>رقم الهوية الوطنية</span>
+                <div class="input-shell verified">
+                  <i class="bi bi-person-vcard field-icon"></i>
+                  <input value="1 23 4567 890" />
+                  <i class="bi bi-check-circle-fill"></i>
+                </div>
+              </label>
+              <label class="field-label">
+                <span>شركة التأمين</span>
+                <div class="input-shell select-shell">
+                  <select>
+                    <option>التعاونية للتأمين</option>
+                  </select>
+                  <i class="bi bi-chevron-down"></i>
+                </div>
+              </label>
+            </div>
+
+            <label class="field-label notes-label">
+              <span>ملاحظات طبية</span>
+              <div class="textarea-shell">
+                <textarea placeholder="ادخل أي معلومات طبية مهمة (حساسية، أمراض مزمنة، أدوية...)"></textarea>
+                <small>0/500</small>
+              </div>
+            </label>
+          </section>
+
+          <section class="card quick-actions-card">
+            <div class="quick-title"><i class="bi bi-stars"></i> إجراءات سريعة</div>
+            <div class="quick-actions-grid">
+              <button class="quick-action green" type="button">
+                <i class="bi bi-plus-square"></i>
+                <strong>إنشاء الطلب</strong>
+                <span>حفظ وإنشاء طلب جديد</span>
+              </button>
+              <button class="quick-action" type="button">
+                <i class="bi bi-person"></i>
+                <strong>تسجيل وصول</strong>
+                <span>تسجيل المريض دون طلب</span>
+              </button>
+              <button class="quick-action" type="button">
+                <i class="bi bi-printer"></i>
+                <strong>طباعة رقم الانتظار</strong>
+                <span>طباعة رقم انتظار فقط</span>
+              </button>
+              <button class="quick-action" type="button">
+                <i class="bi bi-test-tube"></i>
+                <strong>إرسال إلى جمع العينات</strong>
+                <span>إرسال المريض إلى غرفة جمع العينات</span>
+              </button>
+            </div>
+          </section>
+        </div>
+
+        <div class="dashboard-column left-column">
+          <section class="card results-card">
+            <div class="results-heading">
+              <div>
+                <div class="section-title"><span>نتائج البحث</span><span class="count-badge">3</span></div>
+                <small>تم العثور على 3 مرضى</small>
+              </div>
+            </div>
+
+            <div class="patients-list">
+              <article class="patient-result" *ngFor="let patient of filteredPatients">
+                <div class="patient-avatar" [ngClass]="patient.tone">{{ patient.initials }}</div>
+                <div class="patient-info">
+                  <strong>{{ patient.name }}</strong>
+                  <span>رقم الهوية: {{ patient.nationalId }}</span>
+                  <span class="mrn">MRN: {{ patient.mrn }}</span>
+                </div>
+                <div class="patient-meta">
+                  <strong>{{ patient.birthDate }}</strong>
+                  <span>الجنس: {{ patient.gender }}</span>
+                </div>
+              </article>
+            </div>
+
+            <button class="new-patient-btn" type="button">
+              <i class="bi bi-plus-lg"></i>
+              إنشاء مريض جديد
+            </button>
+          </section>
+
+          <section class="card services-card">
+            <div class="section-title"><span>اختيار الخدمات</span></div>
+
+            <div class="service-tabs">
+              <button [class.active]="serviceTab === 'labs'" (click)="selectTab('labs')">تحاليل فردية</button>
+              <button [class.active]="serviceTab === 'packages'" (click)="selectTab('packages')">باقات</button>
+              <button [class.active]="serviceTab === 'prescription'" (click)="selectTab('prescription')">وصفة طبية</button>
+              <button [class.active]="serviceTab === 'repeat'" (click)="selectTab('repeat')">إعادة فحص</button>
+            </div>
+
+            <div class="tests-toolbar">
+              <button type="button" class="category-select">
+                <i class="bi bi-chevron-down"></i>
+                كل الفئات
+              </button>
+              <div class="tests-search">
+                <input type="text" placeholder="ابحث عن تحليل أو فحص..." />
+                <i class="bi bi-search"></i>
+              </div>
+            </div>
+
+            <div class="tests-list">
+              <label class="test-row" *ngFor="let test of labTests">
+                <input type="checkbox" [(ngModel)]="test.selected" />
+                <span class="test-name">{{ test.name }} <b>({{ test.code }})</b></span>
+                <span class="test-price">{{ test.price | number:'1.2-2' }} ر.س</span>
+              </label>
+            </div>
+
+            <button class="show-more" type="button">عرض المزيد</button>
+
+            <div class="selected-tests">
+              <div class="selected-title">
+                <span>التحاليل المختارة ({{ selectedTests.length }})</span>
+                <i class="bi bi-cart3"></i>
+              </div>
+              <div class="selected-test-row" *ngFor="let test of selectedTests">
+                <button type="button" (click)="test.selected = false"><i class="bi bi-x-lg"></i></button>
+                <span>{{ test.name }} ({{ test.code }})</span>
+                <strong>{{ test.price | number:'1.2-2' }} ر.س</strong>
+              </div>
+              <div class="services-total">
+                <span>الإجمالي الفرعي</span>
+                <strong>{{ subtotal | number:'1.2-2' }} ر.س</strong>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>

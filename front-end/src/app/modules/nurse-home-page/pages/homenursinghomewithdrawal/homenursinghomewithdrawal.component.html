@@ -1,0 +1,276 @@
+<section class="home-collection-page" dir="rtl">
+  <div class="page-heading">
+    <h1>إدارة طلبات السحب المنزلي</h1>
+    <p>إدارة ومتابعة زيارات السحب المنزلي وتسجيل جمع العينات</p>
+  </div>
+
+  <section class="stats-grid" aria-label="إحصائيات طلبات السحب المنزلي">
+    <article
+      class="stat-card"
+      *ngFor="let stat of stats"
+      [ngClass]="'tone-' + stat.tone"
+    >
+      <div class="stat-top">
+        <div>
+          <span class="stat-label">{{ stat.title }}</span>
+          <strong class="stat-value">{{ stat.value }}</strong>
+        </div>
+        <span class="stat-icon"><i class="bi" [ngClass]="stat.icon"></i></span>
+      </div>
+      <div class="stat-change">
+        <span>عن أمس</span>
+        <b>{{ stat.change }}</b>
+      </div>
+      <button type="button" class="stat-link">{{ stat.action }}</button>
+    </article>
+  </section>
+
+  <section class="filter-panel">
+    <div class="filter-search">
+      <input
+        type="search"
+        [(ngModel)]="searchText"
+        placeholder="ابحث برقم الطلب، اسم المريض، رقم الجوال..."
+      />
+      <i class="bi bi-search"></i>
+    </div>
+
+    <label class="filter-control date-control">
+      <span>تاريخ الزيارة</span>
+      <div class="control-shell">
+        <i class="bi bi-calendar3"></i>
+        <input type="date" [(ngModel)]="selectedDate" />
+      </div>
+    </label>
+
+    <label class="filter-control">
+      <span>المدينة / الفرع</span>
+      <select [(ngModel)]="selectedCity">
+        <option>الرياض - العليا</option>
+        <option>الرياض - النرجس</option>
+        <option>الرياض - الياسمين</option>
+      </select>
+    </label>
+
+    <label class="filter-control">
+      <span>العنوان</span>
+      <select [(ngModel)]="selectedAddress">
+        <option>الكل</option>
+        <option>العليا</option>
+        <option>النرجس</option>
+      </select>
+    </label>
+
+    <label class="filter-control">
+      <span>الممرض المعين</span>
+      <select [(ngModel)]="selectedNurse">
+        <option>الكل</option>
+        <option>نورة الشهري</option>
+        <option>لم يتم التعيين</option>
+      </select>
+    </label>
+
+    <label class="filter-control">
+      <span>حالة الزيارة</span>
+      <select [(ngModel)]="selectedVisitStatus">
+        <option>الكل</option>
+        <option>تم الوصول</option>
+        <option>في الطريق</option>
+        <option>مؤكدة</option>
+      </select>
+    </label>
+
+    <label class="filter-control">
+      <span>حالة الدفع</span>
+      <select [(ngModel)]="selectedPaymentStatus">
+        <option>الكل</option>
+        <option>مدفوع</option>
+        <option>لم يتم الدفع</option>
+      </select>
+    </label>
+
+    <button class="filter-button" type="button" title="تصفية">
+      <i class="bi bi-funnel"></i>
+    </button>
+
+    <button class="reset-button" type="button" (click)="resetFilters()">
+      <i class="bi bi-arrow-clockwise"></i>
+      إعادة تعيين
+    </button>
+  </section>
+
+  <section class="requests-panel">
+    <div class="desktop-table-head" aria-hidden="true">
+      <span>رقم الطلب</span>
+      <span>المريض</span>
+      <span>رقم الجوال</span>
+      <span>العنوان</span>
+      <span>وقت الزيارة</span>
+      <span>عدد الفحوصات</span>
+      <span>الممرض المعين</span>
+      <span>حالة الدفع</span>
+      <span>حالة الزيارة</span>
+      <span>الإجراءات</span>
+    </div>
+
+    <ng-container *ngFor="let row of visits; trackBy: trackByOrder">
+      <article class="request-row" [class.is-expanded]="row.expanded">
+        <button class="order-cell" type="button" (click)="toggleRow(row)">
+          <i class="bi" [ngClass]="row.expanded ? 'bi-chevron-up' : 'bi-chevron-down'"></i>
+          <strong>{{ row.orderNo }}</strong>
+        </button>
+
+        <div class="patient-cell">
+          <strong>{{ row.patient }}</strong>
+          <small>{{ row.meta }}</small>
+        </div>
+
+        <div class="phone-cell">
+          <i class="bi bi-telephone"></i>
+          <span>{{ row.phone }}</span>
+        </div>
+
+        <div class="address-cell">
+          <i class="bi bi-geo-alt"></i>
+          <span><b>{{ row.city }}</b><small>{{ row.address }}</small></span>
+        </div>
+
+        <div class="time-cell">
+          <strong>{{ row.time.split(' ')[0] }}</strong>
+          <small>{{ row.time.substring(row.time.indexOf(' ') + 1) }}</small>
+        </div>
+
+        <div class="tests-cell">{{ row.tests }}</div>
+
+        <div class="nurse-cell">
+          <img *ngIf="row.nurseAvatar" src="assets/home-collection/nurse.png" alt="" />
+          <span *ngIf="!row.nurseAvatar" class="empty-avatar"><i class="bi bi-person-fill"></i></span>
+          <span>{{ row.nurse }}</span>
+        </div>
+
+        <span class="status-pill" [ngClass]="row.paymentTone">{{ row.payment }}</span>
+        <span class="status-pill" [ngClass]="row.statusTone">{{ row.status }}</span>
+
+        <button class="more-button" type="button"><i class="bi bi-three-dots"></i></button>
+      </article>
+
+      <section class="expanded-details" *ngIf="row.expanded">
+        <div class="details-grid">
+          <article class="detail-card verification-card">
+            <h3>قائمة التحقق (للممرض)</h3>
+            <label *ngFor="let item of checklist">
+              <input type="checkbox" [(ngModel)]="item.checked" />
+              <span>{{ item.label }}</span>
+            </label>
+          </article>
+
+          <article class="detail-card patient-info-card">
+            <h3>بيانات المريض</h3>
+            <div class="patient-summary">
+              <div>
+                <strong>أحمد محمد العتيبي</strong>
+                <span>37 سنة - ذكر</span>
+              </div>
+              <span class="large-avatar"><i class="bi bi-person-fill"></i></span>
+            </div>
+            <p><span>رقم المريض</span><b>MR-0087765</b></p>
+            <p><i class="bi bi-telephone"></i><b>050 123 4567</b></p>
+            <p><i class="bi bi-envelope"></i><b>ahmed.alotaibi&#64;Email.Com</b></p>
+            <p><span>فصيلة الدم</span><b>O+</b></p>
+          </article>
+
+          <article class="detail-card location-card">
+            <h3>العنوان والموقع</h3>
+            <p>الرياض - العليا</p>
+            <small>شارع التحلية، برج المملكة، الدور 14<br />رقم الشقة: 1403</small>
+            <img src="assets/home-collection/map.png" alt="خريطة الموقع" />
+            <button type="button">
+              <i class="bi bi-box-arrow-up-left"></i>
+              فتح في خرائط جوجل
+            </button>
+          </article>
+
+          <div class="test-stack">
+            <article class="detail-card tests-card">
+              <h3>الفحوصات المطلوبة (12)</h3>
+              <ul>
+                <li>صورة دم كاملة (CBC)</li>
+                <li>سكر صائم (FBS)</li>
+                <li>دهون ثلاثية (Triglyceride)</li>
+                <li>الكوليسترول الكلي</li>
+                <li>وظائف كبد (LFT)</li>
+              </ul>
+              <a href="javascript:void(0)">+7 فحوصات أخرى</a>
+            </article>
+
+            <article class="detail-card fasting-card">
+              <img src="assets/home-collection/fasting.png" alt="متطلبات الصيام" />
+              <div>
+                <h3>متطلبات الصيام</h3>
+                <p>صائم لمدة 12 ساعة</p>
+                <small>من 08:00 م</small>
+              </div>
+              <i class="bi bi-basket2 fasting-icon"></i>
+            </article>
+          </div>
+
+          <div class="attachment-stack">
+            <article class="detail-card attachment-card">
+              <h3>الملف المرفق</h3>
+              <div class="file-box">
+                <span class="pdf-icon"><i class="bi bi-file-earmark-pdf"></i></span>
+                <div><strong>وصفة_دكتور.pdf</strong><small>PDF - 245 KB</small></div>
+                <i class="bi bi-download download-icon"></i>
+              </div>
+            </article>
+
+            <article class="detail-card note-card">
+              <h3>ملاحظات داخلية</h3>
+              <p>المريض يفضل التواصل قبل الوصول</p>
+              <p>حساسية من البنسلين</p>
+            </article>
+          </div>
+
+          <article class="detail-card schedule-card">
+            <div class="schedule-title">
+              <h3>جدول اليوم</h3>
+              <span>نورة الشهري</span>
+            </div>
+            <div
+              class="schedule-item"
+              *ngFor="let item of daySchedule"
+              [class.current]="item.current"
+            >
+              <time>{{ item.time }}</time>
+              <span class="dot"></span>
+              <div><strong>{{ item.name }}</strong><small>{{ item.state }}</small></div>
+            </div>
+            <a href="javascript:void(0)">عرض الجدول الكامل</a>
+          </article>
+        </div>
+
+        <div class="payment-strip">
+          <div class="payment-method">
+            <i class="bi bi-file-earmark-plus"></i>
+            <span>طريقة الدفع</span>
+            <strong>342 **** 4242</strong>
+            <small>08:15 م - 2024/05/19</small>
+          </div>
+          <div><span>المبلغ</span><strong>240 ر.س</strong></div>
+          <div><span>بقية الدفع</span><strong>240.00</strong></div>
+          <span class="status-pill paid">مدفوع</span>
+        </div>
+
+        <div class="action-bar">
+          <button type="button" class="action assign"><i class="bi bi-people"></i>تعيين ممرض</button>
+          <button type="button" class="action"><i class="bi bi-car-front"></i>بدء الرحلة</button>
+          <button type="button" class="action"><i class="bi bi-geo-alt"></i>تم الوصول</button>
+          <button type="button" class="action"><i class="bi bi-test-tube"></i>تسجيل جمع العينة</button>
+          <button type="button" class="action"><i class="bi bi-telephone"></i>الاتصال بالمريض</button>
+          <button type="button" class="action reschedule"><i class="bi bi-calendar3"></i>إعادة الجدولة</button>
+          <button type="button" class="action cancel"><i class="bi bi-trash"></i>إلغاء</button>
+        </div>
+      </section>
+    </ng-container>
+  </section>
+</section>

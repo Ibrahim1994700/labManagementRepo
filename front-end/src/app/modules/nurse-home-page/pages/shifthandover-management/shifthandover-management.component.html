@@ -1,0 +1,340 @@
+<section class="handover-page" dir="rtl">
+  <div class="page-title-wrap">
+    <h1>تقرير الوردية وتسليم الاستلام</h1>
+    <p>ملخص شامل لأعمال الوردية وتسليم المهام للمستلم التالي</p>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card" *ngFor="let stat of stats">
+      <div class="stat-icon" [ngClass]="'tone-' + stat.tone">
+        <i class="bi" [ngClass]="stat.icon"></i>
+      </div>
+      <div class="stat-content">
+        <span class="stat-title">{{ stat.title }}</span>
+        <strong>{{ stat.value }}</strong>
+        <div class="stat-note">
+          <span
+            *ngIf="stat.trend"
+            [class.trend-up]="stat.trendType === 'up'"
+            [class.trend-down]="stat.trendType === 'down'"
+          >{{ stat.trend }}</span>
+          <span>{{ stat.note }}</span>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="dashboard-grid">
+    <article class="dashboard-card handover-card">
+      <header class="card-header">
+        <div class="card-heading">
+          <i class="bi bi-person-lock"></i>
+          <h2>بيانات التسليم</h2>
+        </div>
+      </header>
+
+      <div class="card-body handover-body">
+        <div class="form-grid two-columns">
+          <label class="field-group">
+            <span>اسم المسلم (أنت الحالي) <b>*</b></span>
+            <input type="text" value="سارة القحطاني" readonly />
+          </label>
+
+          <label class="field-group">
+            <span>اسم المستلم (المسؤول التالي) <b>*</b></span>
+            <select>
+              <option selected disabled>اختر أو ابحث عن موظف...</option>
+              <option>محمد العتيبي</option>
+              <option>ريم خالد</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="form-grid two-columns">
+          <label class="field-group">
+            <span>تاريخ التسليم <b>*</b></span>
+            <div class="input-icon">
+              <input type="text" value="20/05/2024" />
+              <i class="bi bi-calendar3"></i>
+            </div>
+          </label>
+
+          <label class="field-group">
+            <span>وقت التسليم <b>*</b></span>
+            <div class="input-icon">
+              <input type="text" value="03:00 م" />
+              <i class="bi bi-calendar3"></i>
+            </div>
+          </label>
+        </div>
+
+        <label class="field-group textarea-group">
+          <span>ملاحظات الوردية</span>
+          <textarea maxlength="500" placeholder="اكتب ملخص ما يجب معرفته للوردية التالية..."></textarea>
+          <small>0/500</small>
+        </label>
+
+        <label class="field-group textarea-group">
+          <span>حوادث أو استثناءات؟</span>
+          <textarea maxlength="300" placeholder="اكتب أي حوادث، أعطال أو استثناءات حدثت أثناء الوردية..."></textarea>
+          <small>0/300</small>
+        </label>
+
+        <div class="signature-grid">
+          <div class="signature-panel">
+            <span>تأكيد المسلم</span>
+            <div class="signature-box">
+              <i class="bi bi-pen"></i>
+              <small>توقيع المسلم</small>
+            </div>
+          </div>
+
+          <div class="signature-panel">
+            <span>تأكيد المستلم</span>
+            <div class="signature-box">
+              <i class="bi bi-pen"></i>
+              <small>توقيع المستلم</small>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer class="handover-actions">
+        <button class="btn btn-success action-main" type="button">
+          <i class="bi bi-shield-check"></i>
+          اعتماد تسليم الوردية
+        </button>
+        <button class="btn btn-outline-primary" type="button">
+          <i class="bi bi-floppy"></i>
+          حفظ مسودة
+        </button>
+        <button class="btn btn-outline-primary" type="button">
+          <i class="bi bi-printer"></i>
+          طباعة التقرير
+        </button>
+      </footer>
+    </article>
+
+    <article class="dashboard-card tasks-card">
+      <header class="card-header">
+        <div class="card-heading">
+          <i class="bi bi-clipboard2-check"></i>
+          <h2>المهام والعينات بانتظار المتابعة (6)</h2>
+        </div>
+      </header>
+
+      <div class="table-wrap">
+        <table class="data-table tasks-table">
+          <thead>
+            <tr>
+              <th>النوع</th>
+              <th>الوصف</th>
+              <th>الوقت</th>
+              <th>الأولوية</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let task of followUpTasks">
+              <td>
+                <span class="task-type"><i class="bi" [ngClass]="task.typeIcon"></i>{{ task.type }}</span>
+              </td>
+              <td>{{ task.description }}</td>
+              <td class="nowrap">{{ task.time }}</td>
+              <td><span class="priority-badge" [ngClass]="priorityClass(task.priority)">{{ task.priority }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <a class="card-link" href="javascript:void(0)">
+        عرض جميع المهام
+        <i class="bi bi-arrow-left"></i>
+      </a>
+    </article>
+
+    <article class="dashboard-card shift-card">
+      <header class="card-header">
+        <div class="card-heading">
+          <i class="bi bi-calendar3"></i>
+          <h2>ملخص الوردية</h2>
+        </div>
+      </header>
+
+      <div class="summary-grid">
+        <div class="summary-item">
+          <div>
+            <span>الموظف</span>
+            <strong>سارة القحطاني</strong>
+          </div>
+          <i class="bi bi-person"></i>
+        </div>
+        <div class="summary-item">
+          <div>
+            <span>تاريخ الوردية</span>
+            <strong>20/05/2024</strong>
+          </div>
+          <i class="bi bi-calendar3"></i>
+        </div>
+        <div class="summary-item">
+          <div>
+            <span>وقت البداية</span>
+            <strong>07:00 ص</strong>
+          </div>
+          <i class="bi bi-stopwatch"></i>
+        </div>
+        <div class="summary-item">
+          <div>
+            <span>وقت النهاية</span>
+            <strong>03:00 م</strong>
+          </div>
+          <i class="bi bi-stopwatch"></i>
+        </div>
+        <div class="summary-item">
+          <div>
+            <span>القسم</span>
+            <strong>الزيارات المنزلية والمختبر</strong>
+          </div>
+          <i class="bi bi-building"></i>
+        </div>
+        <div class="summary-item">
+          <div>
+            <span>الموقع</span>
+            <strong>الرياض - شمال</strong>
+          </div>
+          <i class="bi bi-geo-alt"></i>
+        </div>
+      </div>
+
+      <div class="shift-status">
+        <span>إجمالي الوردية</span>
+        <strong><i class="bi bi-clock"></i> 8 ساعات</strong>
+        <span class="status-complete">مكتملة</span>
+      </div>
+    </article>
+
+    <article class="dashboard-card checklist-card">
+      <header class="card-header">
+        <div class="card-heading">
+          <i class="bi bi-check2-square"></i>
+          <h2>قائمة التحقق للتسليم</h2>
+        </div>
+      </header>
+
+      <div class="checklist-list">
+        <div class="check-item" *ngFor="let item of checklist">
+          <i class="bi check-icon" [ngClass]="item.done ? 'bi-check-square-fill done' : 'bi-square pending'"></i>
+          <span class="check-label">{{ item.label }}</span>
+          <span class="check-status" [class.in-progress]="!item.done">{{ item.status }}</span>
+        </div>
+      </div>
+
+      <div class="progress-section">
+        <span>إجمالي التقدم</span>
+        <div class="progress" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-bar" style="width: 75%"></div>
+        </div>
+        <strong>75%</strong>
+      </div>
+    </article>
+
+    <article class="dashboard-card activities-card">
+      <header class="card-header">
+        <div class="card-heading">
+          <i class="bi bi-activity"></i>
+          <h2>آخر الأنشطة</h2>
+        </div>
+      </header>
+
+      <div class="timeline">
+        <div class="timeline-item" *ngFor="let activity of activities">
+          <div class="timeline-marker" [ngClass]="'marker-' + activity.tone"></div>
+          <div class="timeline-content">
+            <strong>{{ activity.title }}</strong>
+            <span>{{ activity.description }}</span>
+          </div>
+          <div class="timeline-time">
+            <strong>{{ activity.date }}</strong>
+            <span>{{ activity.time }}</span>
+          </div>
+        </div>
+      </div>
+
+      <a class="card-link" href="javascript:void(0)">
+        عرض جميع الأنشطة
+        <i class="bi bi-arrow-left"></i>
+      </a>
+    </article>
+
+    <article class="dashboard-card inventory-card">
+      <header class="card-header">
+        <div class="card-heading">
+          <i class="bi bi-box-seam"></i>
+          <h2>المخزون المستهلك خلال الوردية</h2>
+        </div>
+      </header>
+
+      <div class="table-wrap">
+        <table class="data-table inventory-table">
+          <thead>
+            <tr>
+              <th>الصنف</th>
+              <th>الكمية المستهلكة</th>
+              <th>الوحدة</th>
+              <th>المتبقي</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of inventory">
+              <td>{{ row.item }}</td>
+              <td>{{ row.consumed }}</td>
+              <td>{{ row.unit }}</td>
+              <td>{{ row.remaining }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <a class="card-link" href="javascript:void(0)">
+        عرض المخزون بالكامل
+        <i class="bi bi-arrow-left"></i>
+      </a>
+    </article>
+
+    <article class="dashboard-card urgent-card">
+      <header class="card-header">
+        <div class="card-heading danger-heading">
+          <i class="bi bi-alarm"></i>
+          <h2>الحالات العاجلة غير المحلولة (4)</h2>
+        </div>
+      </header>
+
+      <div class="table-wrap">
+        <table class="data-table urgent-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>المريض</th>
+              <th>الوصف</th>
+              <th>الوقت</th>
+              <th>الإجراء المطلوب</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of urgentCases">
+              <td>{{ row.id }}</td>
+              <td>{{ row.patient }}</td>
+              <td>{{ row.description }}</td>
+              <td class="nowrap">{{ row.time }}</td>
+              <td><span class="urgent-action">{{ row.action }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <a class="card-link" href="javascript:void(0)">
+        عرض جميع الحالات
+        <i class="bi bi-arrow-left"></i>
+      </a>
+    </article>
+  </div>
+</section>

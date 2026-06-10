@@ -1,0 +1,374 @@
+<section class="handover-page" dir="rtl">
+  <header class="page-heading">
+    <h1>تسليم العينات للأقسام</h1>
+    <p>إدارة وتجهيز وتسليم العينات المجمعة إلى أقسام المختبر</p>
+  </header>
+
+  <section class="stats-grid" aria-label="ملخص دفعات التسليم">
+    <article
+      class="stat-card"
+      *ngFor="let stat of stats"
+      [attr.data-tone]="stat.tone"
+    >
+      <span class="stat-icon">
+        <i class="bi" [ngClass]="stat.icon"></i>
+      </span>
+
+      <div class="stat-content">
+        <h2>{{ stat.title }}</h2>
+        <strong>{{ stat.value }}</strong>
+        <span>{{ stat.unit }}</span>
+        <small>
+          <b>{{ stat.delta }}</b>
+          {{ stat.deltaLabel }}
+        </small>
+      </div>
+    </article>
+  </section>
+
+  <section class="filters-card" aria-label="فلترة دفعات التسليم">
+    <label class="field search-field">
+      <span class="visually-hidden">البحث</span>
+      <div class="control-with-icon">
+        <i class="bi bi-search"></i>
+        <input
+          [(ngModel)]="searchText"
+          type="search"
+          placeholder="ابحث برقم الدفعة أو القسم أو اسم الموظف..."
+        />
+      </div>
+    </label>
+
+    <label class="field">
+      <span>القسم</span>
+      <select [(ngModel)]="selectedDepartment">
+        <option>الكل</option>
+        <option>الكيمياء</option>
+        <option>أمراض الدم</option>
+        <option>الأحياء الدقيقة</option>
+        <option>المناعة</option>
+        <option>الهرمونات</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>الفرع</span>
+      <select [(ngModel)]="selectedBranch">
+        <option>الكل</option>
+        <option>فرع العليا</option>
+        <option>فرع الروضة</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>وقت السحب</span>
+      <select [(ngModel)]="selectedPickupTime">
+        <option>اليوم</option>
+        <option>أمس</option>
+        <option>هذا الأسبوع</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>حالة التسليم</span>
+      <select [(ngModel)]="selectedHandoverStatus">
+        <option>الكل</option>
+        <option>بانتظار الاستلام</option>
+        <option>تم الاستلام</option>
+      </select>
+    </label>
+
+    <label class="field">
+      <span>الموظف المستلم</span>
+      <select [(ngModel)]="selectedReceiver">
+        <option>الكل</option>
+        <option>غير معين</option>
+        <option>أحمد محمد العتيبي</option>
+        <option>عبدالله فهد العصيمي</option>
+      </select>
+    </label>
+
+    <button class="reset-button" type="button" (click)="resetFilters()">
+      <i class="bi bi-arrow-repeat"></i>
+      إعادة تعيين
+    </button>
+  </section>
+
+  <section class="workspace">
+    <div class="main-panel">
+      <section class="batch-list-card">
+        <div class="section-header">
+          <h2>
+            قائمة دفعات التسليم
+            <span class="count-badge">12</span>
+          </h2>
+        </div>
+
+        <div class="desktop-table-wrap">
+          <table class="batch-table">
+            <thead>
+              <tr>
+                <th>رقم الدفعة</th>
+                <th>القسم</th>
+                <th>عدد العينات</th>
+                <th>عاجلة</th>
+                <th>حالة التعبئة</th>
+                <th>مرسل الدفعة</th>
+                <th>المستلم</th>
+                <th>التسليم</th>
+                <th>وقت التجهيز</th>
+                <th>الإجراءات</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr
+                *ngFor="let batch of filteredBatches; trackBy: trackByBatch"
+                class="batch-row"
+                [class.selected]="batch.id === selectedBatchId"
+                (click)="selectBatch(batch)"
+              >
+                <td>
+                  <div class="batch-id-cell">
+                    <button class="row-toggle" type="button" aria-label="فتح تفاصيل الدفعة">
+                      <i class="bi" [ngClass]="batch.id === selectedBatchId ? 'bi-chevron-up' : 'bi-chevron-left'"></i>
+                    </button>
+                    <strong>{{ batch.id }}</strong>
+                  </div>
+                </td>
+                <td>{{ batch.department }}</td>
+                <td>{{ batch.samplesCount }}</td>
+                <td>
+                  <strong [class.urgent-number]="batch.urgentCount > 0">{{ batch.urgentCount }}</strong>
+                </td>
+                <td>
+                  <span class="status-pill" [class.danger]="batch.preparationStatus === 'غير مكتملة'">
+                    {{ batch.preparationStatus }}
+                  </span>
+                </td>
+                <td>
+                  <div class="staff-cell">
+                    <img *ngIf="batch.sender.avatar" [src]="batch.sender.avatar" [alt]="batch.sender.name" />
+                    <span *ngIf="!batch.sender.avatar" class="avatar-fallback"><i class="bi bi-person"></i></span>
+                    <div>
+                      <b>{{ batch.sender.name }}</b>
+                      <small>{{ batch.sender.code }}</small>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="staff-cell" *ngIf="batch.receiver; else noReceiver">
+                    <img *ngIf="batch.receiver.avatar" [src]="batch.receiver.avatar" [alt]="batch.receiver.name" />
+                    <div>
+                      <b>{{ batch.receiver.name }}</b>
+                      <small>{{ batch.receiver.code }}</small>
+                    </div>
+                  </div>
+                  <ng-template #noReceiver>—</ng-template>
+                </td>
+                <td>
+                  <span class="handover-pill" [class.done]="batch.handoverStatus === 'تم الاستلام'">
+                    {{ batch.handoverStatus }}
+                  </span>
+                </td>
+                <td>
+                  <div class="time-cell">
+                    <span>{{ batch.day }}</span>
+                    <b>{{ batch.preparationTime }}</b>
+                  </div>
+                </td>
+                <td>
+                  <div class="actions-cell">
+                    <button type="button" aria-label="المزيد"><i class="bi bi-three-dots-vertical"></i></button>
+                    <button type="button" aria-label="إظهار التفاصيل"><i class="bi bi-chevron-down"></i></button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="mobile-batches">
+          <article
+            class="mobile-batch-card"
+            *ngFor="let batch of filteredBatches; trackBy: trackByBatch"
+            [class.selected]="batch.id === selectedBatchId"
+            (click)="selectBatch(batch)"
+          >
+            <div class="mobile-card-head">
+              <div>
+                <small>رقم الدفعة</small>
+                <strong>{{ batch.id }}</strong>
+              </div>
+              <span class="status-pill" [class.danger]="batch.preparationStatus === 'غير مكتملة'">
+                {{ batch.preparationStatus }}
+              </span>
+            </div>
+
+            <div class="mobile-data-grid">
+              <div><span>القسم</span><b>{{ batch.department }}</b></div>
+              <div><span>عدد العينات</span><b>{{ batch.samplesCount }}</b></div>
+              <div><span>العاجلة</span><b [class.urgent-number]="batch.urgentCount > 0">{{ batch.urgentCount }}</b></div>
+              <div><span>التسليم</span><b>{{ batch.handoverStatus }}</b></div>
+              <div><span>المرسل</span><b>{{ batch.sender.name }}</b></div>
+              <div><span>وقت التجهيز</span><b>{{ batch.preparationTime }}</b></div>
+            </div>
+          </article>
+        </div>
+
+        <section class="expanded-details" *ngIf="selectedBatch">
+          <div class="detail-grid">
+            <article class="detail-card timeline-card">
+              <h3>مسار التسليم</h3>
+              <div class="timeline-list">
+                <div class="timeline-item" *ngFor="let step of selectedBatch.timeline" [attr.data-state]="step.state">
+                  <span class="timeline-dot">
+                    <i class="bi" [ngClass]="step.state === 'done' ? 'bi-check' : step.state === 'current' ? 'bi-circle-fill' : 'bi-circle'"></i>
+                  </span>
+                  <div class="timeline-text">
+                    <b>{{ step.title }}</b>
+                    <small>{{ step.person || '—' }}</small>
+                  </div>
+                  <time>{{ step.time }}</time>
+                </div>
+              </div>
+            </article>
+
+            <article class="detail-card samples-card">
+              <h3>العينات داخل الدفعة ({{ selectedBatch.samplesCount }})</h3>
+
+              <div class="samples-table-wrap">
+                <table class="samples-table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>رقم العينة</th>
+                      <th>اسم المريض</th>
+                      <th>التحليل</th>
+                      <th>الأنبوب</th>
+                      <th>الحالة</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let sample of selectedBatch.samples; let i = index">
+                      <td>{{ i + 1 }}</td>
+                      <td><strong>{{ sample.number }}</strong></td>
+                      <td>{{ sample.patient }}</td>
+                      <td>{{ sample.test }}</td>
+                      <td>
+                        <span class="tube-cell">
+                          <i [attr.data-tone]="sample.tubeTone"></i>
+                          {{ sample.tube }}
+                        </span>
+                      </td>
+                      <td>
+                        <span class="sample-status" [class.urgent]="sample.status === 'عاجلة'">
+                          {{ sample.status }}
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <button class="text-link" type="button">
+                <i class="bi bi-plus"></i>
+                عرض جميع العينات (24)
+              </button>
+            </article>
+
+            <article class="detail-card package-card">
+              <h3>تفاصيل العبوة</h3>
+
+              <dl class="package-list">
+                <div>
+                  <dt>نوع الحاوية</dt>
+                  <dd>{{ selectedBatch.packageType }}</dd>
+                </div>
+                <div>
+                  <dt>رقم الحاوية</dt>
+                  <dd>{{ selectedBatch.boxNumber }}</dd>
+                </div>
+                <div class="barcode-item">
+                  <dt>الباركود</dt>
+                  <dd>
+                    <span class="barcode" aria-hidden="true"></span>
+                    <small>{{ selectedBatch.barcode }}</small>
+                  </dd>
+                </div>
+                <div>
+                  <dt>ملاحظات</dt>
+                  <dd>—</dd>
+                </div>
+                <div>
+                  <dt>حالة السلامة</dt>
+                  <dd><span class="safety-pill">{{ selectedBatch.safetyStatus }}</span></dd>
+                </div>
+              </dl>
+            </article>
+          </div>
+        </section>
+      </section>
+    </div>
+
+    <aside class="action-rail">
+      <button class="primary-action" type="button">
+        <i class="bi bi-plus-lg"></i>
+        إنشاء دفعة
+      </button>
+
+      <button class="outline-action" type="button" (click)="confirmHandover()">
+        <i class="bi bi-check-circle"></i>
+        تأكيد التسليم
+      </button>
+
+      <button class="outline-action" type="button">
+        <i class="bi bi-printer"></i>
+        طباعة بيان التسليم
+      </button>
+
+      <button class="danger-action" type="button">
+        <i class="bi bi-arrow-counterclockwise"></i>
+        إرجاع الدفعة
+      </button>
+
+      <article class="side-card scanner-card">
+        <h3><i class="bi bi-upc-scan"></i> مسح الباركود للاستلام</h3>
+        <input
+          [(ngModel)]="barcodeInput"
+          (keyup.enter)="scanBarcode()"
+          type="text"
+          placeholder="امسح باركود الموظف أو أدخل الرقم..."
+        />
+        <p>أو اضغط Enter للتأكيد</p>
+      </article>
+
+      <article class="side-card handover-statement">
+        <h3><i class="bi bi-printer"></i> بيان التسليم</h3>
+        <dl>
+          <div><dt>رقم الدفعة</dt><dd>{{ selectedBatch.id }}</dd></div>
+          <div><dt>القسم</dt><dd>{{ selectedBatch.department }}</dd></div>
+          <div><dt>عدد العينات</dt><dd>{{ selectedBatch.samplesCount }}</dd></div>
+          <div><dt>عاجلة</dt><dd>{{ selectedBatch.urgentCount }}</dd></div>
+          <div><dt>تاريخ التجهيز</dt><dd>16/05/2024 {{ selectedBatch.preparationTime }}</dd></div>
+        </dl>
+        <button class="text-link wide-link" type="button">
+          <i class="bi bi-plus"></i>
+          معاينة البيان
+        </button>
+      </article>
+
+      <article class="side-card signature-card">
+        <h3><i class="bi bi-printer"></i> توقيع الاستلام</h3>
+        <label>
+          <span>الموظف المستلم</span>
+          <input type="text" placeholder="ادخل اسم الموظف المستلم" />
+        </label>
+        <label>
+          <span>التوقيع</span>
+          <div class="signature-pad">مساحة التوقيع</div>
+        </label>
+      </article>
+    </aside>
+  </section>
+</section>

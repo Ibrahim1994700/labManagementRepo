@@ -1,0 +1,352 @@
+<section class="employee-profile-page" dir="rtl">
+  <header class="page-title-block">
+    <h1>الملف الشخصي للموظف</h1>
+    <p>المرضى <span>/</span> الملف الشخصي</p>
+  </header>
+
+  <section class="profile-summary-card">
+    <div class="summary-top">
+      <div class="employee-identity">
+        <img
+          class="employee-avatar"
+          src="assets/employee-avatar.png"
+          alt="صورة الموظفة سارة القحطاني"
+        />
+
+        <div class="employee-copy">
+          <div class="employee-name-row">
+            <h2>سارة عبدالله القحطاني</h2>a
+            <span class="status-badge">
+              <span class="status-dot"></span>
+              نشط
+            </span>
+          </div>
+
+          <p class="employee-role">ممرضة / فني مختبر أول</p>
+          <strong class="employee-code">EMP-2021-0145</strong>
+        </div>
+      </div>
+
+      <div class="statistics-row" aria-label="ملخص أداء الموظف">
+        <article
+          class="stat-card"
+          *ngFor="let item of summaryStats"
+          [class]="item.theme"
+        >
+          <div class="stat-icon">
+            <i class="bi" [ngClass]="item.icon"></i>
+          </div>
+          <div class="stat-body">
+            <span class="stat-label">{{ item.label }}</span>
+            <strong>{{ item.value }}</strong>
+            <small>{{ item.note }}</small>
+            <em *ngIf="item.extra">{{ item.extra }}</em>
+          </div>
+        </article>
+      </div>
+    </div>
+
+    <div class="employee-meta-grid">
+      <article class="meta-item" *ngFor="let item of employeeMeta">
+        <span class="meta-icon" [class.danger-icon]="item.danger">
+          <i class="bi" [ngClass]="item.icon"></i>
+        </span>
+        <div>
+          <small>{{ item.label }}</small>
+          <strong>{{ item.value }}</strong>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="profile-content-card">
+    <nav class="profile-tabs" aria-label="أقسام الملف الشخصي">
+      <button
+        type="button"
+        *ngFor="let tab of tabs"
+        [class.active]="activeTab === tab.id"
+        (click)="activeTab = tab.id"
+      >
+        <i class="bi" [ngClass]="tab.icon"></i>
+        <span>{{ tab.label }}</span>
+      </button>
+    </nav>
+
+    <ng-container [ngSwitch]="activeTab">
+      <section *ngSwitchCase="'personal'" class="tab-content-area">
+        <div class="primary-content-grid">
+          <article class="panel attendance-panel">
+            <div class="panel-heading">
+              <h3>
+                <i class="bi bi-clock-history"></i>
+                آخر الحضور والانصراف
+              </h3>
+            </div>
+
+            <div class="attendance-list">
+              <div class="attendance-row" *ngFor="let item of attendance">
+                <span class="attendance-day">{{ item.day }}</span>
+                <span class="attendance-badge" [class.out]="item.type === 'انصراف'">
+                  {{ item.type }}
+                </span>
+                <strong>{{ item.time }}</strong>
+              </div>
+            </div>
+
+            <button class="outline-action full-width" type="button">
+              عرض كل السجل
+            </button>
+          </article>
+
+          <article class="panel personal-data-panel">
+            <div class="panel-heading editable-heading">
+              <h3>
+                <i class="bi bi-person"></i>
+                المعلومات الشخصية
+              </h3>
+
+              <button type="button" class="outline-action compact" (click)="toggleEdit()">
+                <i class="bi" [ngClass]="editing ? 'bi-x-lg' : 'bi-pencil-square'"></i>
+                {{ editing ? 'إلغاء التعديل' : 'تعديل المعلومات' }}
+              </button>
+            </div>
+
+            <form class="employee-form" (ngSubmit)="saveChanges()">
+              <label class="form-field">
+                <span>الاسم الكامل <b>*</b></span>
+                <input
+                  type="text"
+                  name="fullName"
+                  [(ngModel)]="profile.fullName"
+                  [readonly]="!editing"
+                />
+              </label>
+
+              <label class="form-field">
+                <span>المسمى الوظيفي</span>
+                <input
+                  type="text"
+                  name="jobTitle"
+                  [(ngModel)]="profile.jobTitle"
+                  [readonly]="!editing"
+                />
+              </label>
+
+              <label class="form-field">
+                <span>رقم الهوية الوطنية <b>*</b></span>
+                <input
+                  type="text"
+                  name="nationalId"
+                  [(ngModel)]="profile.nationalId"
+                  [readonly]="!editing"
+                />
+              </label>
+
+              <label class="form-field">
+                <span>رقم الموظف</span>
+                <input
+                  type="text"
+                  name="employeeNumber"
+                  [(ngModel)]="profile.employeeNumber"
+                  [readonly]="!editing"
+                />
+              </label>
+
+              <label class="form-field">
+                <span>تاريخ الميلاد</span>
+                <div class="input-with-icon">
+                  <input
+                    type="text"
+                    name="birthDate"
+                    [(ngModel)]="profile.birthDate"
+                    [readonly]="!editing"
+                  />
+                  <i class="bi bi-calendar3"></i>
+                </div>
+              </label>
+
+              <label class="form-field">
+                <span>رقم الجوال</span>
+                <input
+                  type="text"
+                  name="mobile"
+                  [(ngModel)]="profile.mobile"
+                  [readonly]="!editing"
+                />
+              </label>
+
+              <label class="form-field">
+                <span>الجنس</span>
+                <select
+                  name="gender"
+                  [(ngModel)]="profile.gender"
+                  [disabled]="!editing"
+                >
+                  <option>أنثى</option>
+                  <option>ذكر</option>
+                </select>
+              </label>
+
+              <label class="form-field">
+                <span>البريد الإلكتروني</span>
+                <input
+                  type="email"
+                  name="email"
+                  [(ngModel)]="profile.email"
+                  [readonly]="!editing"
+                />
+              </label>
+
+              <button
+                type="submit"
+                class="primary-action"
+                [disabled]="!editing"
+              >
+                حفظ التغييرات
+              </button>
+            </form>
+          </article>
+
+          <div class="side-panels">
+            <article class="panel emergency-panel">
+              <div class="panel-heading">
+                <h3>
+                  <i class="bi bi-person-exclamation"></i>
+                  جهة الاتصال للطوارئ
+                </h3>
+              </div>
+
+              <dl class="details-list">
+                <div>
+                  <dt>الاسم</dt>
+                  <dd>فهد عبدالله القحطاني</dd>
+                  <span>أخ</span>
+                </div>
+                <div>
+                  <dt>رقم الجوال</dt>
+                  <dd>055 987 6543</dd>
+                  <i class="bi bi-telephone"></i>
+                </div>
+                <div>
+                  <dt>العنوان</dt>
+                  <dd>حي النخيل</dd>
+                </div>
+              </dl>
+
+              <button class="outline-action compact" type="button">
+                <i class="bi bi-pencil-square"></i>
+                تعديل
+              </button>
+            </article>
+
+            <article class="panel locations-panel">
+              <div class="panel-heading">
+                <h3>
+                  <i class="bi bi-geo-alt"></i>
+                  المواقع المكلفة
+                </h3>
+              </div>
+
+              <div class="location-list">
+                <div *ngFor="let location of locations">
+                  <strong>{{ location.name }}</strong>
+                  <span>{{ location.city }}</span>
+                  <em [class.inactive]="!location.active">
+                    {{ location.active ? 'نشط' : 'غير نشط' }}
+                  </em>
+                </div>
+              </div>
+
+              <button class="outline-action compact" type="button">
+                <i class="bi bi-gear"></i>
+                إدارة المواقع
+              </button>
+            </article>
+          </div>
+        </div>
+
+        <div class="secondary-cards-grid">
+          <article class="panel mini-panel quick-actions-panel">
+            <div class="panel-heading">
+              <h3>
+                <i class="bi bi-lightning-charge"></i>
+                إجراءات سريعة
+              </h3>
+            </div>
+            <button type="button">
+              رفع مستند
+              <i class="bi bi-upload"></i>
+            </button>
+            <button type="button">
+              طلب إجازة
+              <i class="bi bi-calendar-plus"></i>
+            </button>
+          </article>
+
+          <article class="panel mini-panel">
+            <div class="panel-heading">
+              <h3>
+                <i class="bi bi-lock"></i>
+                تغيير كلمة المرور
+              </h3>
+            </div>
+            <p>آخر تغيير لكلمة المرور</p>
+            <strong>منذ 32 يومًا</strong>
+            <button type="button" class="outline-action full-width">
+              تغيير كلمة المرور
+            </button>
+          </article>
+
+          <article class="panel mini-panel">
+            <div class="panel-heading">
+              <h3>
+                <i class="bi bi-window"></i>
+                الأجهزة النشطة
+              </h3>
+            </div>
+            <p>آخر تسجيل دخول</p>
+            <strong>15/05/2024 - 09:32 ص</strong>
+            <button type="button" class="outline-action full-width">
+              إدارة الأجهزة
+            </button>
+          </article>
+
+          <article class="panel mini-panel performance-panel">
+            <div class="panel-heading">
+              <h3>
+                <i class="bi bi-bar-chart"></i>
+                الأداء والإحصائيات
+              </h3>
+            </div>
+
+            <div class="performance-stats">
+              <div>
+                <strong>98.6%</strong>
+                <span>الحضور</span>
+              </div>
+              <div>
+                <strong>4.8</strong>
+                <span>معدل الرضا</span>
+              </div>
+              <div>
+                <strong>96%</strong>
+                <span>معدل الالتزام</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section *ngSwitchDefault class="empty-tab-state">
+        <i class="bi bi-folder2-open"></i>
+        <h3>{{ activeTabLabel }}</h3>
+        <p>محتوى هذا القسم جاهز للربط مع بيانات الـ API الخاصة بمشروعك.</p>
+      </section>
+    </ng-container>
+  </section>
+
+  <div class="save-toast" *ngIf="showSavedMessage">
+    <i class="bi bi-check-circle-fill"></i>
+    تم حفظ التغييرات بنجاح
+  </div>
+</section>

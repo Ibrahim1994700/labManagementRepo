@@ -1,0 +1,186 @@
+<section class="notifications-page" dir="rtl">
+  <div class="page-heading">
+    <h1>الإشعارات والتنبيهات</h1>
+    <p>مركز الإشعارات لجميع التنبيهات المهمة والتنبيهات في النظام</p>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card" *ngFor="let card of statCards">
+      <div class="stat-icon" [ngClass]="'tone-' + card.tone">
+        <i class="bi" [ngClass]="card.icon"></i>
+      </div>
+      <div class="stat-copy">
+        <span class="stat-title">{{ card.title }}</span>
+        <strong>{{ card.value }}</strong>
+        <small>{{ card.subtitle }}</small>
+        <button type="button" class="link-button">عرض الكل</button>
+      </div>
+    </article>
+  </div>
+
+  <div class="filters-card">
+    <div class="filter-scroll">
+      <button
+        type="button"
+        class="filter-chip"
+        *ngFor="let filter of filters"
+        [class.active]="activeFilter === filter.label"
+        (click)="selectFilter(filter.label)">
+        <span class="count-pill" [ngClass]="'pill-' + filter.tone">{{ filter.count }}</span>
+        <span>{{ filter.label }}</span>
+      </button>
+    </div>
+
+    <div class="filter-actions">
+      <button type="button" class="control-button sort-button">
+        <i class="bi bi-funnel"></i>
+        <span>الأحدث أولاً</span>
+        <i class="bi bi-chevron-down small-icon"></i>
+      </button>
+
+      <button type="button" class="control-button settings-button">
+        <i class="bi bi-gear"></i>
+        <span>تخصيص التنبيهات</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="content-layout">
+    <section class="notification-list-card">
+      <div class="table-scroll">
+        <div class="notification-table min-table-width">
+          <div class="table-row table-head">
+            <div>النوع</div>
+            <div>العنوان</div>
+            <div>الوصف</div>
+            <div>المرجع</div>
+            <div>الوقت</div>
+            <div>الأولوية</div>
+            <div>الحالة</div>
+            <div>الإجراء</div>
+          </div>
+
+          <button
+            type="button"
+            class="table-row data-row"
+            *ngFor="let item of notifications"
+            [class.selected]="selectedNotificationId === item.id"
+            (click)="selectNotification(item.id)">
+
+            <div class="type-cell">
+              <span class="unread-dot" [class.invisible]="item.read"></span>
+              <span class="row-icon" [ngClass]="'row-' + item.typeTone">
+                <i class="bi" [ngClass]="item.typeIcon"></i>
+              </span>
+              <span>{{ item.type }}</span>
+            </div>
+
+            <div class="title-cell">
+              <strong>{{ item.title }}</strong>
+              <small>{{ item.description }}</small>
+            </div>
+
+            <div class="description-cell">{{ item.description }}</div>
+
+            <div class="reference-cell">
+              <strong>{{ item.reference }}</strong>
+              <small>{{ item.referenceType }}</small>
+            </div>
+
+            <div class="time-cell">
+              <strong>{{ item.time }}</strong>
+              <small>{{ item.ago }}</small>
+            </div>
+
+            <div>
+              <span class="priority-badge" [ngClass]="priorityClass(item.priority)">{{ item.priority }}</span>
+            </div>
+
+            <div>
+              <span class="read-badge" [class.is-read]="item.read">
+                <i class="bi" [ngClass]="item.read ? 'bi-check-circle' : 'bi-circle-fill'"></i>
+                {{ item.read ? 'مقروء' : 'غير مقروء' }}
+              </span>
+            </div>
+
+            <div>
+              <span class="more-button" aria-label="المزيد">
+                <i class="bi bi-three-dots"></i>
+              </span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <aside class="details-card">
+      <div class="details-header">
+        <span class="urgent-tag">عاجل</span>
+        <h2>تفاصيل الإشعار</h2>
+        <button type="button" class="close-button" aria-label="إغلاق">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+
+      <div class="details-title-block">
+        <span class="details-icon row-danger">
+          <i class="bi bi-flask"></i>
+        </span>
+        <div>
+          <h3>{{ selectedNotification.type }}</h3>
+          <div class="details-meta">
+            <span><i class="bi bi-clock"></i> اليوم - {{ selectedNotification.time }}</span>
+            <a href="#">نتائج تحليل <i class="bi bi-lock"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="critical-message">
+        <strong>{{ selectedNotification.title }}</strong>
+        <span>تحتاج متابعة من الطبيب في أقرب وقت ممكن</span>
+      </div>
+
+      <dl class="details-list">
+        <div>
+          <dt><i class="bi bi-person"></i> المريض</dt>
+          <dd>أحمد محمد العتيبي - 32 سنة</dd>
+        </div>
+        <div>
+          <dt><i class="bi bi-file-earmark-text"></i> رقم الطلب</dt>
+          <dd>{{ selectedNotification.reference }}</dd>
+        </div>
+        <div>
+          <dt><i class="bi bi-flask"></i> نوع التحليل</dt>
+          <dd>HbA1c</dd>
+        </div>
+        <div>
+          <dt><i class="bi bi-calendar-event"></i> تاريخ التحليل</dt>
+          <dd>20/05/2024 - 08:14</dd>
+        </div>
+        <div>
+          <dt><i class="bi bi-geo-alt"></i> المعمل</dt>
+          <dd>فرع الرياض - العليا</dd>
+        </div>
+        <div>
+          <dt><i class="bi bi-person-badge"></i> الطبيب المعالج</dt>
+          <dd>د. أحمد الحربي</dd>
+        </div>
+      </dl>
+
+      <div class="details-actions">
+        <button type="button" class="btn btn-primary action-primary">
+          <i class="bi bi-eye"></i>
+          وضع كمقروء
+        </button>
+        <button type="button" class="btn btn-outline-primary action-outline">
+          <i class="bi bi-box-arrow-up-left"></i>
+          فتح السجل
+        </button>
+        <button type="button" class="btn btn-outline-danger action-danger">
+          <i class="bi bi-exclamation-triangle"></i>
+          تصعيد الإشعار
+        </button>
+      </div>
+    </aside>
+  </div>
+</section>

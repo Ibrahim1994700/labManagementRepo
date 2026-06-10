@@ -1,0 +1,276 @@
+<section class="prescriptions-page" dir="rtl">
+  <div class="page-heading">
+    <div>
+      <h1>مراجعة الوصفات الطبية وتحويلها إلى طلبات</h1>
+      <p><i class="bi bi-info-circle"></i> مراجعة الوصفات الواردة والتأكد من تفاصيل الفحوصات قبل اعتمادها وتحويلها إلى طلبات.</p>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <article class="stat-card" *ngFor="let stat of statistics">
+      <div class="stat-icon" [ngClass]="'tone-' + stat.tone">
+        <i class="bi" [ngClass]="stat.icon"></i>
+      </div>
+      <div class="stat-content">
+        <h3>{{ stat.label }}</h3>
+        <strong>{{ stat.value }}</strong>
+        <div class="stat-change" [class.negative]="stat.change.startsWith('-')">
+          <span>{{ stat.change }}</span>
+          <small>عن أمس</small>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="filters-card">
+    <div class="filter-search">
+      <i class="bi bi-search"></i>
+      <input [(ngModel)]="searchTerm" type="text" placeholder="ابحث برقم الوصفة أو اسم المريض" />
+    </div>
+
+    <label class="filter-control">
+      <span>الحالة</span>
+      <select [(ngModel)]="selectedStatus">
+        <option>الكل</option>
+        <option>بانتظار المراجعة</option>
+        <option>تحتاج توضيحاً</option>
+        <option>تم الاعتماد</option>
+        <option>مرفوضة</option>
+        <option>تم تحويلها للطلبات</option>
+      </select>
+    </label>
+
+    <label class="filter-control">
+      <span>تاريخ الرفع</span>
+      <select [(ngModel)]="selectedDate">
+        <option>كل الفترة</option>
+        <option>اليوم</option>
+        <option>آخر 7 أيام</option>
+      </select>
+    </label>
+
+    <label class="filter-control">
+      <span>الفرع</span>
+      <select [(ngModel)]="selectedBranch">
+        <option>كل الفروع</option>
+        <option>الرياض - العليا</option>
+        <option>الرياض - الملز</option>
+      </select>
+    </label>
+
+    <label class="filter-control">
+      <span>المراجع</span>
+      <select [(ngModel)]="selectedReviewer">
+        <option>كل المراجعين</option>
+        <option>د. أحمد الحربي</option>
+        <option>د. نورة الشهري</option>
+      </select>
+    </label>
+
+    <button class="btn-reset" type="button" (click)="resetFilters()">
+      <i class="bi bi-arrow-counterclockwise"></i>
+      إعادة ضبط
+    </button>
+  </div>
+
+  <div class="workspace-grid">
+    <aside class="prescriptions-list-card">
+      <div class="list-header">
+        <h2>قائمة الوصفات <span>(128)</span></h2>
+        <div class="list-actions">
+          <button type="button"><i class="bi bi-filter"></i></button>
+          <select aria-label="ترتيب الوصفات">
+            <option>الأحدث أولاً</option>
+            <option>الأقدم أولاً</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-head">
+        <span>رقم الوصفة</span>
+        <span>المريض</span>
+        <span>تاريخ الرفع</span>
+      </div>
+
+      <div class="prescription-rows">
+        <button
+          class="prescription-row"
+          type="button"
+          *ngFor="let item of filteredPrescriptions"
+          [class.active]="selectedPrescription.id === item.id"
+          (click)="selectPrescription(item)">
+          <div class="rx-id">{{ item.id }}</div>
+          <div class="patient-cell">
+            <strong>{{ item.patient }}</strong>
+            <small>{{ item.age }} سنة</small>
+          </div>
+          <div class="time-cell">
+            <strong>{{ item.time }}</strong>
+            <small>اليوم</small>
+          </div>
+          <span class="status-pill" [ngClass]="statusClass(item.status)">{{ item.status }}</span>
+        </button>
+      </div>
+
+      <div class="pagination-bar">
+        <label>
+          <span>عرض</span>
+          <select><option>10</option><option>20</option></select>
+        </label>
+        <div class="pages">
+          <button type="button"><i class="bi bi-chevron-right"></i></button>
+          <button class="active" type="button">1</button>
+          <button type="button">2</button>
+          <button type="button">3</button>
+          <button type="button">4</button>
+          <button type="button">5</button>
+          <span>...</span>
+          <button type="button">13</button>
+          <button type="button"><i class="bi bi-chevron-left"></i></button>
+        </div>
+      </div>
+    </aside>
+
+    <main class="review-card">
+      <div class="review-header">
+        <div class="rx-title">
+          <span>الوصفة:</span>
+          <strong>{{ selectedPrescription.id }}</strong>
+          <span class="status-pill" [ngClass]="statusClass(selectedPrescription.status)">{{ selectedPrescription.status }}</span>
+        </div>
+        <div class="review-nav">
+          <button type="button"><i class="bi bi-arrow-right"></i></button>
+          <span>التالي</span>
+          <button type="button"><i class="bi bi-arrow-left"></i></button>
+        </div>
+      </div>
+
+      <div class="review-body-grid">
+        <section class="panel tests-panel">
+          <div class="panel-title">
+            <h3>الفحوصات المستخرجة</h3>
+            <span class="count-badge">{{ extractedTests.length }}</span>
+          </div>
+
+          <div class="tests-header">
+            <span>الفحص</span>
+            <span>ملاحظات</span>
+          </div>
+
+          <div class="test-row" *ngFor="let test of extractedTests; let i = index">
+            <button class="more-btn" type="button" aria-label="خيارات"><i class="bi bi-three-dots-vertical"></i></button>
+            <span class="test-name">{{ test.name }}</span>
+            <input [(ngModel)]="test.note" type="text" aria-label="ملاحظة الفحص" />
+            <button class="remove-test" type="button" aria-label="حذف الفحص" (click)="removeTest(i)"><i class="bi bi-x"></i></button>
+          </div>
+
+          <div class="tests-footer">
+            <small>اسحب لإعادة الترتيب</small>
+            <button type="button" (click)="addTest()"><i class="bi bi-plus"></i> إضافة فحص</button>
+          </div>
+        </section>
+
+        <section class="panel patient-panel">
+          <div class="panel-title">
+            <h3>بيانات المريض والوصفة</h3>
+          </div>
+          <dl class="details-list">
+            <div><dt>اسم المريض</dt><dd>{{ selectedPrescription.patient }}</dd></div>
+            <div><dt>رقم الملف</dt><dd>HM-2023-004567</dd></div>
+            <div><dt>تاريخ الميلاد</dt><dd>1992-08-14 - (32 سنة)</dd></div>
+            <div><dt>الجنس</dt><dd>ذكر</dd></div>
+            <div><dt>رقم الجوال</dt><dd><i class="bi bi-telephone"></i> 05********</dd></div>
+            <div><dt>الطبيب المعالج</dt><dd>د. أحمد الحربي</dd></div>
+            <div><dt>العيادة / الجهة</dt><dd>مجمع النخبة الطبي</dd></div>
+            <div><dt>تاريخ الرفع</dt><dd>اليوم - {{ selectedPrescription.time }}</dd></div>
+            <div><dt>مرفوع بواسطة</dt><dd>مريض</dd></div>
+            <div><dt>الفرع</dt><dd>الرياض - العليا</dd></div>
+          </dl>
+        </section>
+
+        <section class="panel image-panel">
+          <div class="panel-title">
+            <h3>صورة الوصفة المرفوعة</h3>
+          </div>
+          <div class="image-toolbar">
+            <button type="button" (click)="rotateImage(-1)" aria-label="تدوير لليسار"><i class="bi bi-arrow-counterclockwise"></i></button>
+            <button type="button" (click)="rotateImage(1)" aria-label="تدوير لليمين"><i class="bi bi-arrow-clockwise"></i></button>
+            <div class="zoom-box">
+              <button type="button" (click)="zoomOut()">−</button>
+              <span>{{ zoom }}%</span>
+              <button type="button" (click)="zoomIn()">+</button>
+            </div>
+            <button type="button" (click)="resetImage()" aria-label="إعادة ضبط الصورة"><i class="bi bi-arrows-fullscreen"></i></button>
+          </div>
+          <div class="image-stage">
+            <img
+              src="assets/prescription-sample.png"
+              alt="صورة وصفة طبية"
+              [style.transform]="'scale(' + (zoom / 100) + ') rotate(' + rotated + 'deg)'" />
+          </div>
+          <div class="upload-row">
+            <small>صيغة مقبولة: (JPG, PNG, 5MB)</small>
+            <button type="button"><i class="bi bi-upload"></i> تحميل صورة أوضح</button>
+          </div>
+        </section>
+      </div>
+
+      <div class="secondary-grid">
+        <section class="panel notes-panel">
+          <div class="panel-title"><h3>ملاحظات داخلية</h3><i class="bi bi-chat-square-text"></i></div>
+          <textarea [(ngModel)]="internalNotes" placeholder="اكتب ملاحظاتك الداخلية..."></textarea>
+          <small>{{ internalNotes.length }}/500</small>
+        </section>
+
+        <section class="panel instructions-panel">
+          <div class="panel-title"><h3>تعليمات الصيام والتحضير</h3><i class="bi bi-fork-knife"></i></div>
+          <p>صيام 8-10 ساعات قبل تحليل FBS و HbA1c.<br />يفضل شرب كمية كافية من الماء.</p>
+          <button type="button">تعديل التعليمات</button>
+        </section>
+
+        <section class="panel price-panel">
+          <div class="panel-title"><h3>السعر التقديري</h3><i class="bi bi-calculator"></i></div>
+          <strong><span>ر.س</span> 247.00</strong>
+          <button type="button">تفاصيل الأسعار</button>
+        </section>
+      </div>
+
+      <div class="bottom-grid">
+        <section class="panel message-panel">
+          <div class="panel-title"><h3>رسالة للمريض</h3><i class="bi bi-chat-left-text"></i></div>
+          <textarea [(ngModel)]="patientMessage" placeholder="اكتب رسالة سيتم إرسالها للمريض..."></textarea>
+          <div class="message-footer">
+            <small>{{ patientMessage.length }}/500</small>
+            <button type="button"><i class="bi bi-card-text"></i> قالب رسالة</button>
+          </div>
+        </section>
+
+        <section class="panel summary-panel">
+          <div class="panel-title"><h3>ملخص التحويل</h3><i class="bi bi-pie-chart"></i></div>
+          <dl>
+            <div><dt>عدد الفحوصات</dt><dd>{{ extractedTests.length }}</dd></div>
+            <div><dt>الفرع</dt><dd>الرياض - العليا</dd></div>
+            <div><dt>نوع الطلب</dt><dd>طلب عادي</dd></div>
+            <div><dt>وقت التسليم المتوقع</dt><dd>اليوم - خلال 24 ساعة</dd></div>
+          </dl>
+        </section>
+
+        <section class="panel action-panel">
+          <div class="panel-title"><h3>إجراءات المراجعة</h3></div>
+          <button class="action-btn approve" type="button" (click)="updateStatus('تم تحويلها للطلبات')">
+            <i class="bi bi-check-circle"></i> اعتماد وتحويل إلى طلب
+          </button>
+          <button class="action-btn clarify" type="button" (click)="updateStatus('تحتاج توضيحاً')">
+            <i class="bi bi-camera"></i> طلب صورة أوضح
+          </button>
+          <button class="action-btn reject" type="button" (click)="updateStatus('مرفوضة')">
+            <i class="bi bi-x-circle"></i> رفض مع سبب
+          </button>
+          <button class="action-btn send" type="button">
+            <i class="bi bi-send"></i> إرسال للمريض
+          </button>
+        </section>
+      </div>
+    </main>
+  </div>
+</section>

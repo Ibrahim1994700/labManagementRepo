@@ -32,11 +32,11 @@ export class AppComponent implements OnInit {
     }
   }
   ngOnInit(): void {
-    // if (this.dataService.CheckLocalStorageItem('token')) {
-    //   this.Route.navigate(['/Patient-Home/main-user-page']);
-    // } else {
-    //   this.Route.navigate(['/Auth/login']);
-    // }
+    if (this.dataService.CheckLocalStorageItem('token')) {
+      this.Route.navigate(['/Patient-Home/main-user-page']);
+    } else {
+      this.Route.navigate(['/Auth/login']);
+    }
   }
 
  
