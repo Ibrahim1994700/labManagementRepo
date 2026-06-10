@@ -9,12 +9,12 @@
             <p>أدخل بياناتك للوصول إلى حسابك</p>
           </div>
 
-          <form>
+          <form [formGroup]="loginForm" >
             <div class="form-group-custom">
               <label class="form-label">البريد الإلكتروني أو رقم الجوال</label>
               <div class="input-wrap">
                 <i class="bi bi-person input-icon"></i>
-                <input
+                <input  formControlName="Email"
                   type="text"
                   class="form-control"
                   placeholder="أدخل بريدك الإلكتروني أو رقم الجوال"
@@ -26,7 +26,7 @@
               <label class="form-label">كلمة المرور</label>
               <div class="input-wrap">
                 <i class="bi bi-lock input-icon"></i>
-                <input
+                <input  formControlName="Password"
                   type="password"
                   class="form-control"
                   placeholder="أدخل كلمة المرور"

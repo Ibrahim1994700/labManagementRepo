@@ -32,7 +32,15 @@ export class LoginComponent implements OnInit {
   }
 
   loginUser() {
-    this.route.navigate(['Patient-Home/main-user-page']);
+
+if((this.loginForm.get('Email')?.value as string).toLocaleLowerCase()=='admin')
+{
+ this.route.navigate(['nurse-Home/main-nurse-page']);
+}
+else{
+ this.route.navigate(['Patient-Home/main-user-page']);
+}
+    //this.route.navigate(['Patient-Home/main-user-page']);
     // if (this.loginForm.invalid) {
     //   this.loginForm.markAllAsTouched();
     // } else {
