@@ -93,6 +93,70 @@ namespace DataAccessLayer.ContextFolder
                 .Property(x => x.Id)
                 .ValueGeneratedOnAdd();
 
+            modelBuilder.Entity<TestPreparationRule>()
+               .HasOne(r => r.Test)
+               .WithMany(t => t.PreparationRules)
+               .HasForeignKey(r => r.TestId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            // Check constraint لمحاكاة rule_type
+       
+            modelBuilder.Entity<SampleType>()
+            .HasIndex(x => x.code)
+                        .IsUnique();
+            modelBuilder.Entity<SampleType>()
+               .Property(x => x.ID)
+               .ValueGeneratedOnAdd();
+
+            modelBuilder.Entity<TestCatogaries>()
+                .Property(x => x.ID)
+                .ValueGeneratedOnAdd();
+            modelBuilder.Entity<TestCatogaries>()
+           .HasIndex(x => x.Slug)
+                       .IsUnique();
+                    modelBuilder.Entity<TestCatogaries>()
+             .HasOne(c => c.Parent)
+             .WithMany(c => c.Children)
+             .HasForeignKey(c => c.ParentId)
+             .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<LabTestCategory>()
+      .HasKey(tc => new { tc.TestId, tc.CategoryId });
+
+            modelBuilder.Entity<LabTestCategory>()
+                .HasOne(tc => tc.Test)
+                .WithMany(t => t.LabTestCategories)
+                .HasForeignKey(tc => tc.TestId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<LabTestCategory>()
+                .HasOne(tc => tc.Catogaries)
+                .WithMany(c => c.LabTestCategories)
+                .HasForeignKey(tc => tc.CategoryId)
+                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<BranchTestCatalog>()
+       .HasKey(btc => new { btc.BranchId, btc.TestId });
+
+            modelBuilder.Entity<BranchTestCatalog>()
+                .HasOne(btc => btc.Branch)
+                .WithMany(b => b.BranchTestCatalogs)
+                .HasForeignKey(btc => btc.BranchId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<BranchTestCatalog>()
+                .HasOne(btc => btc.Test)
+                .WithMany(t => t.BranchTestCatalogs)
+                .HasForeignKey(btc => btc.TestId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Check constraint لمحاكاة SQL
+        
+
+            modelBuilder.Entity<LabBranch>()
+            .HasMany(b => b.BranchTestCatalogs)
+            .WithOne(c => c.Branch)
+            .HasForeignKey(c => c.BranchId)
+            .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<LabServices>(entity =>
             {
@@ -127,9 +191,17 @@ namespace DataAccessLayer.ContextFolder
         // Many-to-Many (UsersAndServices)
 
         public DbSet<LabServices>  LabServices { get; set; }
+        public DbSet<TestCatogaries>  TestCatogaries { get; set; }
+        public DbSet<SampleType>  sampleTypes { get; set; }
+        public DbSet<LabTest>  labTests { get; set; }
+        public DbSet<LabTestCategory>  LabTestCategories { get; set; }
+        public DbSet<LabBranch>  labBranches { get; set; }
+        public DbSet<BranchTestCatalog>  branchTestCatalogs { get; set; }
 
         public DbSet<Users> Users { get; set; }
-		public DbSet<SigningKey>  signingKeys { get; set; }
+        public DbSet<TestPreparationRule>  testPreparationRules { get; set; }
+
+        public DbSet<SigningKey>  signingKeys { get; set; }
 		public DbSet<Clients>  Clients { get; set; }
 		public DbSet<RefreshToken>  refreshTokens { get; set; }
 
