@@ -1,177 +1,189 @@
 <div class="main-content">
-      <section class="hero-row">
-        <div class="dashboard-intro">
-          <h1>لوحة تحكم المريض</h1>
-          <p>مرحباً أحمد، إليك نظرة عامة على صحتك وحجوزاتك</p>
+  <section class="hero-row">
+    <div class="dashboard-intro">
+      <h1>لوحة تحكم المريض</h1>
+      <p>مرحباً أحمد، إليك نظرة عامة على صحتك وحجوزاتك</p>
 
-          <div class="stats-grid">
-            <article *ngFor="let stat of stats" class="stat-card">
-              <div class="stat-top">
-                <div class="stat-icon" [ngClass]="stat.tone">
-                  <i class="bi" [ngClass]="stat.icon"></i>
-                </div>
-                <div>
-                  <h3>{{ stat.title }}</h3>
-                  <strong>{{ stat.value }}</strong>
-                </div>
-              </div>
-              <p>{{ stat.subtitle }}</p>
-              <a href="javascript:void(0)">{{ stat.link }} <i class="bi bi-arrow-left"></i></a>
-            </article>
-          </div>
-        </div>
-
-        <article class="health-banner">
-          <div class="health-copy">
-            <div class="health-title-row">
-              <i class="bi bi-heart-pulse"></i>
-              <h2>صحتك أولويتنا</h2>
-            </div>
-            <p>نجمع بين الدقة والسرعة لنقدم لك أفضل خدمة مخبرية أينما كنت.</p>
-          </div>
-          <img src="assets/dashboard/doctor-banner.png" alt="طبيب داخل المختبر" />
-        </article>
-      </section>
-
-      <section class="quick-section">
-        <h2>إجراءات سريعة</h2>
-        <div class="quick-grid">
-          <article *ngFor="let action of quickActions" class="quick-card">
-            <div class="quick-icon" [ngClass]="action.tone">
-              <i class="bi" [ngClass]="action.icon"></i>
+      <div class="stats-grid">
+        <article *ngFor="let stat of stats" class="stat-card">
+          <div class="stat-top">
+            <div class="stat-icon" [ngClass]="stat.tone">
+              <i class="bi" [ngClass]="stat.icon"></i>
             </div>
             <div>
-              <h3>{{ action.title }}</h3>
-              <p>{{ action.subtitle }}</p>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section class="content-grid">
-        <article class="panel packages-panel">
-          <div class="panel-title">
-            <h2>الباقات المميزة</h2>
-            <i class="bi bi-star"></i>
-          </div>
-
-          <div class="package-list">
-            <div class="package-item" *ngFor="let packageItem of packages">
-              <img [src]="packageItem.image" [alt]="packageItem.title" />
-              <div class="package-info">
-                <h3>{{ packageItem.title }}</h3>
-                <p>{{ packageItem.description }}</p>
-              </div>
-              <div class="package-price">
-                <del>{{ packageItem.oldPrice }}</del>
-                <strong>{{ packageItem.price }}</strong>
-              </div>
+              <h3>{{ stat.title }}</h3>
+              <strong>{{ stat.value }}</strong>
             </div>
           </div>
-
-          <a class="panel-link" href="javascript:void(0)">عرض جميع الباقات <i class="bi bi-arrow-left"></i></a>
+          <p>{{ stat.subtitle }}</p>
+          <a href="javascript:void(0)"
+            >{{ stat.link }} <i class="bi bi-arrow-left"></i
+          ></a>
         </article>
-
-        <article class="panel results-panel">
-          <div class="panel-title">
-            <h2>أحدث النتائج</h2>
-            <i class="bi bi-clipboard2-pulse"></i>
-          </div>
-
-          <div class="results-table">
-            <div class="result-head">
-              <span>التحليل / الباقة</span>
-              <span>تاريخ التحليل</span>
-              <span>الحالة</span>
-              <span></span>
-            </div>
-
-            <div class="result-row">
-              <strong>فيتامين D</strong>
-              <span>18 مايو 2024</span>
-              <span class="status new">جديد</span>
-              <button>عرض النتيجة</button>
-            </div>
-            <div class="result-row">
-              <strong>صورة دم كاملة (CBC)</strong>
-              <span>18 مايو 2024</span>
-              <span class="status new">جديد</span>
-              <button>عرض النتيجة</button>
-            </div>
-            <div class="result-row">
-              <strong>باقة فحص شامل للرجال</strong>
-              <span>5 مايو 2024</span>
-              <span class="status complete">مكتمل</span>
-              <button>عرض النتيجة</button>
-            </div>
-          </div>
-
-          <a class="panel-link" href="javascript:void(0)">عرض جميع النتائج <i class="bi bi-arrow-left"></i></a>
-        </article>
-
-        <article class="panel appointment-panel">
-          <div class="panel-title">
-            <h2>الحجز القادم</h2>
-            <i class="bi bi-calendar3"></i>
-          </div>
-
-          <div class="appointment-status">مؤكد</div>
-          <div class="appointment-type">سحب منزلي</div>
-          <span class="appointment-id">#H-2024-78915</span>
-
-          <ul class="appointment-details">
-            <li><i class="bi bi-calendar3"></i><span>الأربعاء، 22 مايو 2024</span></li>
-            <li><i class="bi bi-clock"></i><span>09:30 ص - 09:30 ص</span></li>
-            <li><i class="bi bi-geo-alt"></i><span>الرياض - حي النرجس</span></li>
-            <li><i class="bi bi-person"></i><span>باقة فحص شامل للرجال<br />12 تحليل</span></li>
-          </ul>
-
-          <button class="outline-btn">تفاصيل الحجز</button>
-          <a class="panel-link" href="javascript:void(0)">عرض جميع الحجوزات <i class="bi bi-arrow-left"></i></a>
-        </article>
-      </section>
-
-      <section class="bottom-grid">
-        <article class="panel activity-panel">
-          <div class="panel-title">
-            <h2>آخر النشاطات</h2>
-            <i class="bi bi-activity"></i>
-          </div>
-
-          <div class="activity-item">
-            <div class="activity-icon green"><i class="bi bi-file-earmark-text"></i></div>
-            <p>تم استلام نتيجة جديدة لتحليل فيتامين D</p>
-            <span>منذ ساعتين</span>
-          </div>
-          <div class="activity-item">
-            <div class="activity-icon blue"><i class="bi bi-calendar3"></i></div>
-            <p>تم تأكيد حجز سحب منزلي يوم الأربعاء 22 مايو</p>
-            <span>منذ يوم واحد</span>
-          </div>
-          <div class="activity-item">
-            <div class="activity-icon cyan"><i class="bi bi-people"></i></div>
-            <p>تمت إضافة فرد جديد إلى حساب العائلة</p>
-            <span>منذ 3 أيام</span>
-          </div>
-
-          <a class="panel-link" href="javascript:void(0)">عرض جميع النشاطات <i class="bi bi-arrow-left"></i></a>
-        </article>
-
-        <article class="promo-banner">
-          <img src="assets/dashboard/family-banner.png" alt="عائلة سعيدة" />
-          <div class="promo-copy">
-            <h2>خصم <strong>20%</strong> على جميع الباقات<br />لمدة محدودة!</h2>
-            <p>اعتني بصحتك وصحة عائلتك الآن</p>
-          </div>
-          <div class="promo-actions">
-            <div class="coupon">
-              <span>استخدم الكود</span>
-              <strong>HEALTH20</strong>
-            </div>
-            <button>استفد الآن <i class="bi bi-arrow-left"></i></button>
-          </div>
-        </article>
-      </section>
-
-    
+      </div>
     </div>
+
+    <div class="w-100" style="max-width: 455px">
+      <img
+        src="../../../../../assets/img/lab-doctor.jpg"
+        alt="طبيب داخل المختبر"
+        class="img-fluid w-100 rounded-3 d-block"
+      />
+    </div>
+  </section>
+
+  <section class="quick-section">
+    <h2>إجراءات سريعة</h2>
+    <div class="quick-grid">
+      <article *ngFor="let action of quickActions" class="quick-card">
+        <div class="quick-icon" [ngClass]="action.tone">
+          <i class="bi" [ngClass]="action.icon"></i>
+        </div>
+        <div>
+          <h3>{{ action.title }}</h3>
+          <p>{{ action.subtitle }}</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section class="content-grid">
+    <article class="panel packages-panel">
+      <div class="panel-title">
+        <h2>الباقات المميزة</h2>
+        <i class="bi bi-star"></i>
+      </div>
+
+      <div class="package-list">
+        <div class="package-item" *ngFor="let packageItem of packages">
+          <img [src]="packageItem.image" [alt]="packageItem.title" />
+          <div class="package-info">
+            <h3>{{ packageItem.title }}</h3>
+            <p>{{ packageItem.description }}</p>
+          </div>
+          <div class="package-price">
+            <del>{{ packageItem.oldPrice }}</del>
+            <strong>{{ packageItem.price }}</strong>
+          </div>
+        </div>
+      </div>
+
+      <a class="panel-link" href="javascript:void(0)"
+        >عرض جميع الباقات <i class="bi bi-arrow-left"></i
+      ></a>
+    </article>
+
+    <article class="panel results-panel">
+      <div class="panel-title">
+        <h2>أحدث النتائج</h2>
+        <i class="bi bi-clipboard2-pulse"></i>
+      </div>
+
+      <div class="results-table">
+        <div class="result-head">
+          <span>التحليل / الباقة</span>
+          <span>تاريخ التحليل</span>
+          <span>الحالة</span>
+          <span></span>
+        </div>
+
+        <div class="result-row">
+          <strong>فيتامين D</strong>
+          <span>18 مايو 2024</span>
+          <span class="status new">جديد</span>
+          <button>عرض النتيجة</button>
+        </div>
+        <div class="result-row">
+          <strong>صورة دم كاملة (CBC)</strong>
+          <span>18 مايو 2024</span>
+          <span class="status new">جديد</span>
+          <button>عرض النتيجة</button>
+        </div>
+        <div class="result-row">
+          <strong>باقة فحص شامل للرجال</strong>
+          <span>5 مايو 2024</span>
+          <span class="status complete">مكتمل</span>
+          <button>عرض النتيجة</button>
+        </div>
+      </div>
+
+      <a class="panel-link" href="javascript:void(0)"
+        >عرض جميع النتائج <i class="bi bi-arrow-left"></i
+      ></a>
+    </article>
+
+    <article class="panel appointment-panel">
+      <div class="panel-title">
+        <h2>الحجز القادم</h2>
+        <i class="bi bi-calendar3"></i>
+      </div>
+
+      <div class="appointment-status">مؤكد</div>
+      <div class="appointment-type">سحب منزلي</div>
+      <span class="appointment-id">#H-2024-78915</span>
+
+      <ul class="appointment-details">
+        <li>
+          <i class="bi bi-calendar3"></i><span>الأربعاء، 22 مايو 2024</span>
+        </li>
+        <li><i class="bi bi-clock"></i><span>09:30 ص - 09:30 ص</span></li>
+        <li><i class="bi bi-geo-alt"></i><span>الرياض - حي النرجس</span></li>
+        <li>
+          <i class="bi bi-person"></i
+          ><span>باقة فحص شامل للرجال<br />12 تحليل</span>
+        </li>
+      </ul>
+
+      <button class="outline-btn">تفاصيل الحجز</button>
+      <a class="panel-link" href="javascript:void(0)"
+        >عرض جميع الحجوزات <i class="bi bi-arrow-left"></i
+      ></a>
+    </article>
+  </section>
+
+  <section class="bottom-grid">
+    <article class="panel activity-panel">
+      <div class="panel-title">
+        <h2>آخر النشاطات</h2>
+        <i class="bi bi-activity"></i>
+      </div>
+
+      <div class="activity-item">
+        <div class="activity-icon green">
+          <i class="bi bi-file-earmark-text"></i>
+        </div>
+        <p>تم استلام نتيجة جديدة لتحليل فيتامين D</p>
+        <span>منذ ساعتين</span>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon blue"><i class="bi bi-calendar3"></i></div>
+        <p>تم تأكيد حجز سحب منزلي يوم الأربعاء 22 مايو</p>
+        <span>منذ يوم واحد</span>
+      </div>
+      <div class="activity-item">
+        <div class="activity-icon cyan"><i class="bi bi-people"></i></div>
+        <p>تمت إضافة فرد جديد إلى حساب العائلة</p>
+        <span>منذ 3 أيام</span>
+      </div>
+
+      <a class="panel-link" href="javascript:void(0)"
+        >عرض جميع النشاطات <i class="bi bi-arrow-left"></i
+      ></a>
+    </article>
+
+    <article class="promo-banner">
+      <img src="../../../../../assets/img/family-banner.jpg" alt="عائلة سعيدة" />
+      <div class="promo-copy">
+        <h2>خصم <strong>20%</strong> على جميع الباقات<br />لمدة محدودة!</h2>
+        <p>اعتني بصحتك وصحة عائلتك الآن</p>
+      </div>
+      <div class="promo-actions">
+        <div class="coupon">
+          <span>استخدم الكود</span>
+          <strong>HEALTH20</strong>
+        </div>
+        <button>استفد الآن <i class="bi bi-arrow-left"></i></button>
+      </div>
+    </article>
+  </section>
+</div>
