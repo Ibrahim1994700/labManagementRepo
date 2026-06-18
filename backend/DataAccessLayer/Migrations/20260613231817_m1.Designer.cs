@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20260611004819_m1")]
+    [Migration("20260613231817_m1")]
     partial class m1
     {
         /// <inheritdoc />
@@ -127,6 +127,47 @@ namespace DataAccessLayer.Migrations
                         });
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Entities.Days", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("DayName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LabBranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("numberOfDay")
+                        .HasColumnType("int");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("LabBranchId");
+
+                    b.ToTable("Days");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Entities.LabBranch", b =>
                 {
                     b.Property<Guid>("ID")
@@ -188,7 +229,46 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("labBranches");
+                    b.ToTable("LabBranch");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.LabBranchDaysOn", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("DayId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("labBranchId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DayId");
+
+                    b.HasIndex("labBranchId");
+
+                    b.ToTable("LabBranchDaysOns");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.LabServices", b =>
@@ -678,6 +758,49 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("testPreparationRules");
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Entities.TimeOfEachLabBranch", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<TimeSpan>("FromTime")
+                        .HasColumnType("time");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("LabBranchDaysOnId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("MaxPatients")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("ToTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("LabBranchDaysOnId");
+
+                    b.ToTable("TimeOfEachLabBranches");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Entities.UserRole", b =>
                 {
                     b.Property<Guid>("UserId")
@@ -826,6 +949,36 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Test");
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Entities.Days", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.LabBranch", "LabBranch")
+                        .WithMany()
+                        .HasForeignKey("LabBranchId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("LabBranch");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.LabBranchDaysOn", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.Days", "Day")
+                        .WithMany("BranchDays")
+                        .HasForeignKey("DayId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("DataAccessLayer.Entities.LabBranch", "LabBranch")
+                        .WithMany("Days")
+                        .HasForeignKey("labBranchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Day");
+
+                    b.Navigation("LabBranch");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Entities.LabTest", b =>
                 {
                     b.HasOne("DataAccessLayer.Entities.SampleType", "SampleType")
@@ -915,6 +1068,17 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Test");
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Entities.TimeOfEachLabBranch", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.LabBranchDaysOn", "LabBranchDaysOn")
+                        .WithMany("TimeSlots")
+                        .HasForeignKey("LabBranchDaysOnId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("LabBranchDaysOn");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Entities.UserRole", b =>
                 {
                     b.HasOne("DataAccessLayer.Entities.Role", "Role")
@@ -934,9 +1098,21 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("DataAccessLayer.Entities.Days", b =>
+                {
+                    b.Navigation("BranchDays");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Entities.LabBranch", b =>
                 {
                     b.Navigation("BranchTestCatalogs");
+
+                    b.Navigation("Days");
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.LabBranchDaysOn", b =>
+                {
+                    b.Navigation("TimeSlots");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.LabTest", b =>

@@ -28,7 +28,7 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "labBranches",
+                name: "LabBranch",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -40,16 +40,16 @@ namespace DataAccessLayer.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Latitude = table.Column<decimal>(type: "decimal(10,7)", nullable: true),
                     Longitude = table.Column<decimal>(type: "decimal(10,7)", nullable: true),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_labBranches", x => x.ID);
+                    table.PrimaryKey("PK_LabBranch", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -199,6 +199,32 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Days",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    numberOfDay = table.Column<int>(type: "int", nullable: false),
+                    DayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LabBranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Days", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_Days_LabBranch_LabBranchId",
+                        column: x => x.LabBranchId,
+                        principalTable: "LabBranch",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RolePermission",
                 columns: table => new
                 {
@@ -317,6 +343,37 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LabBranchDaysOns",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    labBranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LabBranchDaysOns", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_LabBranchDaysOns_Days_DayId",
+                        column: x => x.DayId,
+                        principalTable: "Days",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LabBranchDaysOns_LabBranch_labBranchId",
+                        column: x => x.labBranchId,
+                        principalTable: "LabBranch",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "branchTestCatalogs",
                 columns: table => new
                 {
@@ -342,9 +399,9 @@ namespace DataAccessLayer.Migrations
                 {
                     table.PrimaryKey("PK_branchTestCatalogs", x => new { x.BranchId, x.TestId });
                     table.ForeignKey(
-                        name: "FK_branchTestCatalogs_labBranches_BranchId",
+                        name: "FK_branchTestCatalogs_LabBranch_BranchId",
                         column: x => x.BranchId,
-                        principalTable: "labBranches",
+                        principalTable: "LabBranch",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -414,6 +471,33 @@ namespace DataAccessLayer.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "TimeOfEachLabBranches",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LabBranchDaysOnId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FromTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    ToTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    MaxPatients = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TimeOfEachLabBranches", x => x.ID);
+                    table.ForeignKey(
+                        name: "FK_TimeOfEachLabBranches_LabBranchDaysOns_LabBranchDaysOnId",
+                        column: x => x.LabBranchDaysOnId,
+                        principalTable: "LabBranchDaysOns",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.InsertData(
                 table: "Clients",
                 columns: new[] { "Id", "ClientId", "ClientURL", "Name" },
@@ -437,6 +521,21 @@ namespace DataAccessLayer.Migrations
                 name: "IX_branchTestCatalogs_TestId",
                 table: "branchTestCatalogs",
                 column: "TestId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Days_LabBranchId",
+                table: "Days",
+                column: "LabBranchId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LabBranchDaysOns_DayId",
+                table: "LabBranchDaysOns",
+                column: "DayId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_LabBranchDaysOns_labBranchId",
+                table: "LabBranchDaysOns",
+                column: "labBranchId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LabTestCategories_CategoryId",
@@ -504,6 +603,11 @@ namespace DataAccessLayer.Migrations
                 column: "TestId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_TimeOfEachLabBranches_LabBranchDaysOnId",
+                table: "TimeOfEachLabBranches",
+                column: "LabBranchDaysOnId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserRole_RoleId",
                 table: "UserRole",
                 column: "RoleId");
@@ -568,10 +672,10 @@ namespace DataAccessLayer.Migrations
                 name: "testPreparationRules");
 
             migrationBuilder.DropTable(
-                name: "UserRole");
+                name: "TimeOfEachLabBranches");
 
             migrationBuilder.DropTable(
-                name: "labBranches");
+                name: "UserRole");
 
             migrationBuilder.DropTable(
                 name: "TestCatogaries");
@@ -586,6 +690,9 @@ namespace DataAccessLayer.Migrations
                 name: "labTests");
 
             migrationBuilder.DropTable(
+                name: "LabBranchDaysOns");
+
+            migrationBuilder.DropTable(
                 name: "Role");
 
             migrationBuilder.DropTable(
@@ -593,6 +700,12 @@ namespace DataAccessLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "sampleTypes");
+
+            migrationBuilder.DropTable(
+                name: "Days");
+
+            migrationBuilder.DropTable(
+                name: "LabBranch");
         }
     }
 }

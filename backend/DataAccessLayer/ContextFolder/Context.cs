@@ -46,6 +46,24 @@ namespace DataAccessLayer.ContextFolder
                 .WithMany(x => x.RolePermissions)
                 .HasForeignKey(x => x.RoleId);
 
+            modelBuilder.Entity<LabBranchDaysOn>()
+     .HasOne(x => x.LabBranch)
+     .WithMany(x => x.Days)
+     .HasForeignKey(x => x.labBranchId)
+     .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<LabBranchDaysOn>()
+                .HasOne(x => x.Day)
+                .WithMany(x => x.BranchDays)
+                .HasForeignKey(x => x.DayId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TimeOfEachLabBranch>()
+                .HasOne(x => x.LabBranchDaysOn)
+                .WithMany(x => x.TimeSlots)
+                .HasForeignKey(x => x.LabBranchDaysOnId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.Entity<RolePermission>()
                 .HasOne(x => x.Permission)
                 .WithMany(x => x.RolePermissions)
@@ -188,7 +206,6 @@ namespace DataAccessLayer.ContextFolder
 
         }
 
-        // Many-to-Many (UsersAndServices)
 
         public DbSet<LabServices>  LabServices { get; set; }
         public DbSet<TestCatogaries>  TestCatogaries { get; set; }
@@ -197,7 +214,13 @@ namespace DataAccessLayer.ContextFolder
         public DbSet<LabTestCategory>  LabTestCategories { get; set; }
         public DbSet<LabBranch>  labBranches { get; set; }
         public DbSet<BranchTestCatalog>  branchTestCatalogs { get; set; }
+        public DbSet<LabBranch> LabBranches { get; set; }
 
+        public DbSet<Days> Days { get; set; }
+
+        public DbSet<LabBranchDaysOn> LabBranchDaysOns { get; set; }
+
+        public DbSet<TimeOfEachLabBranch> TimeOfEachLabBranches { get; set; }
         public DbSet<Users> Users { get; set; }
         public DbSet<TestPreparationRule>  testPreparationRules { get; set; }
 

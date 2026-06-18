@@ -1,4 +1,4 @@
-import { ApplicationConfig } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -7,6 +7,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { authInterceptor } from './Core/interceptors/auth.interceptor';
 import { refreshTokenInterceptor } from './Core/interceptors/refresh-token.interceptor';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,5 +17,7 @@ export const appConfig: ApplicationConfig = {
       withInterceptors([refreshTokenInterceptor, authInterceptor]),
     ),
     provideAnimationsAsync(),
+    importProvidersFrom(GoogleMapsModule),
+    
   ],
 };

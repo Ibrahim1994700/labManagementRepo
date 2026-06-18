@@ -1,82 +1,114 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnInit } from '@angular/core';
+import {
+  FormArray,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
-interface NavItem {
-  label: string;
-  icon: string;
-  active?: boolean;
-}
+import {
+  calendarDays,
+  listOfInputs,
+  ServiceItem,
+  services,
+  steps,
+  times,
+} from './models';
+import { MapComponent } from '../../../../shared/Components/map/map.component';
+import { SharedDialogComponent } from '../../../../shared/Components/shared-dialog/shared-dialog.component';
 
-interface ServiceItem {
-  title: string;
-  price: number;
-  icon: string;
-  tone: 'orange' | 'green' | 'pink' | 'purple';
-}
-
-interface CalendarDay {
-  dayName: string;
-  day: number;
-  month: string;
-  available: boolean;
-}
 @Component({
   selector: 'app-home-withdrawal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    ReactiveFormsModule,
+    MapComponent,
+    SharedDialogComponent,
+  ],
   templateUrl: './home-withdrawal.component.html',
-  styleUrl: './home-withdrawal.component.css'
+  styleUrl: './home-withdrawal.component.css',
 })
-export class HomeWithdrawalComponent {
- navItems: NavItem[] = [
-    { label: 'الرئيسية', icon: 'bi-house-door-fill' },
-    { label: 'حجوزاتي', icon: 'bi-calendar3' },
-    { label: 'السحب المنزلي', icon: 'bi-bicycle', active: true },
-    { label: 'الباقات', icon: 'bi-bag' },
-    { label: 'التحاليل الفردية', icon: 'bi-droplet-half' },
-    { label: 'النتائج', icon: 'bi-check2-square' },
-    { label: 'العروض', icon: 'bi-tag' },
-    { label: 'حساب العائلة', icon: 'bi-people' },
-    { label: 'الوصفة الطبية', icon: 'bi-file-earmark-medical' },
-    { label: 'الدعم', icon: 'bi-headset' }
-  ];
-
-  services: ServiceItem[] = [
-    { title: 'باقة فيتامينات', price: 199, icon: 'bi-capsule-pill', tone: 'orange' },
-    { title: 'باقة فحص شامل', price: 299, icon: 'bi-house-heart', tone: 'green' },
-    { title: 'باقة صحة المرأة', price: 349, icon: 'bi-gender-female', tone: 'pink' },
-    { title: 'باقة فحص شامل للرجل', price: 399, icon: 'bi-droplet-half-fill', tone: 'purple' }
-  ];
-
-  calendarDays: CalendarDay[] = [
-    { dayName: 'السبت', day: 24, month: 'مايو', available: true },
-    { dayName: 'الأحد', day: 29, month: 'مايو', available: true },
-    { dayName: 'الاثنين', day: 28, month: 'مايو', available: true },
-    { dayName: 'الثلاثاء', day: 27, month: 'مايو', available: true },
-    { dayName: 'الأربعاء', day: 26, month: 'مايو', available: true },
-    { dayName: 'الخميس', day: 25, month: 'مايو', available: true },
-    { dayName: 'الجمعة', day: 30, month: 'مايو', available: true }
-  ];
-
-  times = [
-    '08:00 ص - 09:00 ص',
-    '09:00 ص - 10:00 ص',
-    '10:00 ص - 11:00 ص',
-    '11:00 ص - 12:00 م',
-    '12:00 م - 01:00 م',
-    '01:00 م - 02:00 م'
-  ];
-
-  selectedService = 3;
+export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
+  steps = steps;
+  times = times;
+  services = services;
+  calendarDays = calendarDays;
+  visible: boolean = false;
+  selectedService: any;
   selectedDay = 5;
   selectedTime = 1;
-  selectedPayment = 0;
-
-  get selectedServiceItem(): ServiceItem {
-    return this.services[this.selectedService];
+  selectedPayment: any;
+  pp: FormGroup | any;
+  listOfInputs = listOfInputs;
+  get listOfPaitent() {
+    return this.pp.get('listOfPaitent') as FormArray;
   }
 
-  selectService(index: number): void {
+  constructor(private ngZone: NgZone) {}
+
+  ngOnInit(): void {
+    this.initialForm();
+    this.calculateFirstStep();
+    this.calculateSecondStep();
+  }
+
+  ngAfterViewInit(): void {}
+
+  remove(index: number) {
+    this.listOfPaitent.removeAt(index);
+    if (this.listOfPaitent.length == 0) {
+    }
+  }
+
+  openDialog() {
+    this.visible = true;
+  }
+
+  initialForm() {
+    this.pp = new FormGroup({
+      name: new FormControl(),
+      age: new FormControl(),
+      listOfPaitent: new FormArray([]),
+      packages: new FormGroup({
+        name: new FormControl(),
+        price: new FormControl(),
+      }),
+    });
+  }
+
+  calculateFirstStep() {
+    this.listOfPaitent.valueChanges.subscribe((res) => {
+      if (res.length == 0) {
+        steps[0].finishStep = false;
+      }
+    });
+  }
+
+  calculateSecondStep() {
+    (this.pp as FormGroup).valueChanges.subscribe((res: any) => {
+      const packageName = res?.packages?.name;
+      if (packageName == null) {
+        steps[1].finishStep = false;
+      } else if (packageName != null) {
+        steps[1].finishStep = true;
+      }
+    });
+  }
+
+  get selectedServiceItem(): ServiceItem {
+    return services[this.selectedService];
+  }
+
+  selectService(service: any, index: number): void {
+    let x = this.pp.get('packages') as FormGroup;
+
+    x.get('name')?.setValue(service.title);
+    x.get('price')?.setValue(service.price);
+
     this.selectedService = index;
   }
 

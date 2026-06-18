@@ -1,6 +1,7 @@
 import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { DataService } from './shared/Services/data.service';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,6 +11,8 @@ import { DataService } from './shared/Services/data.service';
   styleUrl: './app.component.css',
 })
 export class AppComponent implements OnInit {
+  subvalue: any;
+  behavesubvalue: any;
   constructor(
     private dataService: DataService,
     private Route: Router,
@@ -31,13 +34,38 @@ export class AppComponent implements OnInit {
       this.Route.navigate(['/Auth/login']);
     }
   }
+  subject = new Subject();
+  subjectdf = new BehaviorSubject(null);
   ngOnInit(): void {
     // if (this.dataService.CheckLocalStorageItem('token')) {
     //   this.Route.navigate(['/Patient-Home/main-user-page']);
     // } else {
     //   this.Route.navigate(['/Auth/login']);
+
     // }
+
+    //this.subject.subscribe((v) => (this.subvalue = v));
+
+    this.subjectdf.subscribe((v) => (this.behavesubvalue = v));
   }
 
- 
+  x1() {
+    this.subject.next('3');
+  }
+
+  x2() {
+  //  this.subjectdf.next('4');
+  }
+  x3() {
+
+        this.subject.subscribe((v) => (this.subvalue +=v));
+   // this.subject.next(16);
+
+  }
+
+  x4() {
+
+            this.subjectdf.subscribe((v) => (this.behavesubvalue = v+'xxxxx',alert('asd')));
+
+  }
 }

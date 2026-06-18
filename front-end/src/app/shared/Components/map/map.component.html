@@ -1,0 +1,32 @@
+     <div class="map-card">
+          <!-- 🔘 Buttons -->
+          <div class="buttons">
+            <button (click)="myLocation()">📍 موقعي الحالي</button>
+
+            <button (click)="enableSelectMode()">🖱️ اختر من الخريطة</button>
+          </div>
+
+          <!-- 🗺️ Map -->
+          <div id="map"></div>
+
+          <!-- 📍 Info -->
+          <div class="info">
+            <div class="box">
+              <strong>اسم المكان</strong>
+              <p>{{ placeName || "لم يتم التحديد" }}</p>
+            </div>
+
+            <div class="box">
+              <strong>العنوان الكامل</strong>
+              <p>{{ fullAddress || "لم يتم التحديد" }}</p>
+            </div>
+            <div class="search-box">
+              <input
+                type="text"
+                placeholder="ابحث عن مكان (مدينة، شارع، مستشفى...)"
+              />
+
+              <button (click)="searchLocation()">🔍 بحث</button>
+            </div>
+          </div>
+        </div>

@@ -28,6 +28,7 @@ builder.Services.AddScoped<ILabServices,  LabService>();
 builder.Services.AddHostedService<KeyRotationService>();
 builder.Services.AddScoped<IJwt, Jwt>();
 builder.Services.AddScoped<IRefreshTokenService, RefreshTokenService>();
+builder.Services.AddScoped<ILabBranches, LabBranches>();
 
 builder.Services.AddScoped<ICustomerCookieService, CustomerCookieService>();
 builder.Services.AddHttpContextAccessor();
@@ -94,7 +95,11 @@ builder.Services
     });
 builder.Services.AddDataProtection();
 builder.Services.AddControllers()
-    .AddXmlSerializerFormatters();
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler =
+            System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHttpContextAccessor();

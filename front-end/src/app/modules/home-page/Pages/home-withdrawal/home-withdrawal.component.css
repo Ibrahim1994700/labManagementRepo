@@ -1229,3 +1229,38 @@ button {
     align-items: flex-start;
   }
 }
+
+
+.info {
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+.box {
+  padding: 6px;
+  border-bottom: 1px solid #eee;
+}
+
+.search-box {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.search-box input {
+  flex: 1;
+  padding: 6px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.search-box button {
+  padding: 6px 10px;
+  font-size: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #198754;
+  color: white;
+  cursor: pointer;
+}

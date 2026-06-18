@@ -33,10 +33,8 @@ namespace DataAccessLayer.Entities
         [Column(TypeName = "decimal(10,7)")]
         public decimal? Longitude { get; set; }
 
-        public bool IsActive { get; set; } = true;
+        public ICollection<LabBranchDaysOn> Days { get; set; }
 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation Properties
         public ICollection<BranchTestCatalog> BranchTestCatalogs { get; set; } 

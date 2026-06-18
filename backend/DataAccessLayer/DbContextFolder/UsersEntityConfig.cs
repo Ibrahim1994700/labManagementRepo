@@ -55,7 +55,6 @@ namespace DataAccessLayer.DbContextFolder
 
                 .IsUnique();
 
-            builder.HasQueryFilter(x => !x.IsDeleted);
 
             builder.ToTable(t =>
             {
