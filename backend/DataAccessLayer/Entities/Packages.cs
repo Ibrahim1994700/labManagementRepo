@@ -8,14 +8,10 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entities
 {
-    public class TestCatogaries:Base
+    public class Packages:Base
     {
-        public Guid? ParentId { get; set; }
+     
 
-        [ForeignKey(nameof(ParentId))]
-        public TestCatogaries Parent { get; set; }
-
-        public ICollection<TestCatogaries> Children { get; set; } 
         [Required]
         [MaxLength(150)]
         public string NameAr { get; set; }
@@ -32,7 +28,12 @@ namespace DataAccessLayer.Entities
 
         public int SortOrder { get; set; } = 0;
 
-        public ICollection<LabTestCategory> LabTestCategories { get; set; }
+
+        public ICollection<ListOfTests> ListOfTests { get; set; }
+
+
+        public ICollection<Branches>   ListOfbranches { get; set; }
+
 
     }
 }

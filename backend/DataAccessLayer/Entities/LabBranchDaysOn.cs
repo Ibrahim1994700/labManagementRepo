@@ -10,7 +10,7 @@ namespace DataAccessLayer.Entities
     {
         public Guid labBranchId { get; set; }
 
-        public LabBranch  LabBranch { get; set; }
+        public Branches  LabBranch { get; set; }
         public Guid DayId { get; set; }
         public Days Day { get; set; }
         public ICollection<TimeOfEachLabBranch> TimeSlots { get; set; }

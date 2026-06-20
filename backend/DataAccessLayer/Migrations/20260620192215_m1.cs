@@ -28,7 +28,26 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LabBranch",
+                name: "Days",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    numberOfDay = table.Column<int>(type: "int", nullable: false),
+                    DayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Days", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "labBranches",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -40,16 +59,16 @@ namespace DataAccessLayer.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Latitude = table.Column<decimal>(type: "decimal(10,7)", nullable: true),
                     Longitude = table.Column<decimal>(type: "decimal(10,7)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LabBranch", x => x.ID);
+                    table.PrimaryKey("PK_labBranches", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -61,16 +80,38 @@ namespace DataAccessLayer.Migrations
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     Icon = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     DisplayOrder = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true, defaultValue: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_LabServices", x => x.ID);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Packages",
+                columns: table => new
+                {
+                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    NameAr = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    NameEn = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
+                    Slug = table.Column<string>(type: "nvarchar(160)", maxLength: 160, nullable: false),
+                    Icon = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    SortOrder = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Packages", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -107,12 +148,12 @@ namespace DataAccessLayer.Migrations
                     name_en = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     description_ar = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     description_en = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -135,35 +176,6 @@ namespace DataAccessLayer.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_signingKeys", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TestCatogaries",
-                columns: table => new
-                {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    NameAr = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    NameEn = table.Column<string>(type: "nvarchar(150)", maxLength: 150, nullable: false),
-                    Slug = table.Column<string>(type: "nvarchar(160)", maxLength: 160, nullable: false),
-                    Icon = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    SortOrder = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TestCatogaries", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_TestCatogaries_TestCatogaries_ParentId",
-                        column: x => x.ParentId,
-                        principalTable: "TestCatogaries",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -199,27 +211,56 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Days",
+                name: "LabBranchDaysOns",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    numberOfDay = table.Column<int>(type: "int", nullable: false),
-                    DayName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LabBranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    labBranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Days", x => x.ID);
+                    table.PrimaryKey("PK_LabBranchDaysOns", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_Days_LabBranch_LabBranchId",
-                        column: x => x.LabBranchId,
-                        principalTable: "LabBranch",
+                        name: "FK_LabBranchDaysOns_Days_DayId",
+                        column: x => x.DayId,
+                        principalTable: "Days",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LabBranchDaysOns_labBranches_labBranchId",
+                        column: x => x.labBranchId,
+                        principalTable: "labBranches",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PackagesBranches",
+                columns: table => new
+                {
+                    ListOfPackagesID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ListOfbranchesID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PackagesBranches", x => new { x.ListOfPackagesID, x.ListOfbranchesID });
+                    table.ForeignKey(
+                        name: "FK_PackagesBranches_Packages_ListOfPackagesID",
+                        column: x => x.ListOfPackagesID,
+                        principalTable: "Packages",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PackagesBranches_labBranches_ListOfbranchesID",
+                        column: x => x.ListOfbranchesID,
+                        principalTable: "labBranches",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -249,7 +290,7 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "labTests",
+                name: "ListOfTests",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -270,18 +311,18 @@ namespace DataAccessLayer.Migrations
                     RequiresPrescription = table.Column<bool>(type: "bit", nullable: false),
                     PopularityScore = table.Column<int>(type: "int", nullable: false),
                     PublicationStatus = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_labTests", x => x.ID);
+                    table.PrimaryKey("PK_ListOfTests", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_labTests_sampleTypes_SampleTypeId",
+                        name: "FK_ListOfTests_sampleTypes_SampleTypeId",
                         column: x => x.SampleTypeId,
                         principalTable: "sampleTypes",
                         principalColumn: "ID",
@@ -309,13 +350,13 @@ namespace DataAccessLayer.Migrations
                         column: x => x.ClientId,
                         principalTable: "Clients",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_refreshTokens_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -343,102 +384,76 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "LabBranchDaysOns",
+                name: "TimeOfEachLabBranches",
                 columns: table => new
                 {
                     ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    labBranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    DayId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    LabBranchDaysOnId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FromTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    ToTime = table.Column<TimeSpan>(type: "time", nullable: false),
+                    MaxPatients = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LabBranchDaysOns", x => x.ID);
+                    table.PrimaryKey("PK_TimeOfEachLabBranches", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_LabBranchDaysOns_Days_DayId",
-                        column: x => x.DayId,
-                        principalTable: "Days",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_LabBranchDaysOns_LabBranch_labBranchId",
-                        column: x => x.labBranchId,
-                        principalTable: "LabBranch",
+                        name: "FK_TimeOfEachLabBranches_LabBranchDaysOns_LabBranchDaysOnId",
+                        column: x => x.LabBranchDaysOnId,
+                        principalTable: "LabBranchDaysOns",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "branchTestCatalogs",
+                name: "BranchTest",
                 columns: table => new
                 {
-                    BranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    TestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(10,2)", nullable: false),
-                    IsAvailable = table.Column<bool>(type: "bit", nullable: false),
-                    HomeCollectionAllowed = table.Column<bool>(type: "bit", nullable: false),
-                    ResultMinHours = table.Column<int>(type: "int", nullable: true),
-                    ResultMaxHours = table.Column<int>(type: "int", nullable: true),
-                    DailyCapacity = table.Column<int>(type: "int", nullable: true),
-                    AvailableFrom = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    AvailableTo = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    TestsID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    branchesID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_branchTestCatalogs", x => new { x.BranchId, x.TestId });
+                    table.PrimaryKey("PK_BranchTest", x => new { x.TestsID, x.branchesID });
                     table.ForeignKey(
-                        name: "FK_branchTestCatalogs_LabBranch_BranchId",
-                        column: x => x.BranchId,
-                        principalTable: "LabBranch",
+                        name: "FK_BranchTest_ListOfTests_TestsID",
+                        column: x => x.TestsID,
+                        principalTable: "ListOfTests",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_branchTestCatalogs_labTests_TestId",
-                        column: x => x.TestId,
-                        principalTable: "labTests",
+                        name: "FK_BranchTest_labBranches_branchesID",
+                        column: x => x.branchesID,
+                        principalTable: "labBranches",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
-                name: "LabTestCategories",
+                name: "PackageTest",
                 columns: table => new
                 {
-                    TestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CategoryId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    ListOfTestsID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PackagesID = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LabTestCategories", x => new { x.TestId, x.CategoryId });
+                    table.PrimaryKey("PK_PackageTest", x => new { x.ListOfTestsID, x.PackagesID });
                     table.ForeignKey(
-                        name: "FK_LabTestCategories_TestCatogaries_CategoryId",
-                        column: x => x.CategoryId,
-                        principalTable: "TestCatogaries",
+                        name: "FK_PackageTest_ListOfTests_ListOfTestsID",
+                        column: x => x.ListOfTestsID,
+                        principalTable: "ListOfTests",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_LabTestCategories_labTests_TestId",
-                        column: x => x.TestId,
-                        principalTable: "labTests",
+                        name: "FK_PackageTest_Packages_PackagesID",
+                        column: x => x.PackagesID,
+                        principalTable: "Packages",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -453,49 +468,22 @@ namespace DataAccessLayer.Migrations
                     InstructionAr = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InstructionEn = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsRequired = table.Column<bool>(type: "bit", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    IsActive = table.Column<bool>(type: "bit", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_testPreparationRules", x => x.ID);
                     table.ForeignKey(
-                        name: "FK_testPreparationRules_labTests_TestId",
+                        name: "FK_testPreparationRules_ListOfTests_TestId",
                         column: x => x.TestId,
-                        principalTable: "labTests",
+                        principalTable: "ListOfTests",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "TimeOfEachLabBranches",
-                columns: table => new
-                {
-                    ID = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    LabBranchDaysOnId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FromTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    ToTime = table.Column<TimeSpan>(type: "time", nullable: false),
-                    MaxPatients = table.Column<int>(type: "int", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TimeOfEachLabBranches", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_TimeOfEachLabBranches_LabBranchDaysOns_LabBranchDaysOnId",
-                        column: x => x.LabBranchDaysOnId,
-                        principalTable: "LabBranchDaysOns",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.InsertData(
@@ -518,14 +506,9 @@ namespace DataAccessLayer.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_branchTestCatalogs_TestId",
-                table: "branchTestCatalogs",
-                column: "TestId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Days_LabBranchId",
-                table: "Days",
-                column: "LabBranchId");
+                name: "IX_BranchTest_branchesID",
+                table: "BranchTest",
+                column: "branchesID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LabBranchDaysOns_DayId",
@@ -538,14 +521,25 @@ namespace DataAccessLayer.Migrations
                 column: "labBranchId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_LabTestCategories_CategoryId",
-                table: "LabTestCategories",
-                column: "CategoryId");
+                name: "IX_ListOfTests_SampleTypeId",
+                table: "ListOfTests",
+                column: "SampleTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_labTests_SampleTypeId",
-                table: "labTests",
-                column: "SampleTypeId");
+                name: "IX_Packages_Slug",
+                table: "Packages",
+                column: "Slug",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PackagesBranches_ListOfbranchesID",
+                table: "PackagesBranches",
+                column: "ListOfbranchesID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PackageTest_PackagesID",
+                table: "PackageTest",
+                column: "PackagesID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Permission_Name",
@@ -584,17 +578,6 @@ namespace DataAccessLayer.Migrations
                 name: "IX_sampleTypes_code",
                 table: "sampleTypes",
                 column: "code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TestCatogaries_ParentId",
-                table: "TestCatogaries",
-                column: "ParentId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TestCatogaries_Slug",
-                table: "TestCatogaries",
-                column: "Slug",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -651,13 +634,16 @@ namespace DataAccessLayer.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "branchTestCatalogs");
+                name: "BranchTest");
 
             migrationBuilder.DropTable(
                 name: "LabServices");
 
             migrationBuilder.DropTable(
-                name: "LabTestCategories");
+                name: "PackagesBranches");
+
+            migrationBuilder.DropTable(
+                name: "PackageTest");
 
             migrationBuilder.DropTable(
                 name: "refreshTokens");
@@ -678,7 +664,7 @@ namespace DataAccessLayer.Migrations
                 name: "UserRole");
 
             migrationBuilder.DropTable(
-                name: "TestCatogaries");
+                name: "Packages");
 
             migrationBuilder.DropTable(
                 name: "Clients");
@@ -687,7 +673,7 @@ namespace DataAccessLayer.Migrations
                 name: "Permission");
 
             migrationBuilder.DropTable(
-                name: "labTests");
+                name: "ListOfTests");
 
             migrationBuilder.DropTable(
                 name: "LabBranchDaysOns");
@@ -705,7 +691,7 @@ namespace DataAccessLayer.Migrations
                 name: "Days");
 
             migrationBuilder.DropTable(
-                name: "LabBranch");
+                name: "labBranches");
         }
     }
 }

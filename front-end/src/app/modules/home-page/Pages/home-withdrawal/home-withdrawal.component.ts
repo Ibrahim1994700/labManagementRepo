@@ -18,6 +18,7 @@ import {
 } from './models';
 import { MapComponent } from '../../../../shared/Components/map/map.component';
 import { SharedDialogComponent } from '../../../../shared/Components/shared-dialog/shared-dialog.component';
+import { HomeWithDrwalService } from './home-with-drwal.service';
 
 @Component({
   selector: 'app-home-withdrawal',
@@ -35,25 +36,42 @@ import { SharedDialogComponent } from '../../../../shared/Components/shared-dial
 export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   steps = steps;
   times = times;
+  selectedTab: string = 'packages';
   services = services;
   calendarDays = calendarDays;
   visible: boolean = false;
   selectedService: any;
+  selectSpecificBranch: any;
   selectedDay = 5;
   selectedTime = 1;
   selectedPayment: any;
   pp: FormGroup | any;
   listOfInputs = listOfInputs;
+  AllBranches!: any;
   get listOfPaitent() {
     return this.pp.get('listOfPaitent') as FormArray;
   }
 
-  constructor(private ngZone: NgZone) {}
+  constructor(
+    private ngZone: NgZone,
+    private service: HomeWithDrwalService,
+  ) {}
 
   ngOnInit(): void {
     this.initialForm();
     this.calculateFirstStep();
     this.calculateSecondStep();
+    this.getAllBranches();
+  }
+
+  getAllBranches() {
+    this.service.getAllBranches().subscribe({
+      next: (res) => {
+        this.AllBranches = res;
+      },
+      error: () => {},
+      complete: () => {},
+    });
   }
 
   ngAfterViewInit(): void {}
@@ -122,5 +140,16 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
 
   selectPayment(index: number): void {
     this.selectedPayment = index;
+  }
+
+  selectBranch(branch: any, id: any) {
+    this.selectSpecificBranch = id;
+  }
+
+  closeDialog(event: any) {
+    this.visible = false;
+  }
+  selectTab(tab: string) {
+    this.selectedTab = tab;
   }
 }

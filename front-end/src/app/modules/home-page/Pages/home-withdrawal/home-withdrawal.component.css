@@ -1264,3 +1264,85 @@ button {
   color: white;
   cursor: pointer;
 }
+
+
+
+.branch-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 15px;
+
+  max-height: 400px;
+  overflow-y: auto;
+
+  padding-right: 8px;
+}
+
+/* Card */
+.branch-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  padding: 14px;
+  border-radius: 12px;
+
+  border: 1px solid #e5e5e5;
+  background: #fff;
+
+  cursor: pointer;
+  transition: 0.2s;
+
+  text-align: left;
+}
+
+/* Hover */
+.branch-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* Selected */
+.branch-card.selected {
+  border: 2px solid #3b82f6;
+  background: #f0f7ff;
+}
+
+/* Icon */
+.branch-icon {
+  font-size: 22px;
+  color: #3b82f6;
+}
+
+/* Text */
+.branch-info {
+  min-width: 0;
+}
+
+.branch-info strong {
+  display: block;
+  font-size: 14px;
+}
+
+.branch-info span {
+  display: block;
+  font-size: 12px;
+  color: gray;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Scroll bar */
+.branch-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.branch-container::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 10px;
+}

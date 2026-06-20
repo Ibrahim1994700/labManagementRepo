@@ -49,23 +49,4 @@ export class AppComponent implements OnInit {
     this.subjectdf.subscribe((v) => (this.behavesubvalue = v));
   }
 
-  x1() {
-    this.subject.next('3');
-  }
-
-  x2() {
-  //  this.subjectdf.next('4');
-  }
-  x3() {
-
-        this.subject.subscribe((v) => (this.subvalue +=v));
-   // this.subject.next(16);
-
-  }
-
-  x4() {
-
-            this.subjectdf.subscribe((v) => (this.behavesubvalue = v+'xxxxx',alert('asd')));
-
-  }
 }

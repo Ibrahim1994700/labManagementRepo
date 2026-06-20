@@ -21,26 +21,31 @@ export interface CalendarDay {
 export const steps = [
   {
     number: 1,
-    name: 'اختيار المريض',
+    name: 'اختيار الفرع',
     finishStep: false,
   },
   {
     number: 2,
-    name: 'اختيار الخدمه',
+    name: 'اختيار المريض',
     finishStep: false,
   },
   {
     number: 3,
-    name: 'اختيار التاريخ والوقت',
+    name: 'اختيار الخدمه',
     finishStep: false,
   },
   {
     number: 4,
-    name: 'اختيار العنوان',
+    name: 'اختيار التاريخ والوقت',
     finishStep: false,
   },
   {
     number: 5,
+    name: 'اختيار العنوان',
+    finishStep: false,
+  },
+  {
+    number: 6,
     name: 'اختيار طريقه الدفع',
     finishStep: false,
   },

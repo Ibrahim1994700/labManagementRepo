@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DataAccessLayer.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20260613231817_m1")]
+    [Migration("20260620192215_m1")]
     partial class m1
     {
         /// <inheritdoc />
@@ -25,64 +25,98 @@ namespace DataAccessLayer.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DataAccessLayer.Entities.BranchTestCatalog", b =>
+            modelBuilder.Entity("BranchesListOfTests", b =>
                 {
-                    b.Property<Guid>("BranchId")
+                    b.Property<Guid>("TestsID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("TestId")
+                    b.Property<Guid>("branchesID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime?>("AvailableFrom")
-                        .HasColumnType("datetime2");
+                    b.HasKey("TestsID", "branchesID");
 
-                    b.Property<DateTime?>("AvailableTo")
-                        .HasColumnType("datetime2");
+                    b.HasIndex("branchesID");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                    b.ToTable("BranchTest", (string)null);
+                });
 
-                    b.Property<Guid>("CreatedBy")
+            modelBuilder.Entity("BranchesPackages", b =>
+                {
+                    b.Property<Guid>("ListOfPackagesID")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("DailyCapacity")
-                        .HasColumnType("int");
+                    b.Property<Guid>("ListOfbranchesID")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("HomeCollectionAllowed")
-                        .HasColumnType("bit");
+                    b.HasKey("ListOfPackagesID", "ListOfbranchesID");
 
+                    b.HasIndex("ListOfbranchesID");
+
+                    b.ToTable("PackagesBranches", (string)null);
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.Branches", b =>
+                {
                     b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsAvailable")
-                        .HasColumnType("bit");
+                    b.Property<string>("BranchCode")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
 
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(10,2)");
-
-                    b.Property<int?>("ResultMaxHours")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ResultMinHours")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("BranchId", "TestId");
+                    b.Property<string>("District")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.HasIndex("TestId");
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("bit");
 
-                    b.ToTable("branchTestCatalogs");
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<decimal?>("Latitude")
+                        .HasColumnType("decimal(10,7)");
+
+                    b.Property<decimal?>("Longitude")
+                        .HasColumnType("decimal(10,7)");
+
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("NameEn")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("labBranches");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Clients", b =>
@@ -133,29 +167,26 @@ namespace DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("DayName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<Guid>("LabBranchId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("numberOfDay")
@@ -163,73 +194,7 @@ namespace DataAccessLayer.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("LabBranchId");
-
                     b.ToTable("Days");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Entities.LabBranch", b =>
-                {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("BranchCode")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
-
-                    b.Property<string>("City")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("District")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<decimal?>("Latitude")
-                        .HasColumnType("decimal(10,7)");
-
-                    b.Property<decimal?>("Longitude")
-                        .HasColumnType("decimal(10,7)");
-
-                    b.Property<string>("NameAr")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("LabBranch");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.LabBranchDaysOn", b =>
@@ -238,25 +203,25 @@ namespace DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("DayId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("labBranchId")
@@ -277,10 +242,10 @@ namespace DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Description")
@@ -298,12 +263,12 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("Name")
@@ -311,10 +276,10 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ID");
@@ -322,7 +287,7 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("LabServices", (string)null);
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.LabTest", b =>
+            modelBuilder.Entity("DataAccessLayer.Entities.ListOfTests", b =>
                 {
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
@@ -331,10 +296,10 @@ namespace DataAccessLayer.Migrations
                     b.Property<decimal>("BasePrice")
                         .HasColumnType("decimal(10,2)");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Currency")
@@ -355,10 +320,10 @@ namespace DataAccessLayer.Migrations
                     b.Property<bool>("HomeCollectionAllowed")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("NameAr")
@@ -404,53 +369,72 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ID");
 
                     b.HasIndex("SampleTypeId");
 
-                    b.ToTable("labTests");
+                    b.ToTable("ListOfTests");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.LabTestCategory", b =>
+            modelBuilder.Entity("DataAccessLayer.Entities.Packages", b =>
                 {
-                    b.Property<Guid>("TestId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("TestId", "CategoryId");
+                    b.Property<string>("Icon")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
-                    b.HasIndex("CategoryId");
+                    b.Property<bool?>("IsActive")
+                        .HasColumnType("bit");
 
-                    b.ToTable("LabTestCategories");
+                    b.Property<bool?>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("NameAr")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("NameEn")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("Slug")
+                        .IsRequired()
+                        .HasMaxLength(160)
+                        .HasColumnType("nvarchar(160)");
+
+                    b.Property<int>("SortOrder")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("Slug")
+                        .IsUnique();
+
+                    b.ToTable("Packages");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Permission", b =>
@@ -567,22 +551,22 @@ namespace DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("code")
@@ -648,76 +632,16 @@ namespace DataAccessLayer.Migrations
                     b.ToTable("signingKeys");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.TestCatogaries", b =>
-                {
-                    b.Property<Guid>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("CreatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Icon")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("NameAr")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<string>("NameEn")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("nvarchar(150)");
-
-                    b.Property<Guid?>("ParentId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Slug")
-                        .IsRequired()
-                        .HasMaxLength(160)
-                        .HasColumnType("nvarchar(160)");
-
-                    b.Property<int>("SortOrder")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("ParentId");
-
-                    b.HasIndex("Slug")
-                        .IsUnique();
-
-                    b.ToTable("TestCatogaries");
-                });
-
             modelBuilder.Entity("DataAccessLayer.Entities.TestPreparationRule", b =>
                 {
                     b.Property<Guid>("ID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("InstructionAr")
@@ -728,10 +652,10 @@ namespace DataAccessLayer.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<bool>("IsRequired")
@@ -745,10 +669,10 @@ namespace DataAccessLayer.Migrations
                     b.Property<Guid>("TestId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ID");
@@ -764,19 +688,19 @@ namespace DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("CreatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<TimeSpan>("FromTime")
                         .HasColumnType("time");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
                         .HasColumnType("bit");
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool?>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<Guid>("LabBranchDaysOnId")
@@ -788,10 +712,10 @@ namespace DataAccessLayer.Migrations
                     b.Property<TimeSpan>("ToTime")
                         .HasColumnType("time");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ID");
@@ -822,12 +746,14 @@ namespace DataAccessLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime?>("CreatedAt")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("SYSUTCDATETIME()");
 
-                    b.Property<Guid>("CreatedBy")
+                    b.Property<Guid?>("CreatedBy")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("FailedLoginAttempts")
@@ -840,12 +766,14 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(150)
                         .HasColumnType("nvarchar(150)");
 
-                    b.Property<bool>("IsActive")
+                    b.Property<bool?>("IsActive")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true);
 
-                    b.Property<bool>("IsDeleted")
+                    b.Property<bool?>("IsDeleted")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(false);
@@ -893,12 +821,14 @@ namespace DataAccessLayer.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<DateTime>("UpdatedAt")
+                    b.Property<DateTime?>("UpdatedAt")
+                        .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
                         .HasDefaultValueSql("SYSUTCDATETIME()");
 
-                    b.Property<Guid>("UpdatedBy")
+                    b.Property<Guid?>("UpdatedBy")
+                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserName")
@@ -930,34 +860,49 @@ namespace DataAccessLayer.Migrations
                         });
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.BranchTestCatalog", b =>
+            modelBuilder.Entity("ListOfTestsPackages", b =>
                 {
-                    b.HasOne("DataAccessLayer.Entities.LabBranch", "Branch")
-                        .WithMany("BranchTestCatalogs")
-                        .HasForeignKey("BranchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<Guid>("ListOfTestsID")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.HasOne("DataAccessLayer.Entities.LabTest", "Test")
-                        .WithMany("BranchTestCatalogs")
-                        .HasForeignKey("TestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Property<Guid>("PackagesID")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Navigation("Branch");
+                    b.HasKey("ListOfTestsID", "PackagesID");
 
-                    b.Navigation("Test");
+                    b.HasIndex("PackagesID");
+
+                    b.ToTable("PackageTest", (string)null);
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.Days", b =>
+            modelBuilder.Entity("BranchesListOfTests", b =>
                 {
-                    b.HasOne("DataAccessLayer.Entities.LabBranch", "LabBranch")
+                    b.HasOne("DataAccessLayer.Entities.ListOfTests", null)
                         .WithMany()
-                        .HasForeignKey("LabBranchId")
+                        .HasForeignKey("TestsID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("LabBranch");
+                    b.HasOne("DataAccessLayer.Entities.Branches", null)
+                        .WithMany()
+                        .HasForeignKey("branchesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BranchesPackages", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.Packages", null)
+                        .WithMany()
+                        .HasForeignKey("ListOfPackagesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccessLayer.Entities.Branches", null)
+                        .WithMany()
+                        .HasForeignKey("ListOfbranchesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.LabBranchDaysOn", b =>
@@ -968,7 +913,7 @@ namespace DataAccessLayer.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DataAccessLayer.Entities.LabBranch", "LabBranch")
+                    b.HasOne("DataAccessLayer.Entities.Branches", "LabBranch")
                         .WithMany("Days")
                         .HasForeignKey("labBranchId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -979,7 +924,7 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("LabBranch");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.LabTest", b =>
+            modelBuilder.Entity("DataAccessLayer.Entities.ListOfTests", b =>
                 {
                     b.HasOne("DataAccessLayer.Entities.SampleType", "SampleType")
                         .WithMany()
@@ -990,37 +935,18 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("SampleType");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.LabTestCategory", b =>
-                {
-                    b.HasOne("DataAccessLayer.Entities.TestCatogaries", "Catogaries")
-                        .WithMany("LabTestCategories")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("DataAccessLayer.Entities.LabTest", "Test")
-                        .WithMany("LabTestCategories")
-                        .HasForeignKey("TestId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Catogaries");
-
-                    b.Navigation("Test");
-                });
-
             modelBuilder.Entity("DataAccessLayer.Entities.RefreshToken", b =>
                 {
                     b.HasOne("DataAccessLayer.Entities.Clients", "Client")
                         .WithMany()
                         .HasForeignKey("ClientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DataAccessLayer.Entities.Users", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Client");
@@ -1047,19 +973,9 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("Role");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.TestCatogaries", b =>
-                {
-                    b.HasOne("DataAccessLayer.Entities.TestCatogaries", "Parent")
-                        .WithMany("Children")
-                        .HasForeignKey("ParentId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.Navigation("Parent");
-                });
-
             modelBuilder.Entity("DataAccessLayer.Entities.TestPreparationRule", b =>
                 {
-                    b.HasOne("DataAccessLayer.Entities.LabTest", "Test")
+                    b.HasOne("DataAccessLayer.Entities.ListOfTests", "Test")
                         .WithMany("PreparationRules")
                         .HasForeignKey("TestId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -1098,16 +1014,29 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("ListOfTestsPackages", b =>
+                {
+                    b.HasOne("DataAccessLayer.Entities.ListOfTests", null)
+                        .WithMany()
+                        .HasForeignKey("ListOfTestsID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DataAccessLayer.Entities.Packages", null)
+                        .WithMany()
+                        .HasForeignKey("PackagesID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DataAccessLayer.Entities.Branches", b =>
+                {
+                    b.Navigation("Days");
+                });
+
             modelBuilder.Entity("DataAccessLayer.Entities.Days", b =>
                 {
                     b.Navigation("BranchDays");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Entities.LabBranch", b =>
-                {
-                    b.Navigation("BranchTestCatalogs");
-
-                    b.Navigation("Days");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.LabBranchDaysOn", b =>
@@ -1115,12 +1044,8 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("TimeSlots");
                 });
 
-            modelBuilder.Entity("DataAccessLayer.Entities.LabTest", b =>
+            modelBuilder.Entity("DataAccessLayer.Entities.ListOfTests", b =>
                 {
-                    b.Navigation("BranchTestCatalogs");
-
-                    b.Navigation("LabTestCategories");
-
                     b.Navigation("PreparationRules");
                 });
 
@@ -1134,13 +1059,6 @@ namespace DataAccessLayer.Migrations
                     b.Navigation("RolePermissions");
 
                     b.Navigation("UserRoles");
-                });
-
-            modelBuilder.Entity("DataAccessLayer.Entities.TestCatogaries", b =>
-                {
-                    b.Navigation("Children");
-
-                    b.Navigation("LabTestCategories");
                 });
 
             modelBuilder.Entity("DataAccessLayer.Entities.Users", b =>

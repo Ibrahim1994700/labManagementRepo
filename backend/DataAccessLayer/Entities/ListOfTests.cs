@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entities
 {
-    public class LabTest :Base
+    public class ListOfTests :Base
     {
         [Required, MaxLength(50)]
         public string TestCode { get; set; }
@@ -51,8 +51,12 @@ namespace DataAccessLayer.Entities
 
         [Required, MaxLength(20)]
         public string PublicationStatus { get; set; } = "DRAFT";
-        public ICollection<LabTestCategory> LabTestCategories { get; set; }
-        public ICollection<TestPreparationRule> PreparationRules { get; set; }
-        public ICollection<BranchTestCatalog> BranchTestCatalogs { get; set; }
+      
+        public ICollection<TestPreparationRule>? PreparationRules { get; set; }
+        public ICollection<Packages>?  Packages { get; set; }
+
+        public ICollection<Branches>? branches { get; set; }
+
+
     }
 }

@@ -10,7 +10,7 @@ namespace Core.Services.IServices
 {
     public interface ILabBranches
     {
-        Task<IEnumerable<object>> GetAllBranchesAsync();
+        Task<object> GetAllBranchesAsync();
         
     }
 }

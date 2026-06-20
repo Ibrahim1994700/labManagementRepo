@@ -13,7 +13,7 @@ namespace DataAccessLayer.Entities
         public Guid TestId { get; set; }
 
         [ForeignKey(nameof(TestId))]
-        public LabTest Test { get; set; }
+        public ListOfTests Test { get; set; }
 
         [Required]
         [MaxLength(30)]

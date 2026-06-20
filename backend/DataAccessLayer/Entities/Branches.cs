@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DataAccessLayer.Entities
 {
-    public class LabBranch :Base
+    public class Branches :Base
     {
         [Required, MaxLength(30)]
         public string BranchCode { get; set; }
@@ -33,11 +33,11 @@ namespace DataAccessLayer.Entities
         [Column(TypeName = "decimal(10,7)")]
         public decimal? Longitude { get; set; }
 
-        public ICollection<LabBranchDaysOn> Days { get; set; }
+        public ICollection<LabBranchDaysOn> ?Days { get; set; }
+        public ICollection<Packages> ? ListOfPackages { get; set; }
 
+        public ICollection<ListOfTests> ?  Tests { get; set; }
 
-        // Navigation Properties
-        public ICollection<BranchTestCatalog> BranchTestCatalogs { get; set; } 
     }
 }
 

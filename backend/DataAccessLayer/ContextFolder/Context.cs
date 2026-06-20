@@ -126,55 +126,39 @@ namespace DataAccessLayer.ContextFolder
                .Property(x => x.ID)
                .ValueGeneratedOnAdd();
 
-            modelBuilder.Entity<TestCatogaries>()
+            modelBuilder.Entity<Packages>()
                 .Property(x => x.ID)
                 .ValueGeneratedOnAdd();
-            modelBuilder.Entity<TestCatogaries>()
+            modelBuilder.Entity<Packages>()
            .HasIndex(x => x.Slug)
                        .IsUnique();
-                    modelBuilder.Entity<TestCatogaries>()
-             .HasOne(c => c.Parent)
-             .WithMany(c => c.Children)
-             .HasForeignKey(c => c.ParentId)
-             .OnDelete(DeleteBehavior.Restrict);
+               
 
-            modelBuilder.Entity<LabTestCategory>()
-      .HasKey(tc => new { tc.TestId, tc.CategoryId });
+            // Configure LabTests relationships
+            modelBuilder.Entity<Packages>()
+                .HasMany(l => l.ListOfTests)
+                .WithMany(b => b.Packages)
+                .UsingEntity(l => l.ToTable("PackageTest"))
+                ;
 
-            modelBuilder.Entity<LabTestCategory>()
-                .HasOne(tc => tc.Test)
-                .WithMany(t => t.LabTestCategories)
-                .HasForeignKey(tc => tc.TestId)
-                .OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Packages>()
+              .HasMany(l => l.ListOfbranches)
+              .WithMany(b => b.ListOfPackages)
+              .UsingEntity(l => l.ToTable("PackagesBranches"))
+              ;
 
-            modelBuilder.Entity<LabTestCategory>()
-                .HasOne(tc => tc.Catogaries)
-                .WithMany(c => c.LabTestCategories)
-                .HasForeignKey(tc => tc.CategoryId)
-                .OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<BranchTestCatalog>()
-       .HasKey(btc => new { btc.BranchId, btc.TestId });
+            modelBuilder.Entity<ListOfTests>()
+                .HasMany(l => l.branches)
+                .WithMany(t => t.Tests)
+                .UsingEntity(l => l.ToTable("BranchTest"));
 
-            modelBuilder.Entity<BranchTestCatalog>()
-                .HasOne(btc => btc.Branch)
-                .WithMany(b => b.BranchTestCatalogs)
-                .HasForeignKey(btc => btc.BranchId)
-                .OnDelete(DeleteBehavior.Cascade);
+          
 
-            modelBuilder.Entity<BranchTestCatalog>()
-                .HasOne(btc => btc.Test)
-                .WithMany(t => t.BranchTestCatalogs)
-                .HasForeignKey(btc => btc.TestId)
-                .OnDelete(DeleteBehavior.Cascade);
 
-            // Check constraint لمحاكاة SQL
-        
 
-            modelBuilder.Entity<LabBranch>()
-            .HasMany(b => b.BranchTestCatalogs)
-            .WithOne(c => c.Branch)
-            .HasForeignKey(c => c.BranchId)
-            .OnDelete(DeleteBehavior.Cascade);
+
+
+
 
             modelBuilder.Entity<LabServices>(entity =>
             {
@@ -204,18 +188,33 @@ namespace DataAccessLayer.ContextFolder
                       .HasDefaultValue(0);
             });
 
+            // Packages <-> Branches (through PackagesBranches)
+          
+
+        
+
+            // RefreshToken relations
+            modelBuilder.Entity<RefreshToken>()
+                .HasOne(r => r.User)
+                .WithMany(u => u.RefreshTokens)
+                .HasForeignKey(r => r.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<RefreshToken>()
+                .HasOne(r => r.Client)
+                .WithMany()
+                .HasForeignKey(r => r.ClientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
         }
 
 
         public DbSet<LabServices>  LabServices { get; set; }
-        public DbSet<TestCatogaries>  TestCatogaries { get; set; }
+        public DbSet<Packages> Packages { get; set; }
         public DbSet<SampleType>  sampleTypes { get; set; }
-        public DbSet<LabTest>  labTests { get; set; }
-        public DbSet<LabTestCategory>  LabTestCategories { get; set; }
-        public DbSet<LabBranch>  labBranches { get; set; }
-        public DbSet<BranchTestCatalog>  branchTestCatalogs { get; set; }
-        public DbSet<LabBranch> LabBranches { get; set; }
-
+        public DbSet<ListOfTests> ListOfTests { get; set; }
+        public DbSet<Branches>  labBranches { get; set; }
+    
         public DbSet<Days> Days { get; set; }
 
         public DbSet<LabBranchDaysOn> LabBranchDaysOns { get; set; }

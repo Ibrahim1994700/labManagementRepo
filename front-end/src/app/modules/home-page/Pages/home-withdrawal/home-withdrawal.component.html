@@ -15,9 +15,43 @@
       </ng-container>
     </section>
 
-    <section class="content-card patient-section">
+<section class="content-card services-section">
+  <h2 class="mb-4"><span>2.</span> اختر الفرع</h2>
+
+  
+
+  <!-- GRID CARDS -->
+  <div class="branch-container" [formGroup]="pp">
+
+    <button
+      *ngFor="let branch of AllBranches; let i = index"
+      class="branch-card"
+      [class.selected]="selectSpecificBranch === i"
+      (click)="selectBranch(branch, i)"
+    >
+
+      <i class="bi bi-building branch-icon"></i>
+
+      <div class="branch-info">
+        <strong>{{ branch.nameAr }}</strong>
+        <span>{{ branch.city }}--{{branch.district }}--{{branch.address }}</span>
+      </div>
+
+    
+
+    </button>
+
+  </div>
+</section>
+
+    <section class="content-card patient-section" >
       <h2><span>1.</span> اختر المريض</h2>
       <div class="patient-options">
+
+          <button (click)="openDialog()" class="patient-option add-patient" [disabled]="true">
+          <span class="plus"><i class="bi bi-plus-lg"></i></span>
+          <strong>إضافة مريض جديد</strong>
+        </button>
         <ng-container>
           <button
             *ngFor="let x of listOfPaitent.controls; let i = index"
@@ -35,21 +69,28 @@
           </button>
         </ng-container>
 
-        <button (click)="openDialog()" class="patient-option add-patient">
-          <span class="plus"><i class="bi bi-plus-lg"></i></span>
-          <strong>إضافة مريض جديد</strong>
-        </button>
+      
       </div>
     </section>
 
     <section class="content-card services-section">
       <h2><span>2.</span> اختر الخدمة أو الباقة</h2>
 
-      <div class="mini-tabs">
-        <button>الكل</button>
-        <button class="active">الباقات</button>
-        <button>التحاليل</button>
-      </div>
+     <div class="mini-tabs">
+
+  <button
+    (click)="selectTab('packages')"
+    [class.active]="selectedTab === 'packages'">
+    الباقات
+  </button>
+
+  <button
+    (click)="selectTab('tests')"
+    [class.active]="selectedTab === 'tests'">
+    التحاليل
+  </button>
+
+</div>
 
       <div class="service-grid" [formGroup]="pp">
         <button
@@ -255,4 +296,4 @@
   </aside>
 </div>
 
-<app-shared-dialog [visible]="visible"  [formGroup]="pp" [header]="'معلزمات المريض'"  [listOfInputs]="listOfInputs" ></app-shared-dialog>
+<app-shared-dialog [visible]="visible" (isClosed)="closeDialog($event)"  [formGroup]="pp" [header]="'معلزمات المريض'"  [listOfInputs]="listOfInputs" ></app-shared-dialog>

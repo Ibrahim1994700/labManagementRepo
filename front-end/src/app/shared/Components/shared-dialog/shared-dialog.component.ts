@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, output } from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -27,7 +27,7 @@ import { CommonModule } from '@angular/common';
 export class SharedDialogComponent implements OnInit {
   x: any;
   ngOnInit(): void {
-    this.x=this.formGroup
+    this.x = this.formGroup;
   }
   @Input() visible: boolean = false;
 
@@ -35,7 +35,7 @@ export class SharedDialogComponent implements OnInit {
   @Input() header!: string;
   @Input() listOfInputs: any;
   @Input() formGroup: any;
-
+  @Output() isClosed = new EventEmitter<boolean>();
   get listOfPaitents() {
     return this.x.get('listOfPaitent') as FormArray;
   }
@@ -55,9 +55,6 @@ export class SharedDialogComponent implements OnInit {
       steps[0].finishStep = true;
     } else {
     }
-  }
-
-  showDialog() {
-    this.visible = true;
+    this.isClosed.emit(false)
   }
 }
