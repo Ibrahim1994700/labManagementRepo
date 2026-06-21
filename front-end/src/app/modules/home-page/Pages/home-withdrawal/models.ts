@@ -102,15 +102,7 @@ export const services: ServiceItem[] = [
   },
 ];
 
-export const calendarDays: CalendarDay[] = [
-  { dayName: 'السبت', day: 24, month: 'مايو', available: true },
-  { dayName: 'الأحد', day: 29, month: 'مايو', available: true },
-  { dayName: 'الاثنين', day: 28, month: 'مايو', available: true },
-  { dayName: 'الثلاثاء', day: 27, month: 'مايو', available: true },
-  { dayName: 'الأربعاء', day: 26, month: 'مايو', available: true },
-  { dayName: 'الخميس', day: 25, month: 'مايو', available: true },
-  { dayName: 'الجمعة', day: 30, month: 'مايو', available: true },
-];
+
 
 export const times = [
   '08:00 ص - 09:00 ص',

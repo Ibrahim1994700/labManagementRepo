@@ -20,5 +20,14 @@ namespace backend.Controllers
         {
             return Ok(await _labBranches.GetAllBranchesAsync());
         }
+
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBrancheDetails(Guid id)
+        {
+            return Ok(await _labBranches.GetBrancheDetails(id));
+        }
+      
+
     }
 }

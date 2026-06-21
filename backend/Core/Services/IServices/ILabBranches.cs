@@ -11,6 +11,7 @@ namespace Core.Services.IServices
     public interface ILabBranches
     {
         Task<object> GetAllBranchesAsync();
-        
+        Task<object> GetBrancheDetails(Guid id);
+
     }
 }

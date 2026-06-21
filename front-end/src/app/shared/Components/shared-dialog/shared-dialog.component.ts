@@ -52,9 +52,11 @@ export class SharedDialogComponent implements OnInit {
       }),
     );
     if (this.listOfPaitents.length == 1) {
-      steps[0].finishStep = true;
+      steps[1].finishStep = true;
     } else {
     }
     this.isClosed.emit(false)
   }
+
+ 
 }

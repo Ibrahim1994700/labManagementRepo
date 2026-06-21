@@ -16,11 +16,8 @@
     </section>
 
 <section class="content-card services-section">
-  <h2 class="mb-4"><span>2.</span> اختر الفرع</h2>
+  <h2 class="mb-4"><span>1.</span> اختر الفرع</h2>
 
-  
-
-  <!-- GRID CARDS -->
   <div class="branch-container" [formGroup]="pp">
 
     <button
@@ -33,22 +30,21 @@
       <i class="bi bi-building branch-icon"></i>
 
       <div class="branch-info">
-        <strong>{{ branch.nameAr }}</strong>
-        <span>{{ branch.city }}--{{branch.district }}--{{branch.address }}</span>
+        <strong style="font-size: 20px;">{{ branch.nameAr }}</strong>
+        <span class="branch-desc">
+          {{ branch.city }} - {{ branch.district }} - {{ branch.address }}
+        </span>
       </div>
-
-    
 
     </button>
 
   </div>
 </section>
-
     <section class="content-card patient-section" >
       <h2><span>1.</span> اختر المريض</h2>
       <div class="patient-options">
 
-          <button (click)="openDialog()" class="patient-option add-patient" [disabled]="true">
+          <button (click)="openDialog()" class="patient-option add-patient" >
           <span class="plus"><i class="bi bi-plus-lg"></i></span>
           <strong>إضافة مريض جديد</strong>
         </button>
@@ -134,8 +130,8 @@
             (click)="selectDay(i)"
           >
             <small>{{ date.dayName }}</small>
-            <strong>{{ date.day }}</strong>
-            <span>{{ date.month }}</span>
+            <strong>{{ date.dayName }}</strong>
+            <span>{{ date.dayName }}</span>
             <em>متاح</em>
           </button>
         </div>

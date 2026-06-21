@@ -27,14 +27,35 @@ namespace Core.Services.IServices
             {
                 id=x.ID,
                 nameAr=x.NameAr,
-                city=x.City,
+                nameEn = x.NameEn,
+
+                city = x.City,
                 address=x.Address,
-                ListOfPackages =x.ListOfPackages.Select(p=> new { id= p.ID ,name=p.NameAr}).ToList(),
-                days=x.Days.ToList()
+                days=x.Days.Select(d=> new
+                {
+                    dayName=d.Day.DayName,
+                    ListOfTimes=d.TimeSlots.ToList()
+                }).ToList(),
+                
             }).ToListAsync();
                
 
             return result;
         }
+
+        public async Task<object> GetBrancheDetails(Guid Branchid)
+        {
+            var res = await _context.labBranches.Select(x => new
+            {
+                id=x.ID,
+                packages = x.ListOfPackages.ToList()
+            }).FirstOrDefaultAsync(x=>x.id==Branchid);
+
+
+            return res;
+        }
+
+
+
     }
 }

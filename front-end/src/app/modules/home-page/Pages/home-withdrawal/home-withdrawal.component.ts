@@ -8,14 +8,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import {
-  calendarDays,
-  listOfInputs,
-  ServiceItem,
-  services,
-  steps,
-  times,
-} from './models';
+import { listOfInputs, ServiceItem, services, steps, times } from './models';
 import { MapComponent } from '../../../../shared/Components/map/map.component';
 import { SharedDialogComponent } from '../../../../shared/Components/shared-dialog/shared-dialog.component';
 import { HomeWithDrwalService } from './home-with-drwal.service';
@@ -38,7 +31,7 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   times = times;
   selectedTab: string = 'packages';
   services = services;
-  calendarDays = calendarDays;
+  calendarDays: any;
   visible: boolean = false;
   selectedService: any;
   selectSpecificBranch: any;
@@ -61,6 +54,7 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
     this.initialForm();
     this.calculateFirstStep();
     this.calculateSecondStep();
+    this.calculateThirdStep();
     this.getAllBranches();
   }
 
@@ -88,6 +82,11 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
 
   initialForm() {
     this.pp = new FormGroup({
+      BranchSelected: new FormGroup({
+        id: new FormControl(),
+        name: new FormControl(),
+      }),
+
       name: new FormControl(),
       age: new FormControl(),
       listOfPaitent: new FormArray([]),
@@ -99,20 +98,33 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   }
 
   calculateFirstStep() {
-    this.listOfPaitent.valueChanges.subscribe((res) => {
-      if (res.length == 0) {
+    debugger
+    this.pp.get('BranchSelected').valueChanges.subscribe((res: any) => {
+      if (res.id == null || res.name == null) {
         steps[0].finishStep = false;
+      } else if (res.id && res.name) {
+        steps[0].finishStep = true;
       }
     });
   }
 
   calculateSecondStep() {
+    this.listOfPaitent.valueChanges.subscribe((res) => {
+      if (res.length == 0) {
+        steps[1].finishStep = false;
+      } else {
+        steps[1].finishStep = true;
+      }
+    });
+  }
+
+  calculateThirdStep() {
     (this.pp as FormGroup).valueChanges.subscribe((res: any) => {
       const packageName = res?.packages?.name;
       if (packageName == null) {
-        steps[1].finishStep = false;
+        steps[2].finishStep = false;
       } else if (packageName != null) {
-        steps[1].finishStep = true;
+        steps[2].finishStep = true;
       }
     });
   }
@@ -143,7 +155,13 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   }
 
   selectBranch(branch: any, id: any) {
+    debugger;
+    this.calendarDays = branch.days;
     this.selectSpecificBranch = id;
+
+    let BranchSelected = this.pp.get('BranchSelected') as FormGroup;
+    BranchSelected.get('id')?.setValue(branch.id);
+    BranchSelected.get('name')?.setValue(branch.nameAr);
   }
 
   closeDialog(event: any) {
