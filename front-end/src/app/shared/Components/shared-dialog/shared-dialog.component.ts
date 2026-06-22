@@ -1,4 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output, output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  output,
+} from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -25,38 +32,41 @@ import { CommonModule } from '@angular/common';
   styleUrl: './shared-dialog.component.css',
 })
 export class SharedDialogComponent implements OnInit {
-  x: any;
-  ngOnInit(): void {
-    this.x = this.formGroup;
-  }
   @Input() visible: boolean = false;
-
-  @Input() listOfPaitent: any;
   @Input() header!: string;
   @Input() listOfInputs: any;
-  @Input() formGroup: any;
+  @Input() formGroup!: FormGroup;
   @Output() isClosed = new EventEmitter<boolean>();
+
+  ngOnInit(): void {
+  }
+
   get listOfPaitents() {
-    return this.x.get('listOfPaitent') as FormArray;
+    return this.formGroup.get('listOfPaitent') as FormArray;
   }
 
   saveProfile() {
-    this.listOfPaitents.push(
-      new FormGroup({
-        name: new FormControl(this.formGroup.get('name')?.value, [
-          Validators.required,
-        ]),
-        age: new FormControl(this.formGroup.get('age')?.value, [
-          Validators.required,
-        ]),
-      }),
-    );
-    if (this.listOfPaitents.length == 1) {
-      steps[1].finishStep = true;
+    if (this.listOfPaitents.valid) {
+      
+      this.listOfPaitents.push(
+        new FormGroup({
+          name: new FormControl(this.formGroup.get('name')?.value),
+          age: new FormControl(this.formGroup.get('age')?.value),
+          
+        }),
+      );
+      if (this.listOfPaitents.length == 1) {
+        steps[1].finishStep = true;
+      } else {
+      }
+      this.isClosed.emit(false);
     } else {
+      this.formGroup.markAllAsTouched();
     }
-    this.isClosed.emit(false)
   }
 
- 
+  onDialogClose() {
+    this.isClosed.emit(false);
+    this.formGroup.reset();
+  }
 }

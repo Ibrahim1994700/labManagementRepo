@@ -254,6 +254,9 @@ button {
    Services
 ========================= */
 
+
+
+
 .services-section {
   position: relative;
 }
@@ -1264,63 +1267,198 @@ button {
   color: white;
   cursor: pointer;
 }
+.services-section {
+  position: relative;
+}
 
+/* wrapper */
+.branch-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* SCROLL CONTAINER */
 .branch-container {
   display: flex;
-  gap: 12px;
-  overflow-x: auto;   /* scroll أفقي */
-  padding: 10px 5px;
+  gap: 16px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+
   scroll-behavior: smooth;
+
+  padding: 10px 60px; /* 🔥 مهم جدًا عشان الأسهم ما تقص الكارد */
+
+  scroll-snap-type: x mandatory;
 }
 
-/* Hide scrollbar (optional) */
+/* hide scrollbar */
 .branch-container::-webkit-scrollbar {
-  height: 6px;
-}
-.branch-container::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 10px;
+  display: none;
 }
 
+/* CARD */
 .branch-card {
-  min-width: 260px;   /* مهم عشان يصير جنب بعض */
   flex: 0 0 auto;
+
+  width: 260px;   /* ثابت عشان ما يتكسر التصميم */
+  min-height: 120px;
 
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 
-  padding: 12px;
-  border-radius: 12px;
+  padding: 14px;
+
+  border-radius: 16px;
+  background: #fff;
   border: 1px solid #eee;
-  background: white;
 
-  cursor: pointer;
-  transition: 0.2s;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+
+  scroll-snap-align: start; /* 🔥 مهم جدًا */
 }
 
-.branch-card:hover {
-  transform: translateY(-2px);
-  border-color: #aaa;
-}
-
+/* selected */
 .branch-card.selected {
   border: 2px solid #0d6efd;
-  background: #f0f6ff;
+  background: #f4f8ff;
 }
 
+/* ICON */
 .branch-icon {
-  font-size: 22px;
+  font-size: 24px;
   color: #0d6efd;
 }
 
-/* مهم: سطر واحد فقط */
+/* TEXT FIX */
 .branch-desc {
-  display: block;
-  white-space: nowrap;     /* يمنع النزول سطر ثاني */
-  overflow: hidden;
-  text-overflow: ellipsis; /* ... */
-  max-width: 180px;
-  font-size: 12px;
+  font-size: 12px;   /* صغير ومريح للقراءة */
   color: #666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.branch-info strong {
+  font-size: 16px;   /* 🔥 كان كبير جدًا (نزّلناه) */
+  display: block;
+  font-weight: 600;
+}
+/* ARROWS FIX */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+  border: none;
+
+  background: white;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+
+  z-index: 10;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* مهم: خليهم خارج الكروت مش فوقها */
+.scroll-btn.left {
+  left: -10px;
+}
+
+.scroll-btn.right {
+  right: -10px;
+}
+
+.patients-container {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* CARD */
+.patient-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  width: 260px;
+
+  padding: 12px 14px;
+  border-radius: 14px;
+
+  background: #ffffff;
+  border: 1px solid #e9eef5;
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+
+  cursor: pointer;
+  transition: 0.2s;
+
+  position: relative;
+}
+
+.patient-card:hover {
+  transform: translateY(-2px);
+  border-color: #0d6efd;
+}
+
+/* RADIO */
+.radio-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid #0d6efd;
+  display: inline-block;
+}
+
+/* AVATAR */
+.avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #eaeaea;
+}
+
+/* INFO */
+.patient-info {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.patient-info strong {
+  font-size: 14px;
+  color: #222;
+}
+
+.patient-info small {
+  font-size: 12px;
+  color: #777;
+}
+
+/* DELETE */
+.delete-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+
+  background: transparent;
+  border: none;
+  color: #dc3545;
+
+  font-size: 14px;
+
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  color: #a71d2a;
 }

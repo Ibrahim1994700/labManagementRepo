@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, NgZone, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  NgZone,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   FormArray,
   FormControl,
@@ -14,7 +21,7 @@ import { SharedDialogComponent } from '../../../../shared/Components/shared-dial
 import { HomeWithDrwalService } from './home-with-drwal.service';
 
 @Component({
-  selector: 'app-home-withdrawal',
+  selector: 'amainFormGroup-home-withdrawal',
   standalone: true,
   imports: [
     CommonModule,
@@ -38,11 +45,13 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   selectedDay = 5;
   selectedTime = 1;
   selectedPayment: any;
-  pp: FormGroup | any;
+  mainFormGroup!: FormGroup;
   listOfInputs = listOfInputs;
   AllBranches!: any;
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+
   get listOfPaitent() {
-    return this.pp.get('listOfPaitent') as FormArray;
+    return this.mainFormGroup.get('listOfPaitent') as FormArray;
   }
 
   constructor(
@@ -56,6 +65,13 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
     this.calculateSecondStep();
     this.calculateThirdStep();
     this.getAllBranches();
+    this.observeMainForm();
+  }
+
+  observeMainForm() {
+    this.mainFormGroup.get('listOfPaitents')?.valueChanges.subscribe((res) => {
+      console.log(res);
+    });
   }
 
   getAllBranches() {
@@ -81,14 +97,14 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   }
 
   initialForm() {
-    this.pp = new FormGroup({
+    this.mainFormGroup = new FormGroup({
       BranchSelected: new FormGroup({
         id: new FormControl(),
         name: new FormControl(),
       }),
 
-      name: new FormControl(),
-      age: new FormControl(),
+      name: new FormControl(null, [Validators.required]),
+      age: new FormControl(null, [Validators.required]),
       listOfPaitent: new FormArray([]),
       packages: new FormGroup({
         name: new FormControl(),
@@ -98,14 +114,15 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   }
 
   calculateFirstStep() {
-    debugger
-    this.pp.get('BranchSelected').valueChanges.subscribe((res: any) => {
-      if (res.id == null || res.name == null) {
-        steps[0].finishStep = false;
-      } else if (res.id && res.name) {
-        steps[0].finishStep = true;
-      }
-    });
+    this.mainFormGroup
+      .get('BranchSelected')
+      ?.valueChanges.subscribe((res: any) => {
+        if (res.id == null || res.name == null) {
+          steps[0].finishStep = false;
+        } else if (res.id && res.name) {
+          steps[0].finishStep = true;
+        }
+      });
   }
 
   calculateSecondStep() {
@@ -119,7 +136,7 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   }
 
   calculateThirdStep() {
-    (this.pp as FormGroup).valueChanges.subscribe((res: any) => {
+    (this.mainFormGroup as FormGroup).valueChanges.subscribe((res: any) => {
       const packageName = res?.packages?.name;
       if (packageName == null) {
         steps[2].finishStep = false;
@@ -134,7 +151,7 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   }
 
   selectService(service: any, index: number): void {
-    let x = this.pp.get('packages') as FormGroup;
+    let x = this.mainFormGroup.get('packages') as FormGroup;
 
     x.get('name')?.setValue(service.title);
     x.get('price')?.setValue(service.price);
@@ -155,11 +172,10 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   }
 
   selectBranch(branch: any, id: any) {
-    debugger;
     this.calendarDays = branch.days;
     this.selectSpecificBranch = id;
 
-    let BranchSelected = this.pp.get('BranchSelected') as FormGroup;
+    let BranchSelected = this.mainFormGroup.get('BranchSelected') as FormGroup;
     BranchSelected.get('id')?.setValue(branch.id);
     BranchSelected.get('name')?.setValue(branch.nameAr);
   }
@@ -169,5 +185,19 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   }
   selectTab(tab: string) {
     this.selectedTab = tab;
+  }
+
+  scrollLeft() {
+    this.scrollContainer.nativeElement.scrollBy({
+      left: -300,
+      behavior: 'smooth',
+    });
+  }
+
+  scrollRight() {
+    this.scrollContainer.nativeElement.scrollBy({
+      left: 300,
+      behavior: 'smooth',
+    });
   }
 }

@@ -53,13 +53,17 @@ export const steps = [
 
 export const listOfInputs = [
   {
-    placeHolder: 'test',
-    formControlName:'name',
-    inputType:"text"
+    placeHolder: 'ادخل اسم المريض',
+    formControlName: 'name',
+    inputType: 'text',
+    label: 'اسم المريض',
   },
-  { placeHolder: 'test',
-    formControlName:'age',
-    inputType:"number"},
+  {
+    placeHolder: 'ادخل عمر المريض',
+    formControlName: 'age',
+    inputType: 'number',
+    label:"عمر المريض"
+  },
 ];
 
 export const navItems: NavItem[] = [
@@ -101,8 +105,6 @@ export const services: ServiceItem[] = [
     tone: 'purple',
   },
 ];
-
-
 
 export const times = [
   '08:00 ص - 09:00 ص',

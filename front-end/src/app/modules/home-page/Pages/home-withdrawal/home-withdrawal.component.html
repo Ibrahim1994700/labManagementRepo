@@ -15,80 +15,83 @@
       </ng-container>
     </section>
 
-<section class="content-card services-section">
-  <h2 class="mb-4"><span>1.</span> اختر الفرع</h2>
+    <section class="content-card services-section">
+      <h2 class="mb-4"><span>1.</span> اختر الفرع</h2>
 
-  <div class="branch-container" [formGroup]="pp">
+      <!-- LEFT ARROW -->
+      <button class="scroll-btn left" (click)="scrollLeft()">‹</button>
 
-    <button
-      *ngFor="let branch of AllBranches; let i = index"
-      class="branch-card"
-      [class.selected]="selectSpecificBranch === i"
-      (click)="selectBranch(branch, i)"
-    >
+      <!-- CONTAINER -->
+      <div class="branch-wrapper">
+        <div class="branch-container" #scrollContainer>
+          <button
+            *ngFor="let branch of AllBranches; let i = index"
+            class="branch-card"
+            [class.selected]="selectSpecificBranch === i"
+            (click)="selectBranch(branch, i)"
+          >
+            <i class="bi bi-building branch-icon"></i>
 
-      <i class="bi bi-building branch-icon"></i>
-
-      <div class="branch-info">
-        <strong style="font-size: 20px;">{{ branch.nameAr }}</strong>
-        <span class="branch-desc">
-          {{ branch.city }} - {{ branch.district }} - {{ branch.address }}
-        </span>
+            <div class="branch-info">
+              <strong>{{ branch.nameAr }}</strong>
+              <span class="branch-desc">
+                {{ branch.city }} ---- {{ branch.address }}
+              </span>
+            </div>
+          </button>
+        </div>
       </div>
 
-    </button>
-
-  </div>
-</section>
-    <section class="content-card patient-section" >
+      <!-- RIGHT ARROW -->
+      <button class="scroll-btn right" (click)="scrollRight()">›</button>
+    </section>
+    <section class="content-card patient-section">
       <h2><span>1.</span> اختر المريض</h2>
       <div class="patient-options">
-
-          <button (click)="openDialog()" class="patient-option add-patient" >
+        <button (click)="openDialog()" class="patient-option add-patient">
           <span class="plus"><i class="bi bi-plus-lg"></i></span>
           <strong>إضافة مريض جديد</strong>
         </button>
-        <ng-container>
-          <button
-            *ngFor="let x of listOfPaitent.controls; let i = index"
-            class="patient-option selected"
-          >
-            <span class="radio-dot"></span>
-            <i class="bi bi-trash" (click)="remove(i)"></i>
-            <!-- Trash can -->
+        <div class="patients-container">
+            <button
+              *ngFor="let x of listOfPaitent.controls; let i = index"
+              class="patient-card"
+            >
+              <!-- INFO -->
+              <div class="patient-info">
+                <strong  >{{ x?.get("name")?.value }}</strong>
+                <small>{{ x?.get("age")?.value }} سنة</small>
+              </div>
 
-            <img src="assets/home-booking/avatar.png" />
-            <span class="patient-copy">
-              <strong>{{ x?.get("name")?.value }}</strong>
-              <small>{{ x?.get("age")?.value }}</small>
-            </span>
-          </button>
-        </ng-container>
-
-      
+              <!-- DELETE -->
+              <button class="delete-btn" (click)="remove(i)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </button>
+        </div>
       </div>
     </section>
 
     <section class="content-card services-section">
       <h2><span>2.</span> اختر الخدمة أو الباقة</h2>
 
-     <div class="mini-tabs">
+      <div class="mini-tabs">
+        <button
+          (click)="selectTab('packages')"
+          [class.active]="selectedTab === 'packages'"
+        >
+          الباقات
+        </button>
 
-  <button
-    (click)="selectTab('packages')"
-    [class.active]="selectedTab === 'packages'">
-    الباقات
-  </button>
+        <button
+          (click)="selectTab('tests')"
+          [class.active]="selectedTab === 'tests'"
+        >
+          التحاليل
+        </button>
+      </div>
 
-  <button
-    (click)="selectTab('tests')"
-    [class.active]="selectedTab === 'tests'">
-    التحاليل
-  </button>
-
-</div>
-
-      <div class="service-grid" [formGroup]="pp">
+      <div class="service-grid" [formGroup]="mainFormGroup">
         <button
           *ngFor="let service of services; let i = index"
           class="service-card"
@@ -292,4 +295,10 @@
   </aside>
 </div>
 
-<app-shared-dialog [visible]="visible" (isClosed)="closeDialog($event)"  [formGroup]="pp" [header]="'معلزمات المريض'"  [listOfInputs]="listOfInputs" ></app-shared-dialog>
+<app-shared-dialog
+  [visible]="visible"
+  (isClosed)="closeDialog($event)"
+  [formGroup]="mainFormGroup"
+  [header]="'نافذة معلومات المريض'"
+  [listOfInputs]="listOfInputs"
+></app-shared-dialog>

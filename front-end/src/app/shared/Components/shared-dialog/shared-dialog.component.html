@@ -1,54 +1,61 @@
 <p-dialog
-  header="تعديل الملف الشخصي"
   [(visible)]="visible"
   [modal]="true"
   [draggable]="false"
   [resizable]="false"
   [closable]="true"
-  [style]="{ width: '420px' }"
+  [style]="{ width: '450px' }"
   styleClass="custom-dialog"
+  (onHide)="onDialogClose()"
 >
-  <p class="subtitle">قم بتحديث بياناتك الشخصية</p>
+  <!-- HEADER -->
+  <ng-template pTemplate="header">
+    <div class="dialog-header">
+      <h3>{{ header }}</h3>
+    </div>
+  </ng-template>
 
-  <div class="form-container" [formGroup]="formGroup" >
-    <ng-container>
+  <!-- BODY -->
+  <div class="dialog-body" [formGroup]="formGroup">
+
+    <p class="subtitle">الرجاء إدخال معلومات المريض</p>
+
+    <div class="form-grid">
       <div class="field" *ngFor="let input of listOfInputs">
+
         <label>{{ input.label }}</label>
-        <ng-container [ngSwitch]="input.inputType">
-          <input
-            *ngSwitchCase="'text'"
-            [type]="'text'"
-            [formControlName]="input.formControlName"
-            [placeholder]="input.placeHolder"
-          />
-          <input
-            *ngSwitchCase="'number'"
-            [type]="'number'"
-            [formControlName]="input.formControlName"
-            [placeholder]="input.placeHolder"
-          />
-        </ng-container>
+
+        <input
+          [type]="input.inputType"
+          class="input-field"
+          [formControlName]="input.formControlName"
+          [placeholder]="input.placeHolder"
+        />
+
       </div>
-    </ng-container>
+    </div>
+
   </div>
 
+  <!-- FOOTER -->
   <ng-template pTemplate="footer">
     <div class="dialog-footer">
+
       <button
         pButton
         label="إلغاء"
-        icon="pi pi-times"
         class="p-button-secondary"
-        (click)="isClosed.emit(false);visible = false"
+        (click)="onDialogClose()"
       ></button>
 
       <button
         pButton
         label="حفظ"
-        icon="pi pi-check"
         class="p-button-success"
+        [disabled]="!formGroup.valid"
         (click)="saveProfile()"
       ></button>
+
     </div>
   </ng-template>
 </p-dialog>
