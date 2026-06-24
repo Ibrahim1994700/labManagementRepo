@@ -47,18 +47,16 @@ export class SharedDialogComponent implements OnInit {
 
   saveProfile() {
     if (this.listOfPaitents.valid) {
-      
       this.listOfPaitents.push(
         new FormGroup({
           name: new FormControl(this.formGroup.get('name')?.value),
           age: new FormControl(this.formGroup.get('age')?.value),
-          
         }),
       );
       if (this.listOfPaitents.length == 1) {
         steps[1].finishStep = true;
-      } else {
       }
+     this.clearDialogInputs();
       this.isClosed.emit(false);
     } else {
       this.formGroup.markAllAsTouched();
@@ -67,6 +65,11 @@ export class SharedDialogComponent implements OnInit {
 
   onDialogClose() {
     this.isClosed.emit(false);
-    this.formGroup.reset();
+    this.clearDialogInputs();
+  }
+
+  private clearDialogInputs() {
+    this.formGroup.get('name')?.reset();
+    this.formGroup.get('age')?.reset();
   }
 }

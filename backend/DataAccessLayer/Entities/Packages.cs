@@ -28,6 +28,7 @@ namespace DataAccessLayer.Entities
 
         public int SortOrder { get; set; } = 0;
 
+        public float price { get; set; } = 0;
 
         public ICollection<ListOfTests> ListOfTests { get; set; }
 

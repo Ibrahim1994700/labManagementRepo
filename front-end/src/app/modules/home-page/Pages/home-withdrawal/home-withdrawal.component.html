@@ -46,32 +46,50 @@
       <button class="scroll-btn right" (click)="scrollRight()">›</button>
     </section>
     <section class="content-card patient-section">
-      <h2><span>1.</span> اختر المريض</h2>
-      <div class="patient-options">
-        <button (click)="openDialog()" class="patient-option add-patient">
-          <span class="plus"><i class="bi bi-plus-lg"></i></span>
-          <strong>إضافة مريض جديد</strong>
-        </button>
-        <div class="patients-container">
-            <button
-              *ngFor="let x of listOfPaitent.controls; let i = index"
-              class="patient-card"
-            >
-              <!-- INFO -->
-              <div class="patient-info">
-                <strong  >{{ x?.get("name")?.value }}</strong>
-                <small>{{ x?.get("age")?.value }} سنة</small>
-              </div>
+      <h2 class="section-title"><span>1.</span> اختر المريض</h2>
 
-              <!-- DELETE -->
-              <button class="delete-btn" (click)="remove(i)">
-                <i class="bi bi-trash"></i>
-              </button>
+      <div class="patient-layout">
+        <button
+          class="scroll-btn left patient-scroll"
+          (click)="scrollPatientLeft()"
+        >
+          ‹
+        </button>
+
+        <div class="patients-container" #patientScrollContainer>
+          <button
+            *ngFor="let x of listOfPaitent.controls; let i = index"
+            class="patient-card"
+          >
+            <span class="patient-avatar">
+              <i class="bi bi-person-circle"></i>
+            </span>
+            <div class="patient-info">
+              <strong>{{ x?.get("name")?.value }}</strong>
+              <small>{{ x?.get("age")?.value }} سنة</small>
+            </div>
+
+            <button class="delete-btn" (click)="remove(i)">
+              <i class="bi bi-trash"></i>
             </button>
+          </button>
+
+          <button (click)="openDialog()" class="add-patient-card">
+            <div class="plus-circle">
+              <i class="bi bi-plus-lg"></i>
+            </div>
+            <strong>إضافة مريض جديد</strong>
+          </button>
         </div>
+
+        <button
+          class="scroll-btn right patient-scroll"
+          (click)="scrollPatientRight()"
+        >
+          ›
+        </button>
       </div>
     </section>
-
     <section class="content-card services-section">
       <h2><span>2.</span> اختر الخدمة أو الباقة</h2>
 
@@ -91,29 +109,59 @@
         </button>
       </div>
 
-      <div class="service-grid" [formGroup]="mainFormGroup">
+      <div class="service-layout">
         <button
-          *ngFor="let service of services; let i = index"
-          class="service-card"
-          [class.selected]="selectedService === i"
-          (click)="selectService(service, i)"
+          class="scroll-btn left service-scroll"
+          (click)="scrollServiceLeft()"
         >
-          <div class="service-icon" [ngClass]="service.tone">
-            <i class="bi" [ngClass]="service.icon"></i>
-          </div>
-          <div class="service-copy">
-            <strong>{{ service.title }}</strong>
-            <span>{{ service.price }} ر.س</span>
-          </div>
-          <i
-            *ngIf="selectedService === i"
-            class="bi bi-check-circle-fill selected-mark"
-          ></i>
+          ‹
         </button>
 
-        <button class="service-card all-services">
-          <i class="bi bi-grid"></i>
-          <strong>عرض كل الباقات</strong>
+        <div
+          class="service-grid"
+          [formGroup]="mainFormGroup"
+          #serviceScrollContainer
+        >
+          <button
+            *ngFor="let service of selectedServices; let i = index"
+            class="service-card"
+            [class.selected]="service.Selected == true"
+            (click)="selectService(service)"
+            (mouseenter)="showDetails(service)"
+            (mouseleave)="hideDetailsIcon(service)"
+          >
+            <div
+              *ngIf="service.showDetailsIcon"
+              class="service-details"
+              (click)="openServiceDetails(service); $event.stopPropagation()"
+            >
+              <i class="bi bi-info-circle-fill"></i>
+              <span>تفاصيل</span>
+            </div>
+            <div class="service-icon" [ngClass]="service.tone || 'default'">
+              <i class="bi" [ngClass]="service.icon || 'bi-vial'"></i>
+            </div>
+            <div class="service-copy">
+              <strong>{{ service.nameAr }}</strong>
+              <span>{{ service.price }} ر.س</span>
+            </div>
+            <i
+              *ngIf="service.Selected == true"
+              class="bi bi-check-circle-fill selected-mark"
+            ></i>
+          </button>
+
+          <button class="service-card all-services">
+            <i class="bi bi-grid"></i>
+            <strong>عرض كل الباقات</strong>
+          </button>
+        </div>
+
+        <button
+          class="scroll-btn right service-scroll"
+          (click)="scrollServiceRight()"
+        >
+          ›
         </button>
       </div>
     </section>
@@ -128,14 +176,14 @@
         </div>
         <div class="calendar-grid">
           <button
-            *ngFor="let date of calendarDays; let i = index"
+            *ngFor="let date of ArrayOfWeek; let i = index"
             [class.selected]="selectedDay === i"
             (click)="selectDay(i)"
           >
-            <small>{{ date.dayName }}</small>
-            <strong>{{ date.dayName }}</strong>
-            <span>{{ date.dayName }}</span>
-            <em>متاح</em>
+            <small>{{ date.dayNameEn }}</small>
+            <strong>{{ date.dayNumber }}</strong>
+            <span>{{ date.monthNameAr }}</span>
+            <em  >{{isDayExist(date.dayNameEn,i)}}</em>
           </button>
         </div>
       </section>
@@ -246,7 +294,7 @@
         </div>
         <div>
           <small>الخدمة المختارة</small>
-          <strong>{{ selectedServiceItem?.title }}</strong>
+          <!-- <strong>{{ selectedServiceItem?.title }}</strong> -->
           <span>تحاليل شاملة لصحة الرجل</span>
         </div>
       </div>
@@ -269,7 +317,7 @@
         </div>
       </div>
 
-      <div class="price-lines">
+      <!-- <div class="price-lines">
         <div>
           <span>المجموع الفرعي</span
           ><strong>{{ selectedServiceItem?.price }} ر.س</strong>
@@ -278,7 +326,7 @@
         <div>
           <span>ضريبة القيمة المضافة (15%)</span><strong>63.60 ر.س</strong>
         </div>
-      </div>
+      </div> -->
 
       <div class="total-line">
         <strong>المجموع التقديري</strong>
@@ -293,6 +341,107 @@
       </div>
     </div>
   </aside>
+
+  <div
+    *ngIf="detailPanelOpen"
+    class="detail-drawer-backdrop"
+    (click)="closeServiceDetails()"
+  >
+    <div class="detail-drawer" (click)="$event.stopPropagation()">
+      <button class="drawer-close" (click)="closeServiceDetails()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+      <div class="drawer-header">
+        <div
+          class="drawer-icon"
+          [ngClass]="selectedDetailService?.tone || 'default'"
+        >
+          <i
+            class="bi"
+            [ngClass]="selectedDetailService?.icon || 'bi-vial'"
+          ></i>
+        </div>
+        <div>
+          <small>تفاصيل الخدمة</small>
+          <strong>{{
+            selectedDetailService?.nameAr || selectedDetailService?.title
+          }}</strong>
+        </div>
+      </div>
+      <div class="drawer-content">
+        <div class="drawer-row">
+          <span>السعر</span>
+          <strong>{{ selectedDetailService?.price }} ر.س</strong>
+        </div>
+
+        <details class="drawer-accordion" open>
+          <summary>ملخص</summary>
+          <div class="drawer-text">
+            {{
+              selectedDetailService?.description ||
+                selectedDetailService?.details ||
+                "هذه الخدمة تشمل إجراء الفحوصات المطلوبة وتقديم النتائج بشكل سريع وآمن."
+            }}
+          </div>
+        </details>
+
+        <ng-container *ngIf="selectedTab === 'packages'; else testDetails">
+          <details class="drawer-accordion">
+            <summary>قائمة الفحوصات</summary>
+            <div class="drawer-text">
+              <ul
+                class="tests-list"
+                *ngIf="selectedDetailService?.tests?.length; else noTests"
+              >
+                <li *ngFor="let t of selectedDetailService?.tests">{{ t }}</li>
+              </ul>
+              <ng-template #noTests>
+                <div class="muted">لا توجد تفاصيل مفصّلة لهذه الخدمة.</div>
+              </ng-template>
+            </div>
+          </details>
+        </ng-container>
+
+        <ng-template #testDetails>
+          <details class="drawer-accordion" open>
+            <summary>تفاصيل التحليل</summary>
+            <div class="drawer-text">
+              <div *ngIf="selectedDetailService; else noTestData">
+                <div *ngFor="let kv of objectEntries(selectedDetailService)">
+                  <div
+                    class="detail-kv"
+                    *ngIf="
+                      !['icon', 'tone', 'Selected', 'showDetailsIcon'].includes(
+                        kv[0]
+                      )
+                    "
+                  >
+                    <strong>{{ kv[0] }}</strong>
+                    <div>{{ kv[1] }}</div>
+                  </div>
+                </div>
+              </div>
+              <ng-template #noTestData>
+                <div class="muted">لا توجد بيانات لهذا التحليل.</div>
+              </ng-template>
+            </div>
+          </details>
+        </ng-template>
+
+        <div class="drawer-row compact">
+          <span>نوع</span>
+          <strong>{{ selectedTab === "packages" ? "باقة" : "تحاليل" }}</strong>
+        </div>
+
+        <button
+          class="drawer-action small"
+          (click)="selectService(selectedDetailService); closeServiceDetails()"
+        >
+          اختر هذه الخدمة
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <app-shared-dialog

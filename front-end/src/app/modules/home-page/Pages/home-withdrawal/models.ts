@@ -11,13 +11,15 @@ export interface ServiceItem {
   tone: 'orange' | 'green' | 'pink' | 'purple';
 }
 
-export interface CalendarDay {
-  dayName: string;
-  day: number;
-  month: string;
-  available: boolean;
-}
-
+export const CalendarDay = [
+  { dayName: 'saturday', number: 1 },
+  { dayName: 'sunday', number: 2 },
+  { dayName: 'monday', number: 3 },
+  { dayName: 'tuesday', number: 4 },
+  { dayName: 'wednesday', number: 5 },
+  { dayName: 'thursday', number: 6 },
+  { dayName: 'friday', number: 7 },
+];
 export const steps = [
   {
     number: 1,
@@ -62,7 +64,7 @@ export const listOfInputs = [
     placeHolder: 'ادخل عمر المريض',
     formControlName: 'age',
     inputType: 'number',
-    label:"عمر المريض"
+    label: 'عمر المريض',
   },
 ];
 

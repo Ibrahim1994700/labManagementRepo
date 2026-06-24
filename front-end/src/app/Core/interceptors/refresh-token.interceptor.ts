@@ -1,6 +1,6 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, switchMap, tap, throwError } from 'rxjs';
+import { catchError, mergeMap, switchMap, tap, throwError } from 'rxjs';
 import { DataService } from '../../shared/Services/data.service';
 import { AuthService } from '../../modules/auth/login/auth.service';
 import { Router } from '@angular/router';
@@ -17,7 +17,7 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
         return authService
           .GetRefreshtoken(dataService.getLocalStorageItem('token'))
           .pipe(
-            switchMap((res: any) => {
+            mergeMap(() => {
               const newToken = dataService.getLocalStorageItem('token');
 
               const newReq = req.clone({

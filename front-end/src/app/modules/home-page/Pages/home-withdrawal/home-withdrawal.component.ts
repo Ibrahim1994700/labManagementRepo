@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, WeekDay } from '@angular/common';
 import {
   AfterViewInit,
   Component,
@@ -19,6 +19,7 @@ import { listOfInputs, ServiceItem, services, steps, times } from './models';
 import { MapComponent } from '../../../../shared/Components/map/map.component';
 import { SharedDialogComponent } from '../../../../shared/Components/shared-dialog/shared-dialog.component';
 import { HomeWithDrwalService } from './home-with-drwal.service';
+import { BehaviorSubject, Subject, switchMap } from 'rxjs';
 
 @Component({
   selector: 'amainFormGroup-home-withdrawal',
@@ -37,21 +38,36 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   steps = steps;
   times = times;
   selectedTab: string = 'packages';
-  services = services;
   calendarDays: any;
   visible: boolean = false;
-  selectedService: any;
+  selectedService: boolean = true;
   selectSpecificBranch: any;
-  selectedDay = 5;
+  selectedDay!: number | any;
   selectedTime = 1;
   selectedPayment: any;
   mainFormGroup!: FormGroup;
   listOfInputs = listOfInputs;
   AllBranches!: any;
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
+  @ViewChild('patientScrollContainer') patientScrollContainer!: ElementRef;
+  @ViewChild('serviceScrollContainer') serviceScrollContainer!: ElementRef;
+  branchId = new Subject<string>();
+  branchDetails!: any;
+  selectedServices: any;
+  detailPanelOpen: boolean = false;
+  selectedDetailService: any = null;
+  showDetailsIcon!: boolean;
+  ArrayOfWeek: any = [];
 
   get listOfPaitent() {
     return this.mainFormGroup.get('listOfPaitent') as FormArray;
+  }
+  get listOfPackages() {
+    return this.mainFormGroup.get('listOfPackages') as FormArray;
+  }
+
+  get listOfTests() {
+    return this.mainFormGroup.get('listOfTests') as FormArray;
   }
 
   constructor(
@@ -66,12 +82,52 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
     this.calculateThirdStep();
     this.getAllBranches();
     this.observeMainForm();
+    this.GetBranchDetails();
+    this.calculateWeekInfo();
+  }
+
+  GetBranchDetails() {
+    this.selectedDay = null;
+    this.branchId
+      .pipe(switchMap((branchId) => this.service.GetBrancheDetails(branchId)))
+      .subscribe({
+        next: (res) => {
+          if (res) {
+            this.branchDetails = res;
+
+            this.branchDetails.packages = this.branchDetails.packages.map(
+              (item: any) => ({
+                ...item,
+                Selected: false,
+                showDetailsIcon: false,
+                icon: item.icon || 'bi-vial',
+                tone: item.tone || 'default',
+                type: 'package',
+              }),
+            );
+            this.branchDetails.tests = this.branchDetails.tests.map(
+              (item: any) => ({
+                ...item,
+                Selected: false,
+                showDetailsIcon: false,
+                icon: item.icon || 'bi-vial',
+                tone: item.tone || 'default',
+                type: 'test',
+              }),
+            );
+            this.selectedTab == 'packages'
+              ? (this.selectedServices = this.branchDetails.packages)
+              : (this.selectedServices = this.branchDetails.tests);
+            this.calendarDays = this.branchDetails.days;
+          }
+        },
+      });
   }
 
   observeMainForm() {
-    this.mainFormGroup.get('listOfPaitents')?.valueChanges.subscribe((res) => {
-      console.log(res);
-    });
+    this.mainFormGroup
+      .get('listOfPaitents')
+      ?.valueChanges.subscribe((res) => {});
   }
 
   getAllBranches() {
@@ -106,10 +162,8 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
       name: new FormControl(null, [Validators.required]),
       age: new FormControl(null, [Validators.required]),
       listOfPaitent: new FormArray([]),
-      packages: new FormGroup({
-        name: new FormControl(),
-        price: new FormControl(),
-      }),
+      listOfPackages: new FormArray([]),
+      listOfTests: new FormArray([]),
     });
   }
 
@@ -137,26 +191,60 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
 
   calculateThirdStep() {
     (this.mainFormGroup as FormGroup).valueChanges.subscribe((res: any) => {
-      const packageName = res?.packages?.name;
-      if (packageName == null) {
-        steps[2].finishStep = false;
-      } else if (packageName != null) {
+      const listOfPackages = res?.listOfPackages;
+      const listOfTests = res?.listOfTests;
+
+      if (listOfPackages.length != 0 || listOfTests.length != 0) {
         steps[2].finishStep = true;
+      } else {
+        steps[2].finishStep = false;
       }
     });
   }
 
-  get selectedServiceItem(): ServiceItem {
-    return services[this.selectedService];
-  }
+  selectService(service: any): void {
+    service.Selected = !service.Selected;
 
-  selectService(service: any, index: number): void {
-    let x = this.mainFormGroup.get('packages') as FormGroup;
+    if (service.type === 'package') {
+      const formArray = this.listOfPackages;
 
-    x.get('name')?.setValue(service.title);
-    x.get('price')?.setValue(service.price);
+      if (service.Selected) {
+        formArray.push(
+          new FormGroup({
+            id: new FormControl(service.id),
+            name: new FormControl(service.nameAr),
+          }),
+        );
+      } else {
+        const index = formArray.controls.findIndex(
+          (x) => x.value.id === service.id,
+        );
 
-    this.selectedService = index;
+        if (index !== -1) {
+          formArray.removeAt(index);
+        }
+      }
+    }
+
+    if (service.type === 'test') {
+      const formArray = this.listOfTests;
+      if (service.Selected) {
+        formArray.push(
+          new FormGroup({
+            id: new FormControl(service.id),
+            name: new FormControl(service.nameAr),
+          }),
+        );
+      } else {
+        const index = formArray.controls.findIndex(
+          (x) => x.value.id === service.id,
+        );
+
+        if (index !== -1) {
+          formArray.removeAt(index);
+        }
+      }
+    }
   }
 
   selectDay(index: number): void {
@@ -172,19 +260,26 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   }
 
   selectBranch(branch: any, id: any) {
-    this.calendarDays = branch.days;
     this.selectSpecificBranch = id;
 
     let BranchSelected = this.mainFormGroup.get('BranchSelected') as FormGroup;
     BranchSelected.get('id')?.setValue(branch.id);
     BranchSelected.get('name')?.setValue(branch.nameAr);
+    this.branchId.next(branch.id);
   }
 
   closeDialog(event: any) {
     this.visible = false;
   }
   selectTab(tab: string) {
-    this.selectedTab = tab;
+    if (tab === 'packages') {
+      this.selectedServices = this.branchDetails.packages;
+      this.selectedTab = tab;
+    }
+    if (tab === 'tests') {
+      this.selectedServices = this.branchDetails.tests;
+      this.selectedTab = tab;
+    }
   }
 
   scrollLeft() {
@@ -199,5 +294,91 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
       left: 300,
       behavior: 'smooth',
     });
+  }
+
+  scrollPatientLeft() {
+    this.patientScrollContainer.nativeElement.scrollBy({
+      left: -260,
+      behavior: 'smooth',
+    });
+  }
+
+  scrollPatientRight() {
+    this.patientScrollContainer.nativeElement.scrollBy({
+      left: 260,
+      behavior: 'smooth',
+    });
+  }
+
+  scrollServiceLeft() {
+    this.serviceScrollContainer.nativeElement.scrollBy({
+      left: -280,
+      behavior: 'smooth',
+    });
+  }
+
+  scrollServiceRight() {
+    this.serviceScrollContainer.nativeElement.scrollBy({
+      left: 280,
+      behavior: 'smooth',
+    });
+  }
+
+  showDetails(service: any) {
+    service.showDetailsIcon = true;
+  }
+
+  hideDetailsIcon(service: any) {
+    service.showDetailsIcon = false;
+  }
+
+  openServiceDetails(service: any): void {
+    this.selectedDetailService = service;
+    this.detailPanelOpen = true;
+  }
+
+  closeServiceDetails(): void {
+    this.detailPanelOpen = false;
+    this.selectedDetailService = null;
+  }
+
+  objectEntries(obj: any): [string, any][] {
+    if (!obj) return [];
+    try {
+      return Object.entries(obj);
+    } catch {
+      return [];
+    }
+  }
+
+  calculateWeekInfo() {
+    for (let i = 0; i <= 6; i++) {
+      const date = new Date();
+      date.setDate(date.getDate() + i);
+      this.ArrayOfWeek.push({
+        dayNameAr: date.toLocaleDateString('ar-EG', { weekday: 'long' }),
+        dayNameEn: date.toLocaleDateString('en-US', { weekday: 'long' }),
+        dayNumber: date.getDate(),
+        monthNameAr: date.toLocaleDateString('ar-EG', { month: 'long' }),
+        monthNumber: date.getMonth() + 1,
+        year: date.getFullYear(),
+      });
+    }
+  }
+
+  isDayExist(dayName: string, index: number) {
+    //this.selectedDay=index
+    if (this.branchDetails) {
+      debugger;
+      const x: any[] = this.calendarDays.map((x: { dayName: string }) =>
+        x.dayName.toLowerCase(),
+      );
+      if (x.includes(dayName.toLowerCase())) {
+        return 'متاح';
+      } else {
+        return 'متاح غير';
+      }
+    }
+    return null;
   }
 }

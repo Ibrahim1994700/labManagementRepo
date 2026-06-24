@@ -27,7 +27,17 @@ namespace backend.Controllers
         {
             return Ok(await _labBranches.GetBrancheDetails(id));
         }
-      
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> getPackageDetails(Guid id)
+        {
+            return Ok(await _labBranches.GetPackageDetails(id));
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> getTestDetails(Guid id)
+        {
+            return Ok(await _labBranches.GetTestDetails(id));
+        }
 
     }
 }

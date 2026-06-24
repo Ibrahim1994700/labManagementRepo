@@ -12,6 +12,9 @@ namespace Core.Services.IServices
     {
         Task<object> GetAllBranchesAsync();
         Task<object> GetBrancheDetails(Guid id);
+        Task<object> GetPackageDetails(Guid id);
+        Task<object> GetTestDetails(Guid id);
+
 
     }
 }

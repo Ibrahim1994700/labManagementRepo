@@ -31,7 +31,7 @@ namespace DataAccessLayer.Entities
 
         [Column(TypeName = "decimal(10,2)")]
         [Range(0, double.MaxValue)]
-        public decimal BasePrice { get; set; }
+        public decimal price { get; set; }
 
         [Required, MaxLength(3)]
         public string Currency { get; set; } = "SAR";
