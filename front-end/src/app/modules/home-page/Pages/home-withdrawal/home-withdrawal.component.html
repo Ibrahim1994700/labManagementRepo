@@ -178,7 +178,7 @@
           <button
             *ngFor="let date of ArrayOfWeek; let i = index"
             [class.selected]="selectedDay === i"
-            (click)="selectDay(i)"
+            (click)="selectDay(i,date)"
           >
             <small>{{ date.dayNameEn }}</small>
             <strong>{{ date.dayNumber }}</strong>
@@ -197,7 +197,7 @@
             [class.selected]="selectedTime === i"
             (click)="selectTime(i)"
           >
-            {{ time }}
+            {{ ConverTime(time) }}
           </button>
         </div>
         <p class="visit-duration">

@@ -12,7 +12,10 @@ namespace DataAccessLayer.Entities
         public LabBranchDaysOn LabBranchDaysOn { get; set; }
 
         public TimeSpan FromTime { get; set; }
+        public string FromTimePeriod { get; set; }
+
         public TimeSpan ToTime { get; set; }
+        public string ToTimePeriod { get; set; }
 
         public int MaxPatients { get; set; }
 

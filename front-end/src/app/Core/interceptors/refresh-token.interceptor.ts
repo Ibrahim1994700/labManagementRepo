@@ -30,8 +30,7 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
           );
       }
       else if (error.status === 400) {
-        debugger
-        // خطأ آخر
+       
         dataService.removeLocalStorage('token');
         route.navigate(['/Auth/login']);
       }

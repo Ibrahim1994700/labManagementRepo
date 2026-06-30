@@ -15,7 +15,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { listOfInputs, ServiceItem, services, steps, times } from './models';
+import { listOfInputs, steps} from './models';
 import { MapComponent } from '../../../../shared/Components/map/map.component';
 import { SharedDialogComponent } from '../../../../shared/Components/shared-dialog/shared-dialog.component';
 import { HomeWithDrwalService } from './home-with-drwal.service';
@@ -36,7 +36,7 @@ import { BehaviorSubject, Subject, switchMap } from 'rxjs';
 })
 export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   steps = steps;
-  times = times;
+  times :any
   selectedTab: string = 'packages';
   calendarDays: any;
   visible: boolean = false;
@@ -161,9 +161,13 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
 
       name: new FormControl(null, [Validators.required]),
       age: new FormControl(null, [Validators.required]),
-      listOfPaitent: new FormArray([]),
-      listOfPackages: new FormArray([]),
-      listOfTests: new FormArray([]),
+      listOfPaitent: new FormArray([], [Validators.required]),
+      listOfPackages: new FormArray([], [Validators.required]),
+      listOfTests: new FormArray([], [Validators.required]),
+      dateOfBooking: new FormGroup({
+        dayName: new FormControl(null, [Validators.required]),
+        monthName: new FormControl(null, [Validators.required]),
+      }),
     });
   }
 
@@ -247,8 +251,13 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
     }
   }
 
-  selectDay(index: number): void {
+  selectDay(index: number, date: any): void {
+    const Date = this.mainFormGroup.get('dateOfBooking') as FormGroup;
+    Date.get('dayName')?.setValue(date.dayNameAr);
+    Date.get('monthName')?.setValue(date.monthNameAr);
     this.selectedDay = index;
+    
+    this.times=this.calendarDays.find((x: { dayName: any; })=>x.dayName==date.dayNameEn).times
   }
 
   selectTime(index: number): void {
@@ -367,9 +376,8 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   }
 
   isDayExist(dayName: string, index: number) {
-    //this.selectedDay=index
     if (this.branchDetails) {
-      debugger;
+      
       const x: any[] = this.calendarDays.map((x: { dayName: string }) =>
         x.dayName.toLowerCase(),
       );
@@ -380,5 +388,10 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
       }
     }
     return null;
+  }
+
+  ConverTime(time:any){
+    debugger
+    return `${time.toTime} ${time.fromTimePeriod} - ${time.fromTime} ${time.toTimePeriod} `
   }
 }

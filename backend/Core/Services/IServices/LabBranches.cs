@@ -31,6 +31,7 @@ namespace Core.Services.IServices
 
                 city = x.City,
                 address=x.Address,
+                isActive=x.IsActive
               
                 
             }).ToListAsync();
@@ -74,6 +75,8 @@ namespace Core.Services.IServices
                         {
                             t.FromTime,
                             t.ToTime,
+                            t.FromTimePeriod,
+                            t.ToTimePeriod,
                             t.MaxPatients
                         }).ToList()
                     }).OrderBy(x=>x.numberOdDay).ToList()
