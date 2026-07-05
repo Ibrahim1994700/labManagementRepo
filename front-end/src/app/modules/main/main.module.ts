@@ -6,12 +6,13 @@ import { HeaderComponent } from '../../shared/Components/header/header.component
 import { MainPageComponent } from './main-page.component';
 import { FooterComponent } from '../../shared/Components/footer/footer.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 
 
 
 
 @NgModule({
   declarations: [MainPageComponent,HeaderComponent,FooterComponent],
-  imports: [CommonModule, MainRoutingModule,FormsModule,ReactiveFormsModule],
+  imports: [CommonModule, MainRoutingModule,FormsModule,ReactiveFormsModule,TranslateModule],
 })
 export class MainModule {}

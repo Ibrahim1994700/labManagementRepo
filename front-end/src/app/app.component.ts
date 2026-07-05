@@ -2,6 +2,7 @@ import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { DataService } from './shared/Services/data.service';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class AppComponent implements OnInit {
   constructor(
     private dataService: DataService,
     private Route: Router,
+    private translate: TranslateService,
   ) {}
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(event: BeforeUnloadEvent): void {
@@ -37,6 +39,20 @@ export class AppComponent implements OnInit {
   subject = new Subject();
   subjectdf = new BehaviorSubject(null);
   ngOnInit(): void {
+    const saved = localStorage.getItem('lang');
+    const browserLang = this.translate.getBrowserLang();
+    const initial = saved ? (saved === 'ar' ? 'ar' : 'en') : (browserLang === 'ar' ? 'ar' : 'en');
+    this.translate.addLangs(['en', 'ar']);
+    this.translate.use(initial);
+    document.documentElement.lang = initial;
+    document.documentElement.dir = initial === 'ar' ? 'rtl' : 'ltr';
+
+    this.translate.onLangChange.subscribe((ev) => {
+      const lang = ev.lang;
+      document.documentElement.lang = lang;
+      document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+      localStorage.setItem('lang', lang);
+    });
     // if (this.dataService.CheckLocalStorageItem('token')) {
     //   this.Route.navigate(['/Patient-Home/main-user-page']);
     // } else {

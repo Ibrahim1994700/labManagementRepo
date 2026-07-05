@@ -52,7 +52,7 @@
         pButton
         label="حفظ"
         class="p-button-success"
-        [disabled]="!formGroup.valid"
+        [disabled]="!formGroup.get('name')?.valid||!formGroup.get('age')?.valid"
         (click)="saveProfile()"
       ></button>
 

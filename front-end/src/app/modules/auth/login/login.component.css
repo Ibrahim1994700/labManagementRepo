@@ -227,7 +227,6 @@
 
 .welcome-copy {
     text-align: left;
-    direction: rtl;
 }
 
 .welcome-copy h3 {
@@ -411,3 +410,4 @@
         width: 165px;
     }
 }
+

@@ -1,32 +1,41 @@
-     <div class="map-card">
-          <!-- 🔘 Buttons -->
-          <div class="buttons">
-            <button (click)="myLocation()">📍 موقعي الحالي</button>
+<div class="map-card">
 
-            <button (click)="enableSelectMode()">🖱️ اختر من الخريطة</button>
-          </div>
+  <!-- 🔘 Buttons -->
+  <div class="buttons">
+    <button (click)="myLocation()">📍 موقعي الحالي</button>
 
-          <!-- 🗺️ Map -->
-          <div id="map"></div>
+    <button (click)="enableSelectMode()">
+      🖱️ اختر من الخريطة
+    </button>
+  </div>
 
-          <!-- 📍 Info -->
-          <div class="info">
-            <div class="box">
-              <strong>اسم المكان</strong>
-              <p>{{ placeName || "لم يتم التحديد" }}</p>
-            </div>
+  <!-- 🔍 Search -->
+ 
+  <!-- 🗺️ MAP -->
+  <div id="map"></div>
 
-            <div class="box">
-              <strong>العنوان الكامل</strong>
-              <p>{{ fullAddress || "لم يتم التحديد" }}</p>
-            </div>
-            <div class="search-box">
-              <input
-                type="text"
-                placeholder="ابحث عن مكان (مدينة، شارع، مستشفى...)"
-              />
+  <!-- 📍 INFO -->
+  <div class="info">
 
-              <button (click)="searchLocation()">🔍 بحث</button>
-            </div>
-          </div>
-        </div>
+    <div class="box">
+      <strong>اسم المكان</strong>
+      <p>{{ placeName || "لم يتم التحديد" }}</p>
+    </div>
+
+    <div class="box">
+      <strong>العنوان الكامل</strong>
+      <p>{{ fullAddress || "لم يتم التحديد" }}</p>
+    </div>
+
+  </div>
+ <div class="search-box">
+    <input
+      [(ngModel)]="searchText"
+      type="text"
+      placeholder="ابحث عن مكان (عربي أو إنجليزي) داخل الأردن 🇯🇴"
+    />
+
+    <button (click)="searchLocation()">بحث 🔍</button>
+  </div>
+
+</div>

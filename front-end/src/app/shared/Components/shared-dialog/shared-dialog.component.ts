@@ -46,7 +46,8 @@ export class SharedDialogComponent implements OnInit {
   }
 
   saveProfile() {
-    if (this.listOfPaitents.valid) {
+    debugger
+    if (this.formGroup.get('name')?.valid&&this.formGroup.get('age')?.valid) {
       this.listOfPaitents.push(
         new FormGroup({
           name: new FormControl(this.formGroup.get('name')?.value),

@@ -15,7 +15,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { listOfInputs, steps} from './models';
+import { listOfInputs, steps } from './models';
 import { MapComponent } from '../../../../shared/Components/map/map.component';
 import { SharedDialogComponent } from '../../../../shared/Components/shared-dialog/shared-dialog.component';
 import { HomeWithDrwalService } from './home-with-drwal.service';
@@ -36,14 +36,14 @@ import { BehaviorSubject, Subject, switchMap } from 'rxjs';
 })
 export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   steps = steps;
-  times :any
+  times: any;
   selectedTab: string = 'packages';
   calendarDays: any;
   visible: boolean = false;
   selectedService: boolean = true;
   selectSpecificBranch: any;
   selectedDay!: number | any;
-  selectedTime = 1;
+  selectedTime!: number | any;
   selectedPayment: any;
   mainFormGroup!: FormGroup;
   listOfInputs = listOfInputs;
@@ -80,6 +80,8 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
     this.calculateFirstStep();
     this.calculateSecondStep();
     this.calculateThirdStep();
+    this.calculateForuthStep();
+
     this.getAllBranches();
     this.observeMainForm();
     this.GetBranchDetails();
@@ -87,14 +89,18 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
   }
 
   GetBranchDetails() {
-    this.selectedDay = null;
     this.branchId
       .pipe(switchMap((branchId) => this.service.GetBrancheDetails(branchId)))
       .subscribe({
         next: (res) => {
           if (res) {
+            this.selectedDay = null;
+            this.selectedTime = null;
+            this.listOfPackages.clear();
+            this.listOfTests.clear();
+            this.mainFormGroup.get('dateOfBooking')?.reset();
             this.branchDetails = res;
-
+            this.times = [];
             this.branchDetails.packages = this.branchDetails.packages.map(
               (item: any) => ({
                 ...item,
@@ -128,6 +134,25 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
     this.mainFormGroup
       .get('listOfPaitents')
       ?.valueChanges.subscribe((res) => {});
+  }
+
+  calculateForuthStep() {
+    this.mainFormGroup
+      .get('dateOfBooking')
+      ?.valueChanges.subscribe((res: any) => {
+        if (
+          res.dayName &&
+          res.monthName &&
+          res.FromTime &&
+          res.fromTimePeriod &&
+          res.ToTime &&
+          res.toTimePeriod
+        ) {
+          steps[3].finishStep = true;
+        } else {
+          steps[3].finishStep = false;
+        }
+      });
   }
 
   getAllBranches() {
@@ -167,7 +192,21 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
       dateOfBooking: new FormGroup({
         dayName: new FormControl(null, [Validators.required]),
         monthName: new FormControl(null, [Validators.required]),
+        FromTime: new FormControl(null, [Validators.required]),
+        fromTimePeriod: new FormControl(null, [Validators.required]),
+        ToTime: new FormControl(null, [Validators.required]),
+        toTimePeriod: new FormControl(null, [Validators.required]),
       }),
+      location: new FormGroup(
+        {
+          lat: new FormControl(null, [Validators.required]),
+          lng: new FormControl(null, [Validators.required]),
+          placeName: new FormControl(null, [Validators.required]),
+          fullAddress: new FormControl(null, [Validators.required]),
+        },
+        [Validators.required],
+      ),
+      paymentMethod: new FormControl(null, [Validators.required]),
     });
   }
 
@@ -195,15 +234,25 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
 
   calculateThirdStep() {
     (this.mainFormGroup as FormGroup).valueChanges.subscribe((res: any) => {
-      const listOfPackages = res?.listOfPackages;
-      const listOfTests = res?.listOfTests;
-
-      if (listOfPackages.length != 0 || listOfTests.length != 0) {
+      if (this.listOfPackages.length != 0 || this.listOfTests.length != 0) {
         steps[2].finishStep = true;
       } else {
         steps[2].finishStep = false;
+        this.selectedDay = null;
+        this.selectedTime = null;
+        this.times = [];
+        //   this.mainFormGroup.get('dateOfBooking')?.reset();
       }
     });
+  }
+
+  locationSelected(event: any) {
+    const locationGroup = this.mainFormGroup?.get('location') as FormGroup;
+    locationGroup.get('lat')?.setValue(event.lat);
+    locationGroup.get('lng')?.setValue(event.lng);
+    locationGroup.get('placeName')?.setValue(event.placeName);
+    locationGroup.get('fullAddress')?.setValue(event.fullAddress);
+    this.steps[4].finishStep = true;
   }
 
   selectService(service: any): void {
@@ -253,19 +302,38 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
 
   selectDay(index: number, date: any): void {
     const Date = this.mainFormGroup.get('dateOfBooking') as FormGroup;
-    Date.get('dayName')?.setValue(date.dayNameAr);
+    Date.get('dayName')?.setValue(date?.dayNameAr);
     Date.get('monthName')?.setValue(date.monthNameAr);
     this.selectedDay = index;
-    
-    this.times=this.calendarDays.find((x: { dayName: any; })=>x.dayName==date.dayNameEn).times
+    this.times = this.calendarDays.find(
+      (x: { dayName: any }) => x?.dayName == date?.dayNameEn,
+    ).times;
   }
 
-  selectTime(index: number): void {
+  selectTime(index: number, time: any): void {
     this.selectedTime = index;
+    this.mainFormGroup
+      .get('dateOfBooking')
+      ?.get('FromTime')
+      ?.setValue(time.fromTime);
+    this.mainFormGroup
+      .get('dateOfBooking')
+      ?.get('fromTimePeriod')
+      ?.setValue(time.fromTimePeriod);
+    this.mainFormGroup
+      .get('dateOfBooking')
+      ?.get('ToTime')
+      ?.setValue(time.toTime);
+    this.mainFormGroup
+      .get('dateOfBooking')
+      ?.get('toTimePeriod')
+      ?.setValue(time.toTimePeriod);
   }
 
-  selectPayment(index: number): void {
+  selectPayment(paymentMethod: string, index: number): void {
     this.selectedPayment = index;
+    this.mainFormGroup.get('paymentMethod')?.setValue(paymentMethod);
+    this.steps[5].finishStep = true;
   }
 
   selectBranch(branch: any, id: any) {
@@ -377,11 +445,10 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
 
   isDayExist(dayName: string, index: number) {
     if (this.branchDetails) {
-      
       const x: any[] = this.calendarDays.map((x: { dayName: string }) =>
-        x.dayName.toLowerCase(),
+        x?.dayName?.toLowerCase(),
       );
-      if (x.includes(dayName.toLowerCase())) {
+      if (x.includes(dayName?.toLowerCase())) {
         return 'متاح';
       } else {
         return 'متاح غير';
@@ -390,8 +457,7 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
     return null;
   }
 
-  ConverTime(time:any){
-    debugger
-    return `${time.toTime} ${time.fromTimePeriod} - ${time.fromTime} ${time.toTimePeriod} `
+  ConverTime(time: any) {
+    return `${time.toTime} ${time.fromTimePeriod} - ${time.fromTime} ${time.toTimePeriod} `;
   }
 }

@@ -1,0 +1,13 @@
+{
+  "homeWithdrawal": {
+    "TITLE": "سحب",
+    "PATIENT_NAME": "اسم المريض",
+    "AGE": "العمر",
+    "H1": "Home Blood Collection Booking",
+    "P": "Follow the steps below to book a home blood collection appointment",
+
+    "HEADER": {
+      "HELP": "مساعدة"
+    }
+  }
+}

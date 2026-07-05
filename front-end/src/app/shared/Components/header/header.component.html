@@ -11,15 +11,30 @@
         <div class="top-actions d-flex align-items-center gap-2">
           <button type="button" class="btn btn-light-soft">
             <i class="bi bi-headset"></i>
-            <span>مساعدة</span>
+            <span>{{ 'HEADER.HELP' | translate }}</span>
           </button>
 
-          <button type="button" class="btn btn-light-soft">
+          <button
+            type="button"
+            class="btn btn-light-soft lang-btn"
+            [class.active]="currentLang === 'ar'"
+            (click)="changeLang('ar')"
+          >
             <i class="bi bi-globe2"></i>
             <span>AR</span>
-            <i class="bi bi-chevron-down arrow-icon"></i>
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-light-soft lang-btn"
+            [class.active]="currentLang === 'en'"
+            (click)="changeLang('en')"
+          >
+            <i class="bi bi-globe2"></i>
+            <span>EN</span>
           </button>
         </div>
       </div>
     </div>
   </header>
+

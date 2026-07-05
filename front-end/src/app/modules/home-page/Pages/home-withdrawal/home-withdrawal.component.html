@@ -95,14 +95,14 @@
 
       <div class="mini-tabs">
         <button
-          (click)="selectTab('packages')"
+          (click)="selectTab('packages')" [disabled]="!branchDetails?.packages?.length"
           [class.active]="selectedTab === 'packages'"
         >
           الباقات
         </button>
 
         <button
-          (click)="selectTab('tests')"
+          (click)="selectTab('tests')" [disabled]="!branchDetails?.tests?.length"
           [class.active]="selectedTab === 'tests'"
         >
           التحاليل
@@ -151,10 +151,7 @@
             ></i>
           </button>
 
-          <button class="service-card all-services">
-            <i class="bi bi-grid"></i>
-            <strong>عرض كل الباقات</strong>
-          </button>
+        
         </div>
 
         <button
@@ -175,7 +172,7 @@
           <button><i class="bi bi-chevron-left"></i></button>
         </div>
         <div class="calendar-grid">
-          <button
+          <button [disabled]="this.listOfPackages.length == 0 && this.listOfTests.length == 0"
             *ngFor="let date of ArrayOfWeek; let i = index"
             [class.selected]="selectedDay === i"
             (click)="selectDay(i,date)"
@@ -192,10 +189,10 @@
         <h2><span>4.</span> اختر الفترة الزمنية</h2>
         <p class="selected-date">السبت، 25 مايو 2024</p>
         <div class="times-grid">
-          <button
+          <button 
             *ngFor="let time of times; let i = index"
             [class.selected]="selectedTime === i"
-            (click)="selectTime(i)"
+            (click)="selectTime(i,time)"
           >
             {{ ConverTime(time) }}
           </button>
@@ -208,7 +205,7 @@
 
     <div class="three-column-row bottom-row">
       <section class="content-card address-section">
-        <app-map></app-map>
+        <app-map (locationSelected)="locationSelected($event)" ></app-map>
       </section>
 
       <section class="content-card payment-section">
@@ -217,7 +214,7 @@
         <button
           class="payment-option"
           [class.selected]="selectedPayment === 0"
-          (click)="selectPayment(0)"
+          (click)="selectPayment('VISA',0)"
         >
           <span class="pay-radio"></span>
           <div>
@@ -232,7 +229,7 @@
         <button
           class="payment-option"
           [class.selected]="selectedPayment === 1"
-          (click)="selectPayment(1)"
+          (click)="selectPayment('Apple Pay', 1)"
         >
           <span class="pay-radio"></span>
           <div><strong>Apple Pay</strong></div>
@@ -242,7 +239,7 @@
         <button
           class="payment-option"
           [class.selected]="selectedPayment === 2"
-          (click)="selectPayment(2)"
+          (click)="selectPayment('مدى - الدفع عند الاستلام',2)"
         >
           <span class="pay-radio"></span>
           <div><strong>مدى - الدفع عند الاستلام</strong></div>
@@ -275,7 +272,7 @@
     </div>
   </main>
 
-  <aside class="summary-panel">
+  <aside class="summary-panel" >
     <div class="summary-card">
       <h2>ملخص الحجز</h2>
 
@@ -451,3 +448,9 @@
   [header]="'نافذة معلومات المريض'"
   [listOfInputs]="listOfInputs"
 ></app-shared-dialog>
+
+
+
+
+
+

@@ -235,6 +235,93 @@ button {
   flex-shrink: 0;
 }
 
+/* Ensure cards are wide enough so 3 fit, additional ones cause horizontal scroll */
+.service-grid .service-card {
+  min-width: 220px;
+}
+
+/* Specific grids for packages/tests to allow independent scrolling */
+.packages-grid, .tests-grid {
+  padding: 8px 12px;
+}
+
+/* Patients horizontal scroll (already used in template) */
+.patients-container {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 8px 6px;
+}
+
+.patients-container .patient-card,
+.service-grid .service-card {
+  scroll-snap-align: start;
+}
+
+/* Show scrollbar only when overflow */
+.service-grid::-webkit-scrollbar,
+.patients-container::-webkit-scrollbar {
+  height: 8px;
+}
+.service-grid::-webkit-scrollbar-thumb,
+.patients-container::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.12);
+  border-radius: 6px;
+}
+
+/* Sticky summary panel */
+.summary-panel {
+  grid-area: summary;
+  padding: 24px 20px 24px;
+}
+
+.summary-card {
+  position: sticky;
+  top: 90px;
+  border-radius: 12px;
+  padding: 18px;
+  background: linear-gradient(180deg,#ffffff,#fbfdff);
+  box-shadow: 0 10px 30px rgba(16,40,80,0.08);
+  max-height: calc(100vh - 120px);
+  overflow: auto;
+}
+
+.summary-card h2 {
+  margin-bottom: 12px;
+}
+
+.summary-user {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 8px 0;
+}
+
+.summary-user img {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.total-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px dashed #e9eef6;
+  margin-top: 12px;
+}
+
+/* Responsive: stack summary under main on small screens */
+@media (max-width: 900px) {
+  .page-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas: "main" "summary";
+  }
+  .summary-card { position: relative; top: 0; max-height: none; }
+}
+
 .service-card.selected {
   border-color: #74aaf0;
   box-shadow: inset 0 0 0 1px rgba(67, 135, 224, 0.08);
@@ -1699,3 +1786,4 @@ button {
   .drawer-text { font-size: 12px; }
   .drawer-action { font-size: 13px; padding: 8px 0; }
 }
+
