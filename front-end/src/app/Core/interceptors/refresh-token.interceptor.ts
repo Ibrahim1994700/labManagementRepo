@@ -8,30 +8,28 @@ export const refreshTokenInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const dataService = inject(DataService);
   const route = inject(Router);
+  let ExistToken: string | null = null;
+  const authToken = dataService.existToken.subscribe((token) => {
+    ExistToken = token;
+  });
 
   return next(req).pipe(
     catchError((error) => {
       if (error.status === 401) {
         // Access Token انتهى →
         //  اطلب refresh
-        return authService
-          .GetRefreshtoken(dataService.getLocalStorageItem('token'))
-          .pipe(
-            mergeMap(() => {
-              const newToken = dataService.getLocalStorageItem('token');
-
-              const newReq = req.clone({
-                setHeaders: {
-                  Authorization: `Bearer ${newToken}`,
-                },
-              });
-              return next(newReq);
-            }),
-          );
-      }
-      else if (error.status === 400) {
-       
-        dataService.removeLocalStorage('token');
+        return authService.GetRefreshtoken().pipe(
+          switchMap((res) => {
+            const newToken = res.token;
+            const newReq = req.clone({
+              setHeaders: {
+                Authorization: `Bearer ${newToken}`,
+              },
+            });
+            return next(newReq);
+          }),
+        );
+      } else if (error.status === 400) {
         route.navigate(['/Auth/login']);
       }
       return throwError(() => error);

@@ -1,4 +1,5 @@
 ﻿using Core.Services.IServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ namespace backend.Controllers
             _labBranches = labBranches;
         }
 
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> getAllBranches()
         {

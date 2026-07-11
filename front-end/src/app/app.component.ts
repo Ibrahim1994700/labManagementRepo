@@ -3,6 +3,7 @@ import { Router, RouterOutlet } from '@angular/router';
 import { DataService } from './shared/Services/data.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { AuthService } from './modules/auth/login/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -18,7 +19,12 @@ export class AppComponent implements OnInit {
     private dataService: DataService,
     private Route: Router,
     private translate: TranslateService,
-  ) {}
+    private authService: AuthService
+  ) {
+    if (this.dataService.accessToken.getValue() == null) {
+      this.authService.GetRefreshtoken()
+    }
+  }
   @HostListener('window:beforeunload', ['$event'])
   onBeforeUnload(event: BeforeUnloadEvent): void {
     console.log('Are you sure you want to leave?');
@@ -41,7 +47,13 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     const saved = localStorage.getItem('lang');
     const browserLang = this.translate.getBrowserLang();
-    const initial = saved ? (saved === 'ar' ? 'ar' : 'en') : (browserLang === 'ar' ? 'ar' : 'en');
+    const initial = saved
+      ? saved === 'ar'
+        ? 'ar'
+        : 'en'
+      : browserLang === 'ar'
+        ? 'ar'
+        : 'en';
     this.translate.addLangs(['en', 'ar']);
     this.translate.use(initial);
     document.documentElement.lang = initial;
@@ -64,5 +76,4 @@ export class AppComponent implements OnInit {
 
     this.subjectdf.subscribe((v) => (this.behavesubvalue = v));
   }
-
 }

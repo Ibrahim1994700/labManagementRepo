@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,32 +33,40 @@ namespace Core.Services
 			_genericRepo = genericRepository;
 			_iJWT = jwt;
 			_customerCookieService = customerCookieService;
-			_protector = dataProtectionProvider.CreateProtector("Token");
+			_protector = dataProtectionProvider.CreateProtector("AccessToken");
 			_context = context;
 			_httpContextAccessor = httpContextAccessor;
 
 
 		}
-		public async Task<TokenResponseDTO> RefreshToken(RefreshTokenRequestDTO requestDto)
+		public async Task<TokenResponseDTO> RefreshToken()
 		{
-			if (requestDto == null)
-				throw new Exception("Invalid request.");
-			if (requestDto.UserId.ToString() == null)
-				throw new Exception("Invalid request.");
+            var token = _httpContextAccessor.HttpContext.Request
+     .Cookies["AccessToken"];
 
-			if (!Guid.TryParse(requestDto.ClientId, out var clientGuid))
-				throw new Exception("Invalid ClientId. ");
+            if (string.IsNullOrEmpty(token))
+                throw new Exception("Invalid request.");
+
+            var handler = new JwtSecurityTokenHandler();
+			var unProtectToken = _protector.Unprotect(token);
+            var jwtToken = handler.ReadJwtToken(unProtectToken);
+
+            var userId = jwtToken.Claims
+                .FirstOrDefault(c => c.Type == "userId")
+                ?.Value;
+
+            if (string.IsNullOrEmpty(userId))
+                throw new Exception("Invalid request.");
 
 
 
-			var storedRefreshToken = await _context.refreshTokens
+            var storedRefreshToken = await _context.refreshTokens
 				.Include(rt => rt.User)
 					.ThenInclude(u => u.UserRoles)
 						.ThenInclude(ur => ur.Role)
 				.Include(rt => rt.Client)
 				.FirstOrDefaultAsync(rt =>
-					rt.UserId == requestDto.UserId &&
-					rt.ClientId == clientGuid && rt.IsRevoked == false);
+					rt.UserId ==new Guid( userId)&& rt.IsRevoked == false);
 
 
 
@@ -89,8 +98,8 @@ namespace Core.Services
 				Token = hashedNewRefreshToken,
 				UserId = user.ID,
 				ClientId = client.Id,
-				ExpiresAt = DateTime.UtcNow.AddMinutes(3),
-				CreatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddDays(7),
+                CreatedAt = DateTime.UtcNow,
 				IsRevoked = false
 			};
 

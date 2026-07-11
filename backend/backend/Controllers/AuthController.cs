@@ -28,24 +28,17 @@ namespace backend.Controllers
 
 
 		[HttpPost]
-		public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDTO requestDto)
+		public async Task<IActionResult> RefreshToken()
 		{
 
-			if (requestDto == null || requestDto.UserId.ToString() == null)
-				return BadRequest("Invalid request.");
-			if (requestDto.ExpiredToken == null )
-				return BadRequest("Invalid request.");
-
-
-			if (string.IsNullOrWhiteSpace(requestDto.ClientId))
-				return BadRequest("ClientId is required.");
+		
 
 			
 
 			try
 			{
 				
-				var tokenResponse = await refreshTokenService.RefreshToken(requestDto);
+				var tokenResponse = await refreshTokenService.RefreshToken();
 
 				return Ok(tokenResponse);
 			}

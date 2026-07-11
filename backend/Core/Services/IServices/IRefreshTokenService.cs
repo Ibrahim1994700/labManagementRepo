@@ -9,6 +9,6 @@ namespace Core.Services.IServices
 {
 	public interface IRefreshTokenService
 	{
-		Task<TokenResponseDTO> RefreshToken(RefreshTokenRequestDTO requestDto);
+		Task<TokenResponseDTO> RefreshToken();
 	}
 }

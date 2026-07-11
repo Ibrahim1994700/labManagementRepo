@@ -3,13 +3,12 @@ import { inject, Injectable } from '@angular/core';
 import { DataService } from '../../../shared/Services/data.service';
 import { Router } from '@angular/router';
 import { read } from 'fs';
-import { tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  accessToken: any;
   constructor(private http: HttpClient) {}
   dataService = inject(DataService);
   route = inject(Router);
@@ -20,9 +19,12 @@ export class AuthService {
       .subscribe({
         next: (res: any) => {
           if (res.succeeded && res.data.token && res.data.refreshToken) {
-            this.dataService.removeLocalStorage('token');
-            this.dataService.setLocalStorageItem('token', res.data.token);
-            this.route.navigate(['/home']);
+            // this.dataService.removeLocalStorage('token');
+            // this.dataService.setLocalStorageItem('token', res.data.token);
+            this.dataService.existToken.next(res.data.token);
+            this.dataService.accessToken.next(res.data.token);
+
+            this.route.navigate(['/Patient-Home']);
           }
         },
         error: (error) => {
@@ -31,26 +33,23 @@ export class AuthService {
       });
   }
 
-  GetRefreshtoken(token: any) {
+  GetRefreshtoken(token?: any) {
     var data = {
       expiredToken: token,
       clientId: '36265F7F-070A-411A-BC1D-1ED9ABB3C9F0',
       clientUrl: 'https://client1.com',
-      userId: this.dataService.DecodeToken('token'),
+    //  userId: this.dataService?.DecodeToken('token').userId,
     };
     return this.http
-      .post('https://localhost:7071/api/Auth/RefreshToken', data, {
+      .post('https://localhost:7071/api/Auth/RefreshToken',{}, {
         withCredentials: true,
       })
       .pipe(
         tap((res: any) => {
-          localStorage.setItem('token', res.token);
-          this.accessToken = res.token;
+          this.dataService.accessToken.next(res.token);
         }),
       );
   }
 
-  getAccessToken(): string | null {
-    return this.accessToken;
-  }
+ 
 }

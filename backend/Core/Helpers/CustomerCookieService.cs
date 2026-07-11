@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -21,9 +22,10 @@ namespace Core.Helpers
             _configuration = configuration;
         }
 
-        public void SetToken(string Refreshtoken)
+        public void SetToken(string token)
         {
             var httpContext = _httpContextAccessor.HttpContext;
+
 
             if (httpContext == null)
             {
@@ -32,12 +34,12 @@ namespace Core.Helpers
 
             var expireMinutes = int.Parse(_configuration["Jwt:ExpireMinutes"]!);
 
-            httpContext.Response.Cookies.Append("RefreshToken", Refreshtoken, new CookieOptions
+            httpContext.Response.Cookies.Append("AccessToken", token, new CookieOptions
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Expires = DateTimeOffset.UtcNow.AddMinutes(expireMinutes),
+                SameSite = SameSiteMode.None,
+                Expires = DateTimeOffset.UtcNow.AddDays(expireMinutes),
                 Path = "/"
             });
         }

@@ -7,11 +7,15 @@ import {
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import CryptoJS from 'crypto-js';
 import { jwtDecode } from 'jwt-decode';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DataService {
+  existToken = new BehaviorSubject<string | null>(null);
+  accessToken =new BehaviorSubject<string | null>(null);
+
   constructor(
     public http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -34,11 +38,13 @@ export class DataService {
   }
 
   DecodeToken(key: any) {
-    var token=localStorage.getItem(key);
-    if(token)
-    {
-       var decode:any= jwtDecode(token);
-       return decode.userId
+    let token: any = null;
+    this.existToken.subscribe((tok) => {
+      token = tok;
+    });
+    if (token) {
+      var decode: any = jwtDecode(token);
+      return decode;
     }
   }
 

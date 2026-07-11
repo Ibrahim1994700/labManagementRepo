@@ -14,6 +14,11 @@ import { MainUserPageComponent } from "./Pages/main-user-page/main-user-page.com
   styleUrl: './home-page.component.css',
 })
 export class HomePageComponent {
-  constructor(private dataservice: DataService) {}
+  constructor(private dataservice: DataService) {
+ 
+
+
+
+  }
   
 }

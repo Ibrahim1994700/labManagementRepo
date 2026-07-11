@@ -184,8 +184,8 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
         name: new FormControl(),
       }),
 
-      name: new FormControl(null, [Validators.required]),
-      age: new FormControl(null, [Validators.required]),
+      name: new FormControl(null),
+      age: new FormControl(null),
       listOfPaitent: new FormArray([], [Validators.required]),
       listOfPackages: new FormArray([], [Validators.required]),
       listOfTests: new FormArray([], [Validators.required]),
@@ -459,5 +459,31 @@ export class HomeWithdrawalComponent implements AfterViewInit, OnInit {
 
   ConverTime(time: any) {
     return `${time.toTime} ${time.fromTimePeriod} - ${time.fromTime} ${time.toTimePeriod} `;
+  }
+
+  submitBooking() {
+    const listOfPackages = this.listOfPackages;
+    const listOfTests = this.listOfTests;
+
+    if (listOfPackages.length == 0 && listOfTests.length > 0) {
+      listOfPackages?.clearValidators();
+      listOfPackages?.updateValueAndValidity();
+    } else if (listOfPackages.length > 0 && listOfTests.length == 0) {
+      listOfTests?.clearValidators();
+      listOfTests?.updateValueAndValidity();
+    }
+
+    const finishedSteps = steps.map((step) => step.finishStep);
+    if (
+      this.mainFormGroup.valid &&
+      finishedSteps.every((step) => step === true)
+    ) {
+      alert('Booking submitted successfully!');
+    }
+
+    console.log(this.mainFormGroup.value);
+    console.log(this.mainFormGroup.get('listOfTests'));
+
+    console.log(finishedSteps);
   }
 }

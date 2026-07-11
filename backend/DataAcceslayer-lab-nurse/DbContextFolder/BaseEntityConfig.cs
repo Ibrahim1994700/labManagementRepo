@@ -1,13 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using DataAcceslayer_lab_nurse.Entites;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using DataAccessLayer.Entities;
 
-namespace DataAccessLayer.DbContextFolder
+namespace DataAcceslayer_lab_nurse.DbContextFolder
 {
     public abstract class BaseEntityConfig<TEntity> : IEntityTypeConfiguration<TEntity> where TEntity : Base
 
@@ -30,7 +28,7 @@ namespace DataAccessLayer.DbContextFolder
                 .HasColumnType("datetime2")
                 .HasDefaultValueSql("SYSUTCDATETIME()");
 
-         
+
 
             builder.Property(x => x.IsActive)
                 .IsRequired()
@@ -46,4 +44,5 @@ namespace DataAccessLayer.DbContextFolder
 
         }
     }
+
 }

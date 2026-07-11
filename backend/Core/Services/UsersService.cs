@@ -32,7 +32,7 @@ namespace Core.Services
             _genericRepo = genericRepository;
             _iJWT = jwt;
             _customerCookieService = customerCookieService;
-            _protector = dataProtectionProvider.CreateProtector("Token");
+            _protector = dataProtectionProvider.CreateProtector("AccessToken");
             _context = context;
             _contextAccessor = httpContextAccessor;
 
@@ -189,8 +189,8 @@ namespace Core.Services
 									Token = hashedRefreshToken,
 									UserId = users.ID,
 									ClientId = userLoggedInDto.client.Id,
-									ExpiresAt = DateTime.UtcNow.AddMinutes(3),
-									CreatedAt = DateTime.UtcNow,
+                                    ExpiresAt = DateTime.UtcNow.AddDays(7),
+                                    CreatedAt = DateTime.UtcNow,
 									IsRevoked = false
 								};
 								_context.refreshTokens.Add(refreshTokenEntity);
@@ -205,7 +205,7 @@ namespace Core.Services
                                     RefreshToken = refreshToken
                                 };
 
-								//_customerCookieService.SetToken(_protector.Protect(userResponse.Usertoken));
+								_customerCookieService.SetToken(_protector.Protect(userResponse.Usertoken));
 
 
 								return OperationResult<TokenResponseDTO>.Success(res);
